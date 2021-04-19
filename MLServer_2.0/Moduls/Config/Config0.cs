@@ -1,10 +1,8 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using MLServer_2._0.Moduls.ClfFileType;
-using TypeDStringMemoryInfo
-    = System.Collections.Concurrent.ConcurrentDictionary<string,
-        System.Collections.Concurrent.ConcurrentDictionary<string,
-            MLServer_2._0.Moduls.ClfFileType.MemoryInfo>>;
+using TypeDStringMemoryInfo = System.Collections.Concurrent.ConcurrentDictionary<string,
+        System.Collections.Concurrent.ConcurrentDictionary<string,  MLServer_2._0.Moduls.ClfFileType.MemoryInfo>>;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +18,7 @@ namespace MLServer_2._0.Moduls.Config
         public MasPaths MPath;
 
         public ConcurrentDictionary<string, string> BasaParams;
-        public ConcurrentDictionary<string, string> ClexportParams;
+        public ConcurrentDictionary<string, ConcurrentDictionary<string, string>> ClexportParams;
         public ConcurrentDictionary<string, string> Fields;
         public List<DanTriggerTime> DateTimeTrigger;
         public ConcurrentDictionary<string, string> NameTrigger { get; set; }
@@ -40,7 +38,7 @@ namespace MLServer_2._0.Moduls.Config
         {
             IsRun = new IsRun();
             BasaParams = new ConcurrentDictionary<string, string>();
-            ClexportParams = new ConcurrentDictionary<string, string>();
+            ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>();
             Fields = new ConcurrentDictionary<string, string>();
             DateTimeTrigger = new List<DanTriggerTime>();
             NameTrigger = new ConcurrentDictionary<string, string>();

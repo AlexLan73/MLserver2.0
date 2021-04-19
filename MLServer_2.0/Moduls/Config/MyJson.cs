@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using MLServer_2._0.Logger;
 using MLServer_2._0.Moduls.Error;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace MLServer_2._0.Moduls.Config
@@ -13,7 +14,7 @@ namespace MLServer_2._0.Moduls.Config
     public class CarNameDan
     {
         public ConcurrentDictionary<string, string> BasaParams = new();
-        public ConcurrentDictionary<string, string> ClexportParams = new();
+        public ConcurrentDictionary<string, ConcurrentDictionary<string, string>> ClexportParams = new();
     }
 
     public class CarNameParams
@@ -41,14 +42,14 @@ namespace MLServer_2._0.Moduls.Config
 
         private readonly string[] _fieldes = new[] { CarName, Clexport, Error };
         private ConcurrentDictionary<string, string> BasaParams { get; set; }
-        private ConcurrentDictionary<string, string> ClexportParams { get; set; }
+        private ConcurrentDictionary<string, ConcurrentDictionary<string, string>> ClexportParams { get; set; }
 
         private readonly CarNameParams _carParams = new();
         private List<string> _lErrorConvert = new();
         public MlServerJson(ILogger ilogger, ref Config0 config)
         {
             BasaParams = new ConcurrentDictionary<string, string>();
-            ClexportParams = new ConcurrentDictionary<string, string>();
+            ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>();
 
             _iLogger = ilogger;
             _config = config;
@@ -104,7 +105,7 @@ namespace MLServer_2._0.Moduls.Config
         {
             foreach (var item in carxx.Children())
             {
-                ConcurrentDictionary<string, string> clexportParams = new();
+                ConcurrentDictionary<string, ConcurrentDictionary<string, string>> clexportParams = new();
                 ConcurrentDictionary<string, string> basaParams = new();
 
                 var key0 = (string)((JProperty)item.Parent)?.Name;
@@ -119,9 +120,30 @@ namespace MLServer_2._0.Moduls.Config
                             var x0 = val0[Clexport]?.Children().ToList();
                             if (x0 != null)
                                 foreach (var item1 in x0)
-                                    clexportParams.AddOrUpdate(((JProperty)item1).Name,
-                                        (string)((JProperty)item1).Value,
-                                        (_, _) => (string)((JProperty)item1).Value);
+                                {
+                                    string _name = ((JProperty)item1).Name;
+                                    var _zz1 = ((JProperty)item1).Value;
+                                    var _zz2 = (((JProperty)item1).Value).ToString();
+                                    Dictionary<string, string> htmlAttributes = JsonConvert.DeserializeObject<Dictionary<string, string>>(_zz2);
+                                    ConcurrentDictionary<string, string> xx = new ConcurrentDictionary<string, string>(htmlAttributes);
+                                    ClexportParams.AddOrUpdate(_name, xx, (_, _) => xx);
+                                    int k = 1;
+
+//                                    clexportParams.AddOrUpdate(_name,
+//                                        (string)((JProperty)item1).Value,
+//                                        (_, _) => (string)((JProperty)item1).Value);
+//                                    clexportParams.AddOrUpdate(((JProperty)item1).Name,
+//                                        (string)((JProperty)item1).Value,
+//                                        (_, _) => (string)((JProperty)item1).Value);
+                                }
+                            //                            string _name = ((JProperty)item).Name;
+                            //                            var _zz1 = ((JProperty)item).Value;
+                            //                            var _zz2 = (((JProperty)item).Value).ToString();
+                            //                            Dictionary<string, string> htmlAttributes = JsonConvert.DeserializeObject<Dictionary<string, string>>(_zz2);
+                            //                            ConcurrentDictionary<string, string> xx = new ConcurrentDictionary<string, string>(htmlAttributes);
+                            //                            ClexportParams.AddOrUpdate(_name, xx, (_, _) => xx);
+
+
                         }
 
                         if (((JProperty)item0).Name != Lrfdec) continue;
@@ -133,7 +155,7 @@ namespace MLServer_2._0.Moduls.Config
                 _carParams.Add(key0, new CarNameDan()
                 {
                     BasaParams = new ConcurrentDictionary<string, string>(basaParams),
-                    ClexportParams = new ConcurrentDictionary<string, string>(clexportParams)
+                    ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>(clexportParams)
                 });
             }
         }
@@ -144,7 +166,15 @@ namespace MLServer_2._0.Moduls.Config
                 return;
 
             foreach (JToken item in clexportLs)
-                ClexportParams.AddOrUpdate(((JProperty)item).Name, (string)((JProperty)item).Value, (_, _) => (string)((JProperty)item).Value);
+            {
+                string _name = ((JProperty)item).Name;
+                var _zz1 = ((JProperty)item).Value;
+                var _zz2 = (((JProperty)item).Value).ToString();
+                Dictionary<string, string> htmlAttributes = JsonConvert.DeserializeObject<Dictionary<string, string>>(_zz2);
+                ConcurrentDictionary<string, string> xx = new ConcurrentDictionary<string, string>(htmlAttributes);
+
+                ClexportParams.AddOrUpdate(_name, xx, (_, _) => xx);
+            }
         }
 
         public void CarSetParam(string nameCar="")
@@ -198,7 +228,7 @@ namespace MLServer_2._0.Moduls.Config
             }
             else
             {
-                ClexportParams = new ConcurrentDictionary<string, string>(ClexportParams);
+                ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>(ClexportParams);
             }
 
         }
@@ -219,7 +249,7 @@ namespace MLServer_2._0.Moduls.Config
             CarSetParam(namecar);
 
             _config.BasaParams = new ConcurrentDictionary<string, string>(BasaParams);
-            _config.ClexportParams = new ConcurrentDictionary<string, string>(ClexportParams);
+            _config.ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>(ClexportParams);
         }
 
     }

@@ -20,18 +20,21 @@ namespace MLServer_2._0.Moduls.Export
         private readonly ILogger _iLogger;
         private Config0 _config;
         private readonly string _patternFile;
-        private ConcurrentDictionary<string, bool> _dirClfRun;
+//        private ConcurrentDictionary<string, bool> _dirClfRun;
+        private ConcurrentDictionary<string, Task> _dirClfRun;
         private readonly string _typeExport;
         private readonly string _commandExport;
         private readonly string _outDir;
-        private Barrier _barrier;
         private readonly int _timeComp;
         private  DateTime _startDateTime;
         private int _timeWait;
+        private List<string> _newFiles;
+        public int ErrorRun { get; private set; } = 0;
+        public Task TaskRun { get; set; } = null;
         #endregion
 
         #region Constructor
-        public OneExport(ILogger ilogger, ref Config0 config, (string, string) typeExport)
+        public OneExport(ILogger ilogger, ref Config0 config, (string, string, string) typeExport)
         {
             _iLogger = ilogger;
             _config = config;
@@ -40,12 +43,12 @@ namespace MLServer_2._0.Moduls.Export
             _outDir = _config.MPath.OutputDir + "\\" + _typeExport;
 
             _patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\).clf";
-            _dirClfRun = new ConcurrentDictionary<string, bool>();
+//            _dirClfRun = new ConcurrentDictionary<string, bool>();
+            _dirClfRun = new ConcurrentDictionary<string, Task>();
             _config.Time1Sec += _config_Time1Sec;
             _timeComp = 60;                             // о
             _startDateTime = DateTime.Now;
-
-
+            _newFiles = new List<string>();
         }
 
         private void _config_Time1Sec(object sender, EventArgs e)
@@ -111,88 +114,115 @@ namespace MLServer_2._0.Moduls.Export
             return -1;
         }
 //        public int Run(object obj)
-        public int Run(Barrier barrier)
+        public void Run()
         {
-//            _barrier = (Barrier)obj;
-            _barrier = barrier;
-
-            switch (_runTestStartProcess())
+            TaskRun = Task.Run(async ()=> 
             {
-                case 0:
-                    Console.WriteLine("Error  - 0");
-
-                    return 0;
-
-                case <0:
-                    Console.WriteLine("Error  -1");
-                    return -1;
-
-                case >0:
-                    Console.WriteLine("Все нормально! ");
-                    break;
-
-                default:
-
-                    return 0;
-            }
-
-            _startDateTime = DateTime.Now;
-//            bool _isTestRunSourse = true;
-            while (_timeWait < 120)
-            {
-                List<string> _newFiles = newFileDirCLF();
-                if (_newFiles.Count() > 0)
-                {//  Есть новые файлы
-                    _startConvert(_newFiles);
-                    _startDateTime = DateTime.Now;
-                }
-                else 
+                switch (_runTestStartProcess())
                 {
-                    int _countWorkClf = _newFileWorkDir().Count;
-                    //  Есть данные уйти на повторение
-                    if (_countWorkClf > 0 && _config.IsRun.IsRename)
-                        continue;
+                    case 0:
+                        Console.WriteLine("Error  - 0");
+                        ErrorRun = 0;
+                        return;
 
-//                    if ((!(_config.IsRun.IsSource || _config.IsRun.IsRename)) && _countWorkClf==0)
-                    //  процессы не работают файлов нет
-//                        return 1;
+                    case < 0:
+                        Console.WriteLine("Error  -1");
+                        ErrorRun = -1;
+                        return;
 
-                    if(_countWorkClf==0 && !_config.IsRun.IsSource && !_config.IsRun.IsRename)
-                        // Новых файдов нет CLF в корневом нет
-                        //  _config.IsRun.IsSource, _config.IsRun.IsRename - отработали
+                    case > 0:
+                        Console.WriteLine("Все нормально! ");
                         break;
 
-                    if(_countSourseFiles() <= 0 && _countWorkClf==0 && _config.IsRun.IsRename)
-                        _startDateTime = DateTime.Now;
+                    default:
+                        ErrorRun = 0;
+                        return;
                 }
-            }
-            int dd = 1;
-            return 1;
+
+                _startDateTime = DateTime.Now;
+                //            bool _isTestRunSourse = true;
+                while (_timeWait < 120)
+                {
+                    List<string> _newFiles = newFileDirCLF();
+                    if (_newFiles.Count() > 0)
+                    {//  Есть новые файлы
+                        _startConvert(_newFiles);
+                        //                    await Task.Delay(250);
+                        _startDateTime = DateTime.Now;
+
+                        continue;
+                    }
+                    await Task.Delay(250);
+                    if(compareFilesClf()<=0)
+                    {
+                        int _countWorkClf = _newFileWorkDir().Count;
+                        //  Есть данные уйти на повторение
+                        if (_countWorkClf > 0 && _config.IsRun.IsRename)
+                            continue;
+
+                        //                    if ((!(_config.IsRun.IsSource || _config.IsRun.IsRename)) && _countWorkClf==0)
+                        //  процессы не работают файлов нет
+                        //                        return 1;
+
+                        if (_countWorkClf == 0 && !_config.IsRun.IsSource && !_config.IsRun.IsRename)
+                            // Новых файдов нет CLF в корневом нет
+                            //  _config.IsRun.IsSource, _config.IsRun.IsRename - отработали
+                            break;
+
+                        if (_countSourseFiles() <= 0 && _countWorkClf == 0 && _config.IsRun.IsRename)
+                            _startDateTime = DateTime.Now;
+                    }
+                }
+
+                foreach (var item in _dirClfRun)
+                {
+                    item.Value.Wait();
+                }
+
+            });
+
+            //            ErrorRun = 1;
+            //            return;
+            
         }
 
         private void _startConvert(List<string> newFiles)
         {
+            _newFiles = new List<string>(newFiles);
             foreach (var item in newFiles)
             {
                 if (_dirClfRun.ContainsKey(item))
                     continue;
-                //                ThreadPool.QueueUserWorkItem((object info) => 
-                //                {
-                //Mlserver
+
+                Task _tast = Task.Factory.StartNew((object info1) => 
+                {
                     Directory.SetCurrentDirectory(_config.MPath.Mlserver);
                     var dir_ = Directory.GetCurrentDirectory();
 
-                    string _file = _config.MPath.Clf + "\\" + item;
+                    string _file = _config.MPath.Clf + "\\" + (string)info1;
                     string _maska = _commandExport.Replace("file_clf", _file);
                     _maska = _maska.Replace("my_dir", _outDir);
-//                    Console.WriteLine(_maska);
                     RunCLexport _runCLexport = new RunCLexport(_config.MPath.CLexport, _maska, "");
                     _runCLexport.Run();
-  //              }, item);
-                _dirClfRun.AddOrUpdate(item, true, (_, _) => true);
+                }, item);
+//                var xx = ThreadPool.QueueUserWorkItem((object info) => 
+//                {                //Mlserver
+//                }, item);
+
+                _dirClfRun.AddOrUpdate(item, _tast, (_, _) => _tast);
             }
         }
 
+        private int compareFilesClf()
+        {
+            var Countfiles = Directory.GetFiles(_config.MPath.Clf, "*.clf")
+                        .Where(x => Regex.Matches(x, _patternFile, RegexOptions.IgnoreCase).Count == 1)
+                        .Select(z => Path.GetFileName(z))
+                        .ToList().Count;
+            var _x = _dirClfRun.Count();
+
+            return Countfiles > _x ? 1 : Countfiles == _x ? 0 : -1;
+        }
         private List<string> newFileDirCLF()
         {
             var files = Directory.GetFiles(_config.MPath.Clf, "*.clf")

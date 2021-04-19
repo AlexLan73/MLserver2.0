@@ -66,8 +66,13 @@ namespace MLServer_2._0.Moduls
 
             string _lrd = " -S 20 -L 512 -n -k -v -i ";
             string _mdf = " -v -~ -o -t -l \"file_clf\" -MB -O  \"my_dir\" SystemChannel=Binlog_GL.ini";
+
+            ConcurrentDictionary<string, string> _mdf0 = new();
+            _mdf0.AddOrUpdate("commanda", _mdf, (_, _) => _mdf);
+            _mdf0.AddOrUpdate("ext", "mdf", (_, _) => "mdf");
+
             _config.BasaParams.AddOrUpdate("lrf_dec", _lrd, (_, _) => _lrd);
-            _config.ClexportParams.AddOrUpdate("MDF", _mdf, (_, _) => _mdf);
+            _config.ClexportParams.AddOrUpdate("MDF", _mdf0, (_, _) => _mdf0);
         }
 
         public bool RunClr()

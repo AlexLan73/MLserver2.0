@@ -13,11 +13,13 @@
 
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using MLServer_2._0.Logger;
 using MLServer_2._0.Moduls;
 using MLServer_2._0.Moduls.Config;
 using MLServer_2._0.Moduls.Error;
+using MLServer_2._0.Moduls.Export;
 using static System.Console;
 
 namespace MLServer_2._0
@@ -69,6 +71,11 @@ namespace MLServer_2._0
             SetupParam _setupParam = new(ref _config, _logger, _jsonBasa);
 //            var _mpathTask = Task<bool>.Factory.StartNew(_setupParam.IniciaPathJson);
             var z = _setupParam.IniciaPathJson();
+
+
+            SetNameTrigger _setNameTrigger = new SetNameTrigger(_logger, ref _config, "MDF");
+            _setNameTrigger.Run();
+            Thread.Sleep(6000);
 
 
             if (_inputArguments.DArgs.ContainsKey("RenameDir"))
@@ -124,6 +131,7 @@ namespace MLServer_2._0
                     && File.Exists(_config.MPath.WorkDir + "\\DbConfig.json"))
                 {
                     ConverExport _converExport = new ConverExport(_logger, ref _config);
+                    _converExport.Run();
 
                 }
                 else

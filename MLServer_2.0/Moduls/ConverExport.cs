@@ -36,8 +36,8 @@ namespace MLServer_2._0.Moduls
         private string _commandExport;
         private readonly string _patternFile;
         private ConcurrentDictionary<string, OneExport> _allRun;
+//        private ConcurrentDictionary<string, Task<int>> _allRun;
         private ConcurrentDictionary<string, bool> _dirClfRun;
-        private Barrier _barrier;
 
         #endregion
         public ConverExport(ILogger ilogger, ref Config0 config)
@@ -47,9 +47,10 @@ namespace MLServer_2._0.Moduls
             _patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\).clf";
             _dirClfRun = new ConcurrentDictionary<string, bool>();
             _allRun = new ConcurrentDictionary<string, OneExport>();
+//            _allRun = new ConcurrentDictionary<string, Task<int>>();
 
-
-            Run();
+            //  вызвать по Task
+//            Run();
 
 
 //            _lTypePath = new ConcurrentDictionary<string, string>();
@@ -60,16 +61,25 @@ namespace MLServer_2._0.Moduls
 
         public void Run()
         {
-            _barrier = new Barrier(_config.ClexportParams.Count + 1);
+//            _mdf0.AddOrUpdate("commanda", _mdf, (_, _) => _mdf);
+//            _mdf0.AddOrUpdate("ext", "mdf", (_, _) => "mdf");
+
             foreach (var item in _config.ClexportParams)
             {
-                _allRun.AddOrUpdate(item.Key, new OneExport(_iLogger, ref _config, (item.Key, item.Value))
-                    , (_, _) => new OneExport(_iLogger, ref _config, (item.Key, item.Value)));
+                _allRun.AddOrUpdate(item.Key, new OneExport(_iLogger, ref _config, (item.Key, item.Value["commanda"], item.Value["ext"]))
+                    , (_, _) => new OneExport(_iLogger, ref _config, (item.Key, item.Value["commanda"], item.Value["ext"])));
 
-                Task.Factory.StartNew(()=> _allRun[item.Key].Run(_barrier));
+                _allRun[item.Key].Run();
             }
 
-            _barrier.SignalAndWait();
+
+            foreach (var item in _allRun)
+            {
+                item.Value.TaskRun.Wait();
+            }
+
+
+
         }
         private void copy_siglog()
         {   //  copy_siglog_vsysvar

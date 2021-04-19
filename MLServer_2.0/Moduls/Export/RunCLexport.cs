@@ -18,9 +18,6 @@ namespace MLServer_2._0.Moduls.Export
         public RunCLexport(string exefile, string filenamr, string command)
                 :base(exefile, filenamr, command)
         {
-//            Console.WriteLine($" 1.  {exefile}");
-//            Console.WriteLine($" 2.  {filenamr}");
-//            Console.WriteLine($" 3.  {command}");
             _nameFile = filenamr;
         }
 
@@ -34,7 +31,6 @@ namespace MLServer_2._0.Moduls.Export
             {
                 Console.WriteLine(" !!!  Бардак!! ");
             }
-
 
             if (result.CodeError == 0) return false;
 
