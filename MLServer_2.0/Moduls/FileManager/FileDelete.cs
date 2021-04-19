@@ -1,0 +1,121 @@
+﻿using MLServer_2._0.Moduls.Config;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace MLServer_2._0.Moduls.FileManager
+{
+    public class FileDelete : AFileSystemBasa<TypeDanFromFile0>
+    {
+        private readonly Config0 _config;
+        private readonly string _workDir;
+        private bool _isExitRepitFilesNameQueue;
+        public FileDelete(ref Config0 config)
+        {
+            _config = config;
+            _workDir = _config.MPath.WorkDir; 
+            _isExitRepitFilesNameQueue = false;
+            FilesNameQueue = new System.Collections.Concurrent.ConcurrentQueue<TypeDanFromFile0>();
+            ctTokenRepitExit = tokenRepitExit.Token;
+        }
+
+        public void Add(string namefile0)
+        {
+            TypeDanFromFile0 dan = new TypeDanFromFile0(_workDir +"\\" +namefile0);
+            FilesNameQueue.Enqueue(dan);
+        }
+        public override void CallBackQueue(TypeDanFromFile0 dan)
+        {
+            dan.CalcSecDateTime();
+            dan.IsStartTest = _isExitRepitFilesNameQueue;
+            if (dan.IsRun)
+                return;
+            FilesNameQueue.Enqueue(dan);
+        }
+
+        private void DeleteDirsSourse()
+        {
+            foreach (var (item1, item2) in Directory.GetDirectories(_config.MPath.WorkDir, "!D*")
+                .Select(item => ((string, int))new(item, Directory.GetFiles(item, "D?F*.").Count()))
+                .ToList())
+            {
+
+                if (item2 != 0) continue;
+                try
+                {
+                    Directory.Delete(item1, true);
+                }
+                catch (Exception) { /*Console.WriteLine(e);*/  }
+            }
+        }
+
+        public void Run()
+        {
+            MyTask = Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    Thread.Sleep(1000);
+
+                    while (GetCountFilesNameQueue() > 0)
+                    {
+                        TypeDanFromFile0 _value;
+                        FilesNameQueue.TryDequeue(out _value);
+                        if (_value != null)
+                        {
+                            try
+                            {
+                                if (ctTokenRepitExit.IsCancellationRequested)
+                                    ctTokenRepitExit.ThrowIfCancellationRequested();
+                            }
+                            catch (Exception)
+                            {
+                                break;
+                            }
+
+                            RunCommand(() => { File.Delete(_value.NameFile0); }, _value);
+                        }
+
+                        DeleteDirsSourse();
+                    }
+                }
+            });
+        }
+        public int GetCountFilesName() => FilesNameQueue != null ? FilesNameQueue.Count : 0;
+        public void SetExitRepit()
+        {
+            _isExitRepitFilesNameQueue = true;
+        }
+    }
+}
+
+/*
+ 
+       public async void TestQueue()
+        {
+            bool _isRun = true;
+            while (_isRun)
+            {
+                var xx = FilesNameQueue.ToList().Where(x => x.Count > 3 | x.SecWait > 60).Select(x => (x.NameFile0, x.Count, x.SecWait));
+                Console.WriteLine($" count {FilesNameQueue.Count}    --------------------------------------------------");
+                foreach (var item in xx)
+                {
+                    Console.WriteLine($" path-> {item.NameFile0}  Count {item.Count} , SecWait {item.SecWait}");
+                }
+                Thread.Sleep(500);
+                Console.WriteLine("  цикл TestQueue ожидаем ");
+                try
+                {
+                    if (ctTokenRepitExit.IsCancellationRequested)
+                        ctTokenRepitExit.ThrowIfCancellationRequested();
+                }
+                catch (Exception)
+                {
+                    break;
+                }
+            }
+        }
+ 
+ */
