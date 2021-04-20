@@ -160,6 +160,10 @@ namespace MLServer_2._0.Moduls.ClfFileType
                     memoryInfo = new MemoryInfo(memory[i], start[i], end[i]);
 
                 _memInfo.AddOrUpdate(memory[i], memoryInfo, (_, _) => memoryInfo);
+
+                string fMem =( newFileName.ToLower().Contains("_m2_")? "M2_" : "M1_") + memoryInfo.FMemory;
+
+                _config.FMem.AddOrUpdate(fMem, memoryInfo, (_, _) => memoryInfo);
             }
 
             _config.FileMemInfo.AddOrUpdate(newFileName, _memInfo, (_, _) => _memInfo);

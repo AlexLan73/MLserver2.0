@@ -25,6 +25,7 @@ namespace MLServer_2._0.Moduls.Config
 
         public TypeDStringMemoryInfo FileMemInfo;
         public ConcurrentDictionary<string, ConcurrentDictionary<string, MemoryInfo>> DbConfig;
+        public ConcurrentDictionary<string, MemoryInfo> FMem { get; set; }
 
         public string SiglogFileInfo { get; set; }
         public string VSysVarPath { get; set; }
@@ -43,6 +44,7 @@ namespace MLServer_2._0.Moduls.Config
             DateTimeTrigger = new List<DanTriggerTime>();
             NameTrigger = new ConcurrentDictionary<string, string>();
             FileMemInfo = new TypeDStringMemoryInfo();
+            FMem = new ConcurrentDictionary<string, MemoryInfo>();
             DbConfig = new();
             Time1Sec += Config0_Time1Sec;
 

@@ -61,9 +61,10 @@ namespace MLServer_2._0.Moduls
 
         public void Run()
         {
-//            _mdf0.AddOrUpdate("commanda", _mdf, (_, _) => _mdf);
-//            _mdf0.AddOrUpdate("ext", "mdf", (_, _) => "mdf");
+            //            _mdf0.AddOrUpdate("commanda", _mdf, (_, _) => _mdf);
+            //            _mdf0.AddOrUpdate("ext", "mdf", (_, _) => "mdf");
 
+            copy_siglog();
             foreach (var item in _config.ClexportParams)
             {
                 _allRun.AddOrUpdate(item.Key, new OneExport(_iLogger, ref _config, (item.Key, item.Value["commanda"], item.Value["ext"]))
@@ -106,6 +107,17 @@ namespace MLServer_2._0.Moduls
             foreach (var (key, val) in _config.ClexportParams)
             {
                 string _pathConvert = _config.MPath.OutputDir + "\\" + key;
+                try
+                {
+                    Directory.Delete(_pathConvert, true);
+                }
+                catch (Exception e)
+                {
+                    var xx = e;
+                    // ignor
+                }
+                
+
                 DirectoryInfo dirInfo = new(_pathConvert);
                 if (!dirInfo.Exists)
                         dirInfo.Create();

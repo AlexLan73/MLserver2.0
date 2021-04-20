@@ -73,9 +73,10 @@ namespace MLServer_2._0
             var z = _setupParam.IniciaPathJson();
 
 
-            SetNameTrigger _setNameTrigger = new SetNameTrigger(_logger, ref _config, "MDF");
-            _setNameTrigger.Run();
-            Thread.Sleep(6000);
+ //           SetNameTrigger _setNameTrigger = new SetNameTrigger(_logger, ref _config, "MDF");
+//            var _wait = _setNameTrigger.Run();
+//            _wait.Wait();
+//            Thread.Sleep(6000);
 
 
             if (_inputArguments.DArgs.ContainsKey("RenameDir"))
@@ -125,20 +126,32 @@ namespace MLServer_2._0
                 }
                 //  Существует каталог CLF с файлами + налисие файла файла DbConfig.json 
                 //  Нет clf файлов в корневом каталоге
-                else if (Directory.Exists(_config.MPath.Clf) 
-                    && (Directory.GetFiles(_config.MPath.Clf, "*.clf").Length > 0)
-                    && (Directory.GetFiles(_config.MPath.WorkDir, "*.clf").Length == 0)
-                    && File.Exists(_config.MPath.WorkDir + "\\DbConfig.json"))
-                {
-                    ConverExport _converExport = new ConverExport(_logger, ref _config);
-                    _converExport.Run();
-
-                }
                 else
-                {
-                    //  стандартный запуск
 
-                }
+                    if (File.Exists(_inputArguments.DArgs["WorkDir"] + "\\clf.json"))
+                        File.Delete(_inputArguments.DArgs["WorkDir"] + "\\clf.json");
+
+                if (!File.Exists(_inputArguments.DArgs["WorkDir"]+ "\\DbConfig.json"))
+                    {
+                        ConvertOne _convertOne = new(_logger, ref _config, _jsonBasa);
+                        _convertOne.Run();
+
+                    }
+    
+                    if (Directory.Exists(_config.MPath.Clf) 
+                        && (Directory.GetFiles(_config.MPath.Clf, "*.clf").Length > 0)
+                        && (Directory.GetFiles(_config.MPath.WorkDir, "*.clf").Length == 0)
+                        && File.Exists(_config.MPath.WorkDir + "\\DbConfig.json"))
+                    {
+                        ConverExport _converExport = new ConverExport(_logger, ref _config);
+                        _converExport.Run();
+
+                    }
+                    else
+                    {
+                        //  стандартный запуск
+
+                    }
 
             }
 

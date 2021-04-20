@@ -31,6 +31,9 @@ namespace MLServer_2._0.Moduls.Export
         private List<string> _newFiles;
         public int ErrorRun { get; private set; } = 0;
         public Task TaskRun { get; set; } = null;
+        private SetNameTrigger _setNameTrigger;
+        private Task _waitNameTrigger=null;
+        private string _ext;
         #endregion
 
         #region Constructor
@@ -40,6 +43,7 @@ namespace MLServer_2._0.Moduls.Export
             _config = config;
             _typeExport = typeExport.Item1;
             _commandExport = typeExport.Item2;
+            _ext = typeExport.Item3;
             _outDir = _config.MPath.OutputDir + "\\" + _typeExport;
 
             _patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\).clf";
@@ -49,6 +53,9 @@ namespace MLServer_2._0.Moduls.Export
             _timeComp = 60;                             // о
             _startDateTime = DateTime.Now;
             _newFiles = new List<string>();
+
+           
+
         }
 
         private void _config_Time1Sec(object sender, EventArgs e)
@@ -118,6 +125,8 @@ namespace MLServer_2._0.Moduls.Export
         {
             TaskRun = Task.Run(async ()=> 
             {
+                _config.IsRun.IsExport = false;
+
                 switch (_runTestStartProcess())
                 {
                     case 0:
@@ -139,8 +148,14 @@ namespace MLServer_2._0.Moduls.Export
                         return;
                 }
 
+                _config.IsRun.IsExport = true;
+
+                _setNameTrigger = new SetNameTrigger(_iLogger, ref _config, _ext);
+                _waitNameTrigger = _setNameTrigger.Run();
+
                 _startDateTime = DateTime.Now;
                 //            bool _isTestRunSourse = true;
+
                 while (_timeWait < 120)
                 {
                     List<string> _newFiles = newFileDirCLF();
@@ -179,11 +194,11 @@ namespace MLServer_2._0.Moduls.Export
                     item.Value.Wait();
                 }
 
-            });
+                _config.IsRun.IsExport = false;
 
-            //            ErrorRun = 1;
-            //            return;
-            
+  
+                _waitNameTrigger?.Wait();
+            });
         }
 
         private void _startConvert(List<string> newFiles)

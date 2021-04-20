@@ -45,14 +45,24 @@ namespace MLServer_2._0.Moduls.FileManager
                     {
                         TypeDanFromFile1 _value;
                         FilesNameQueue.TryDequeue(out _value);
+
                         if (_value != null)
                         {
+                            if (!File.Exists(_value.NameFile0))
+                                continue;
+
+                            Console.WriteLine($" ==--> {_value.NameFile0} ");
+
                             try
                             {
                                 if (ctTokenRepitExit.IsCancellationRequested) ctTokenRepitExit.ThrowIfCancellationRequested();
                             }
-                            catch (Exception) { break; }
-                            RunCommand(() => { File.Move(_value.NameFile0, _value.NameFile1, true); }, _value);
+                            catch (Exception) 
+                            { 
+                                break; 
+                            }
+                            RunCommand(() => { 
+                                File.Move(_value.NameFile0, _value.NameFile1, true); }, _value);
                         }
                     }
                 }

@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MLServer_2._0.Moduls.ClfFileType
 {
@@ -26,5 +27,19 @@ namespace MLServer_2._0.Moduls.ClfFileType
             End = end;
             TriggerInfo = new List<DanTriggerTime>();
         }
+
+        public string GetNameTrigger()
+        {
+            if (TriggerInfo.Count <= 0)
+                return "";
+
+            string s = "_(x)";
+            string s0 = "";
+            foreach (var item in TriggerInfo.Select(x => x.Trigger.Split(" ")[1]).ToList().Distinct().ToArray())
+                s0 += s.Replace("x", item);
+
+            return s0.Length > 0 ? "_Trigger" + s0 : "";
+        }
+
     }
 }
