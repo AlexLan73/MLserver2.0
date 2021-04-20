@@ -116,12 +116,6 @@ namespace MLServer_2._0.Moduls.Export
                     string _m2fmem = "M2_" + _file1[0];
                     if (_config.FMem.ContainsKey(_m2fmem))
                         _fnum = _config.FMem[_m2fmem].GetNameTrigger();
-//                    else
-//                        Console.WriteLine("нет -!-!-!-!-!-!-!-!-!-!!  **********************************************");
-//                    if (_mem1.ContainsKey(_file1[0]))
-//                        _fnum = _mem1[_file1[0]];
-//                    else
-//                        Console.WriteLine("нет -!-!-!-!-!-!-!-!-!-!!  **********************************************");
                     string s0 = _file0 + _file1[0] + _fnum +"."+ _file1[1];
                     _renameFile.Add(item, s0);
 
