@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using MLServer_2._0.Logger;
 using MLServer_2._0.Moduls.Error;
 using Newtonsoft.Json;
@@ -36,7 +35,6 @@ namespace MLServer_2._0.Moduls.Config
         private const string Clexport = "clexport";
         private const string Lrfdec = "lrf_dec";
         private const string Error = "error";
-        private const string NameModulConfig = "Модуль ConfigProgramm->Iniciall ";
         private readonly Config0 _config;
 
         private readonly string[] _fieldes = new[] { CarName, Clexport, Error };
@@ -44,11 +42,11 @@ namespace MLServer_2._0.Moduls.Config
         private ConcurrentDictionary<string, ConcurrentDictionary<string, string>> ClexportParams { get; set; }
 
         private readonly CarNameParams _carParams = new();
-        private List<string> _lErrorConvert = new();
+        private  List<string> _lErrorConvert;
         public MlServerJson( ref Config0 config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Обработка файла MlServerJson"));
-
+            _lErrorConvert = new();
             BasaParams = new ConcurrentDictionary<string, string>();
             ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>();
 
@@ -121,12 +119,11 @@ namespace MLServer_2._0.Moduls.Config
                             if (x0 != null)
                                 foreach (var item1 in x0)
                                 {
-                                    string _name = ((JProperty)item1).Name;
-                                    var _zz1 = ((JProperty)item1).Value;
+                                    var name = ((JProperty)item1).Name;
                                     var _zz2 = (((JProperty)item1).Value).ToString();
-                                    Dictionary<string, string> htmlAttributes = JsonConvert.DeserializeObject<Dictionary<string, string>>(_zz2);
-                                    ConcurrentDictionary<string, string> xx = new ConcurrentDictionary<string, string>(htmlAttributes);
-                                    ClexportParams.AddOrUpdate(_name, xx, (_, _) => xx);
+                                    var htmlAttributes = JsonConvert.DeserializeObject<Dictionary<string, string>>(_zz2);
+                                    var xx = new ConcurrentDictionary<string, string>(htmlAttributes);
+                                    ClexportParams.AddOrUpdate(name, xx, (_, _) => xx);
                                 }
                         }
 
@@ -151,13 +148,12 @@ namespace MLServer_2._0.Moduls.Config
 
             foreach (JToken item in clexportLs)
             {
-                string _name = ((JProperty)item).Name;
-                var _zz1 = ((JProperty)item).Value;
-                var _zz2 = (((JProperty)item).Value).ToString();
-                Dictionary<string, string> htmlAttributes = JsonConvert.DeserializeObject<Dictionary<string, string>>(_zz2);
-                ConcurrentDictionary<string, string> xx = new ConcurrentDictionary<string, string>(htmlAttributes);
+                var name = ((JProperty)item).Name;
+                var zz2 = (((JProperty)item).Value).ToString();
+                var htmlAttributes = JsonConvert.DeserializeObject<Dictionary<string, string>>(zz2);
+                var xx = new ConcurrentDictionary<string, string>(htmlAttributes);
 
-                ClexportParams.AddOrUpdate(_name, xx, (_, _) => xx);
+                ClexportParams.AddOrUpdate(name, xx, (_, _) => xx);
             }
         }
 
@@ -194,21 +190,16 @@ namespace MLServer_2._0.Moduls.Config
             }
 
             if (ClexportParams.IsEmpty)
-            {
                 _ = ErrorBasa.FError(-272, _config.MPath.MlServerJson);
-                return;
-            }
             else
-            {
                 ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>(ClexportParams);
-            }
         }
         public void IniciallMLServer(string namecar="")
         {
             if (FormDanJson(_config.MPath.MlServerJson))
             {
-                var __error = ErrorBasa.FError(-27, _config.MPath.MlServerJson);
-                __error.Wait();
+                var error = ErrorBasa.FError(-27, _config.MPath.MlServerJson);
+                error.Wait();
                 return;
             }
 

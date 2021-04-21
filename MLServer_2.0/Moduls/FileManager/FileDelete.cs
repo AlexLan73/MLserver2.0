@@ -18,7 +18,7 @@ namespace MLServer_2._0.Moduls.FileManager
             _workDir = _config.MPath.WorkDir; 
             _isExitRepitFilesNameQueue = false;
             FilesNameQueue = new System.Collections.Concurrent.ConcurrentQueue<TypeDanFromFile0>();
-            ctTokenRepitExit = tokenRepitExit.Token;
+            CtTokenRepitExit = TokenRepitExit.Token;
         }
 
         public void Add(string namefile0)
@@ -67,8 +67,8 @@ namespace MLServer_2._0.Moduls.FileManager
                         {
                             try
                             {
-                                if (ctTokenRepitExit.IsCancellationRequested)
-                                    ctTokenRepitExit.ThrowIfCancellationRequested();
+                                if (CtTokenRepitExit.IsCancellationRequested)
+                                    CtTokenRepitExit.ThrowIfCancellationRequested();
                             }
                             catch (Exception)
                             {
@@ -91,31 +91,3 @@ namespace MLServer_2._0.Moduls.FileManager
     }
 }
 
-/*
- 
-       public async void TestQueue()
-        {
-            bool _isRun = true;
-            while (_isRun)
-            {
-                var xx = FilesNameQueue.ToList().Where(x => x.Count > 3 | x.SecWait > 60).Select(x => (x.NameFile0, x.Count, x.SecWait));
-                Console.WriteLine($" count {FilesNameQueue.Count}    --------------------------------------------------");
-                foreach (var item in xx)
-                {
-                    Console.WriteLine($" path-> {item.NameFile0}  Count {item.Count} , SecWait {item.SecWait}");
-                }
-                Thread.Sleep(500);
-                Console.WriteLine("  цикл TestQueue ожидаем ");
-                try
-                {
-                    if (ctTokenRepitExit.IsCancellationRequested)
-                        ctTokenRepitExit.ThrowIfCancellationRequested();
-                }
-                catch (Exception)
-                {
-                    break;
-                }
-            }
-        }
- 
- */

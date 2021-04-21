@@ -12,11 +12,6 @@ namespace MLServer_2._0.Moduls.Config
             IsExport = false;
             IsExportRename = false;
         }
-        public IsRun(bool issource, bool isclr)
-        {
-            IsSource = issource;
-            IsClr = isclr;
-        }
         public bool IsSource { get; set; }
         public bool IsClr { get; set; }
         public bool IsRename { get; set; }

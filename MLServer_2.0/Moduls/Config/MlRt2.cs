@@ -24,7 +24,9 @@ namespace MLServer_2._0.Moduls.Config
 
             if (result)  return true;
 
-            string ConvTriger(string s) => (s.Contains("Trigger")) ? "Trigger " + s.Replace("Trigger", "") : s;
+            string ConvTriger(string s) => (s.Contains("Trigger")) 
+                                                ? "Trigger " + s.Replace("Trigger", "") 
+                                                : s;
 
             var dan = Fields.Select(item => Ldata.FindAll(x => x.ToLower().Contains(item))).ToList();
 
@@ -56,7 +58,7 @@ namespace MLServer_2._0.Moduls.Config
                 }
             }
 
-            foreach ((var key, var val) in Data)
+            foreach (var (key, val) in Data)
                 Config.Fields.AddOrUpdate(key, val, (_, _) => val);
 
             Config.NameTrigger = new ConcurrentDictionary<string, string>(NameTrigger);

@@ -5,7 +5,6 @@ namespace MLServer_2._0.Logger
 {
     public interface ILogger
     {
-//        public void AddLoggerInfoAsync(LoggerEvent e);
         public void SetExitProgrammAsync();
         public void SetRun(bool t);
         public void Dispose();

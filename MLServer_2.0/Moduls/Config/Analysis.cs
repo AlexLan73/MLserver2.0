@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
-using System.Threading.Tasks;
-using MLServer_2._0.Interface.Config;
 using MLServer_2._0.Logger;
 
 namespace MLServer_2._0.Moduls.Config
@@ -20,7 +17,6 @@ namespace MLServer_2._0.Moduls.Config
         public Analysis(ref Config0 config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class Analysis"));
-
             _config = config;
             RezDirAnalis = "";
         }
@@ -30,9 +26,11 @@ namespace MLServer_2._0.Moduls.Config
 
             var filenameOld = filename.Split("_#")[0];
 
-            var compilationtimestamp = _config.Fields.ContainsKey("compilationtimestamp") ? _config.Fields["compilationtimestamp"] : "";
+            var compilationtimestamp = _config.Fields.ContainsKey("compilationtimestamp") 
+                                                        ? _config.Fields["compilationtimestamp"] 
+                                                        : "";
 
-            string pathBasa = _config.MPath.Common + "\\Configuration\\" + filenameOld;
+            var pathBasa = _config.MPath.Common + "\\Configuration\\" + filenameOld;
 
             if (compilationtimestamp != "")
                 RezDirAnalis = FindDirectAnalis(pathBasa, _dirs, filename, compilationtimestamp);
@@ -44,15 +42,12 @@ namespace MLServer_2._0.Moduls.Config
                     RezDirAnalis = _findDirectAnalis(allfiles[0].Split(".zip")[0]);
             }
 
-            if (RezDirAnalis != "")
-            {
+            if (RezDirAnalis == "") return "";
 
-                _ = LoggerManager.AddLoggerAsync
-                            (new LoggerEvent(EnumError.Info, $"Конфигурацию берем из {RezDirAnalis}", EnumLogger.Monitor));
+            _ = LoggerManager.AddLoggerAsync
+                (new LoggerEvent(EnumError.Info, $"Конфигурацию берем из {RezDirAnalis}", EnumLogger.Monitor));
 
-                return RezDirAnalis;
-            }
-            return "";
+            return RezDirAnalis;
         }
 
         private string _findDirectAnalis(string pathAnalis)
@@ -74,7 +69,7 @@ namespace MLServer_2._0.Moduls.Config
             return "";
         }
 
-        private string FindDirectAnalis(string pathBasa, string[] dirs, string filename, string compilationtimestamp)
+        private string FindDirectAnalis(string pathBasa, IEnumerable<string> dirs, string filename, string compilationtimestamp)
         {
             var sdt = DateTime.ParseExact(compilationtimestamp, "dd.MM.yyyy HH:mm:ss",
                             CultureInfo.InvariantCulture).ToString("yyyy-MM-dd_HH-mm-ss");

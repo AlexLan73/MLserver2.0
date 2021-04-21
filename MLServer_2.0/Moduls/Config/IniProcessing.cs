@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using MLServer_2._0.Interface.Config;
-using MLServer_2._0.Logger;
 using MLServer_2._0.Moduls.Error;
 
 namespace MLServer_2._0.Moduls.Config
 {
     public class IniProcessing : IIniProcessing
     {
-
         #region Data
         public Dictionary<string, string> Data { get; set; }
         public string[] Fields { get; set; }
@@ -20,6 +17,7 @@ namespace MLServer_2._0.Moduls.Config
         public Config0 Config { get; set; }
         #endregion
 
+        #region construct
         public IniProcessing(string filename, string[] fields, ref Config0 config)
         {
             Fields = fields;
@@ -39,7 +37,9 @@ namespace MLServer_2._0.Moduls.Config
             Data = new Dictionary<string, string>();
             Config = config;
         }
+        #endregion
 
+        #region convert
         public virtual bool Convert()
         {
             var dan = Fields.Select(item => Ldata.Find(x => x.ToLower().Contains(item))).ToList();
@@ -51,12 +51,15 @@ namespace MLServer_2._0.Moduls.Config
                 _ = ErrorBasa.FError(-211);
             return false;
         }
+        #endregion
+
+        #region Read File
         public bool ReadIni()
         {
             if (!File.Exists(Filename))
             {
-                var __error = ErrorBasa.FError(-20, Filename);
-                __error.Wait();
+                var error = ErrorBasa.FError(-20, Filename);
+                error.Wait();
                 return true;
             }
 
@@ -68,6 +71,7 @@ namespace MLServer_2._0.Moduls.Config
             }
             return false;
         }
+        #endregion
 
     }
 }

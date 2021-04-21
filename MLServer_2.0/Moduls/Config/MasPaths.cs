@@ -2,12 +2,12 @@
 using MLServer_2._0.Logger;
 using MLServer_2._0.Moduls.Error;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace MLServer_2._0.Moduls.Config
 {
     public class MasPaths : IMasPaths
     {
+        #region data
         public string Common { get; set; }
         public string Dll {
                             get => Common != "" ? Common + "\\DLL\\" : "";
@@ -32,7 +32,6 @@ namespace MLServer_2._0.Moduls.Config
                                 get => Common != "" ? Dll + "lrf_dec.exe" : "";
                                 set => _ = value;
                             }
-
         public string FileType
                             {
                                 get => Common != "" ? Dll + "fileType.exe" : "";
@@ -43,7 +42,6 @@ namespace MLServer_2._0.Moduls.Config
             get => Common != "" ? Mlserver + "CLexport.exe" : "";
             set => _ = value;
         }
-
         public string Clf 
         {
             get => WorkDir != "" ? WorkDir + "\\CLF" : "";
@@ -59,16 +57,15 @@ namespace MLServer_2._0.Moduls.Config
             get => WorkDir != "" ? WorkDir + "\\DbConfig.json" : "";
             set => _ = value;
         }
-
         public string ExeFile { get; set; }
         public string WorkDir { get; set; }
         public string OutputDir { get; set; }
         public string Analis { get; set; }
-//        private readonly ILogger _iLoger;
+        #endregion
 
-        public MasPaths(Dictionary<string, string> args)
+        #region construct
+        public MasPaths(IReadOnlyDictionary<string, string> args)
         {
-            //          _iLoger = iLoger;
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем класс MasPaths - конфиг. с путями"));
 
             ExeFile = args["ExeFile"];
@@ -79,15 +76,17 @@ namespace MLServer_2._0.Moduls.Config
         public MasPaths()
         {
         }
+        #endregion
 
+        #region FormPath
         public bool FormPath()
         {
             var findCommand = new FindCommand(ExeFile);
             var common = findCommand.FindCommon();
             if (common == "")
             {
-                var __error = ErrorBasa.FError(-24);
-                __error.Wait();
+                var error = ErrorBasa.FError(-24);
+                error.Wait();
                 return true;
             }
 
@@ -95,17 +94,8 @@ namespace MLServer_2._0.Moduls.Config
 
             Namesiglog = "siglog_config.ini";
             return false;
-
         }
+        #endregion
+
     }
 }
-
-/*
-             if (resul)
-            {
-                var __error = ErrorBasa.FError(2);
-                __error.Wait();
-            }
-
- 
- */

@@ -1,7 +1,6 @@
 ﻿using MLServer_2._0.Logger;
 using MLServer_2._0.Moduls.Error;
 using MLServer_2._0.Moduls.FileManager;
-using System;
 
 namespace MLServer_2._0.Moduls.Export
 {
@@ -20,15 +19,13 @@ namespace MLServer_2._0.Moduls.Export
         {
             var result = ExeInfo();
 
-            string _sWrite = $"  Код завершения программы {result.CodeError}  ";
-            Console.WriteLine(_sWrite);
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " RunCLexport =>  " + _sWrite));
+            var sWrite = $"  Код завершения программы {result.CodeError}  ";
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " RunCLexport =>  " + sWrite));
 
             if (result.CodeError != 0)
             {
-                _sWrite = " !!!  Бардак!! ";
-                Console.WriteLine(_sWrite);
-                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " RunCLexport =>  " + _sWrite));
+                sWrite = " !!!  Бардак!! ";
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " RunCLexport =>  " + sWrite));
             }
 
             if (result.CodeError == 0) return false;
@@ -39,7 +36,6 @@ namespace MLServer_2._0.Moduls.Export
         public override void CallBackFun(string line)
         {
             if (line.Length <= 0) return;
-            Console.WriteLine(line);
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " RunCLexport =>  " + line));
         }
 

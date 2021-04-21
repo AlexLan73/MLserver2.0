@@ -11,6 +11,7 @@
     {
         Info,
         Warning,
-        Error
+        Error,
+        DeskTop
     }
 }

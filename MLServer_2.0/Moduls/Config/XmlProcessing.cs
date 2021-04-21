@@ -28,9 +28,17 @@ namespace MLServer_2._0.Moduls.Config
             {
                 XmlDocument doc = new XmlDocument();
                 doc.Load(filename);
-                LXmld? rezultat = (from XmlNode elem in doc.SelectNodes(selectnodes)
-                                select elem.Cast<XmlNode>()
-                            .ToDictionary(elem1 => elem1.Name.ToLower(), elem1 => elem1.InnerText.ToLower())).ToList();
+
+//                var rezultat = (from XmlNode elem in doc.SelectNodes(selectnodes)
+//                    select elem.Cast<XmlNode>()
+//                        .ToDictionary(elem1 => elem1.Name.ToLower(), elem1 => elem1.InnerText.ToLower())).ToList();
+
+                var rezultat = new LXmld();
+                foreach (XmlNode elem in doc.SelectNodes(selectnodes)!)
+                {
+                    rezultat.Add(elem.Cast<XmlNode>()
+                        .ToDictionary(elem1 => elem1.Name.ToLower(), elem1 => elem1.InnerText.ToLower()));
+                }
 
                 if (rezultat.Count == 0)
                     return;
@@ -65,24 +73,3 @@ namespace MLServer_2._0.Moduls.Config
     }
 }
 
-
-/*
-             IList<Dictionary<string, string>> lDxml = (IList < Dictionary<string, string>>) _dGlobal.Analysis["ldxml"];
-            Dictionary<string, string> VSysVar = (Dictionary<string, string>)_dGlobal.Analysis["vsysvar"];
-            
-            foreach (var item0 in lDxml)
-            {
-                Console.WriteLine($" №{lDxml.IndexOf(item0)}  номер итерации ==== ");
-
-                foreach (var item1 in item0)
-                    Console.WriteLine($"  key {item1.Key}   val {item1.Value}");
-            }
-
-            Console.WriteLine(" значения VSysVar ");
-
-            foreach (var item1 in VSysVar)
-                    Console.WriteLine($"  key {item1.Key}   val {item1.Value}");
-
-
-
- */

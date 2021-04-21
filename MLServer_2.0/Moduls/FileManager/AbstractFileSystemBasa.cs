@@ -11,14 +11,14 @@ namespace MLServer_2._0.Moduls.FileManager
     {
         public ConcurrentQueue<T> FilesNameQueue;
 
-        protected int _repit;
-        protected int _compareSec;
+        protected int Repit;
+        protected int CompareSec;
         public Task MyTask { get; set; }
 
-        protected CancellationTokenSource tokenRepitExit = new();
-        protected CancellationToken ctTokenRepitExit = new();
+        protected CancellationTokenSource TokenRepitExit = new();
+        protected CancellationToken CtTokenRepitExit = new();
         public virtual void CallBackQueue(T dan) { }
-        public virtual void RunCommand(Action myfun, T _dan)
+        public virtual void RunCommand(Action myfun, T dan)
         {
             try
             {
@@ -26,11 +26,11 @@ namespace MLServer_2._0.Moduls.FileManager
             }
             catch (IOException)
             {
-                CallBackQueue(_dan);
+                CallBackQueue(dan);
             }
         }
 
-        public void AbortRepit() => tokenRepitExit.Cancel();
-        public int GetCountFilesNameQueue() => FilesNameQueue != null ? FilesNameQueue.Count() : 0;
+        public void AbortRepit() => TokenRepitExit.Cancel();
+        public int GetCountFilesNameQueue() => FilesNameQueue?.Count() ?? 0;
     }
 }

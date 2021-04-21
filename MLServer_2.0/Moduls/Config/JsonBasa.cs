@@ -1,5 +1,4 @@
-﻿using MLServer_2._0.Interface.Config;
-using MLServer_2._0.Logger;
+﻿using MLServer_2._0.Logger;
 using MLServer_2._0.Moduls.ClfFileType;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
@@ -17,7 +16,7 @@ namespace MLServer_2._0.Moduls.Config
     {
         #region data
         private readonly Config0 _config;
-        private static JsonBasa _jsonBasa = null;
+        private static JsonBasa _jsonBasa;
         #endregion
 
         #region Constructor
@@ -29,14 +28,18 @@ namespace MLServer_2._0.Moduls.Config
             _jsonBasa = this;
         }
         #endregion
+        
         #region Func -> ADD
-        public static async Task AddFileMemInfo(TypeDStringMemoryInfo1 fileMemInfo) => 
+        public static Task AddFileMemInfo(TypeDStringMemoryInfo1 fileMemInfo)
+        {
             ThreadPool.QueueUserWorkItem(_ =>
                     {
                         var d = new TypeDStringMemoryInfo1(fileMemInfo);
                         foreach (var (key, value) in d)
                             _jsonBasa._config.FileMemInfo.AddOrUpdate(key, value, (_, _) => value);
                     });
+            return Task.CompletedTask;
+        }
         #endregion
 
         #region Save File   
@@ -66,14 +69,12 @@ namespace MLServer_2._0.Moduls.Config
             if(File.Exists(_jsonBasa._config.MPath.DbConfig))
             {
                 var dbConfig = LoadFileJso<ConcurrentDictionary<string, ConcurrentDictionary<string, MemoryInfo>>>(_jsonBasa._config.MPath.DbConfig);
-                _jsonBasa._config.DbConfig = dbConfig == null
-                        ? new()
-                        : dbConfig;
+                _jsonBasa._config.DbConfig = dbConfig ?? new TypeDStringMemoryInfo1();
 
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Чтение данных из DbConfig.json"));
             }
             else
-                _jsonBasa._config.DbConfig = new();
+                _jsonBasa._config.DbConfig = new TypeDStringMemoryInfo1();
         }
         #endregion
 

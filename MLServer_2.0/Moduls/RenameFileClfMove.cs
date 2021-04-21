@@ -6,32 +6,31 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using MLServer_2._0.Logger;
-using MLServer_2._0.Interface.Config;
 
 namespace MLServer_2._0.Moduls
 {
     public class RenameFileClfMoveBasa
     {
-        protected Config0 _config;
+        protected Config0 Config;
         public RenameFileClfMoveBasa(ref Config0 config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class RenameFileClfMoveBasa"));
-            _config = config;
+            Config = config;
     }
 
         public virtual bool GetReturn()
         {
-            return Directory.GetFiles(_config.MPath.WorkDir, "*.clf").Length <= 0;
+            return Directory.GetFiles(Config.MPath.WorkDir, "*.clf").Length <= 0;
         }
 
         public bool Run()
         {
-            var nameFileClf = Directory.GetFiles(_config.MPath.WorkDir, "*.clf");
+            string[] nameFileClf;
             if (GetReturn())
                 return false;
 
-            _config.IsRun.IsRename = true;
-            var renameFile = new FileMove(_config.MPath.WorkDir, _config.MPath.Clf);
+            Config.IsRun.IsRename = true;
+            var renameFile = new FileMove(Config.MPath.WorkDir, Config.MPath.Clf);
             renameFile.Run();
 
             List<ClfFileInfo> taskClfInfo = new();
@@ -39,7 +38,7 @@ namespace MLServer_2._0.Moduls
 
             while (true)
             {
-                nameFileClf = Directory.GetFiles(_config.MPath.WorkDir, "*.clf");
+                nameFileClf = Directory.GetFiles(Config.MPath.WorkDir, "*.clf");
                 if (GetReturn())
                     break; 
 
@@ -53,9 +52,9 @@ namespace MLServer_2._0.Moduls
                     {
                         if (taskClfInfo[i].IsError)
                         {
-                            (string, long, DateTime) _xkey = (taskClfInfo[i].FileName, taskClfInfo[i].FileSize, taskClfInfo[i].FileDate);
-                            if (dFileClf.ContainsKey(_xkey))
-                                dFileClf.Remove(_xkey, out _);
+                            (string, long, DateTime) xkey = (taskClfInfo[i].FileName, taskClfInfo[i].FileSize, taskClfInfo[i].FileDate);
+                            if (dFileClf.ContainsKey(xkey))
+                                dFileClf.Remove(xkey, out _);
 
                             taskClfInfo.RemoveAt(i);
                         }
@@ -73,7 +72,7 @@ namespace MLServer_2._0.Moduls
                             using (File.Open(item, FileMode.Open, FileAccess.Read, FileShare.None))
                             { }
 
-                            taskClfInfo.Add(new ClfFileInfo(item, ref renameFile,  ref _config));
+                            taskClfInfo.Add(new ClfFileInfo(item, ref renameFile,  ref Config));
                             dFileClf.Add(xkey, true);
                         }
                     }
@@ -85,14 +84,14 @@ namespace MLServer_2._0.Moduls
                 }
             }
 
-            _ = JsonBasa.AddFileMemInfo(_config.FileMemInfo);
+            _ = JsonBasa.AddFileMemInfo(Config.FileMemInfo);
 
             while (renameFile.GetCountFilesNameQueue() > 0)
                 Thread.Sleep(300);
 
             renameFile.AbortRepit();
 
-            _config.IsRun.IsRename =  false;
+            Config.IsRun.IsRename =  false;
             _ = JsonBasa.SaveFileFileMemInfo();
             return false;
         }
@@ -107,7 +106,7 @@ namespace MLServer_2._0.Moduls
         }
 
         public override bool GetReturn() 
-        {  return!((Directory.GetFiles(_config.MPath.WorkDir, "*.clf").Length > 0) || _config.IsRun.IsSource); 
+        {  return!((Directory.GetFiles(Config.MPath.WorkDir, "*.clf").Length > 0) || Config.IsRun.IsSource); 
         }
     }
 }

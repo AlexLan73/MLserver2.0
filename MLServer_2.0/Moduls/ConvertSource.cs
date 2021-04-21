@@ -1,5 +1,4 @@
-﻿using MLServer_2._0.Interface.Config;
-using MLServer_2._0.Logger;
+﻿using MLServer_2._0.Logger;
 using MLServer_2._0.Moduls.Config;
 using MLServer_2._0.Moduls.FileManager;
 using System;
@@ -15,14 +14,11 @@ namespace MLServer_2._0.Moduls
         #region data
         private Config0 _config;
         private ConverExport _converExport;
-        private Task _converExportTask = null;
+        private Task _converExportTask;
         #endregion
         public ConvertSource(ref Config0 config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Создаем class ConvertSource"));
-
-//            _iLogger = ilogger;
-//            _ijsonbasa = ijsonbasa;
             _config = config;
             Func<string, string> dirCreate = (NameDir) =>
             {
@@ -30,7 +26,7 @@ namespace MLServer_2._0.Moduls
 
                 if (!Directory.Exists(_s))
                     Directory.CreateDirectory(_s);
-
+                
                 return _s;
             };
             if (!Directory.Exists(_config.MPath.Clf))
@@ -100,7 +96,7 @@ namespace MLServer_2._0.Moduls
             _converExport = new ConverExport(ref _config);
             
 
-            bool resultat = false;
+            var resultat = false;
 
             TestFilesNullByte(Directory.GetDirectories(_config.MPath.WorkDir, "!D*"));
 

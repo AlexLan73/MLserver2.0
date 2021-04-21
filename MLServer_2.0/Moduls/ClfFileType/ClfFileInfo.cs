@@ -27,9 +27,9 @@ namespace MLServer_2._0.Moduls.ClfFileType
         public bool IsError { get; set; }
         public long FileSize { get; set; }
         public DateTime FileDate { get; set; }
-
-
         #endregion
+
+        #region constructor
         public ClfFileInfo(string filename, ref FileMove renameFile,  ref Config0 config) 
                              : base(config.MPath.FileType, filename, "")
         {
@@ -45,7 +45,9 @@ namespace MLServer_2._0.Moduls.ClfFileType
             FileSize = fileInf.Length;
             ClfInfoTask = Task<bool>.Factory.StartNew(Run);
         }
+        #endregion
 
+        #region Run
         private bool Run()
         {
             var result = ExeInfo();
@@ -99,12 +101,12 @@ namespace MLServer_2._0.Moduls.ClfFileType
             List<string> danAll = new(z0);
 
             Func<List<string>, string, List<DateTime>> FParser = (all, s) => 
-            { 
-                return  all.FindAll(x => x.Contains(s))
-                .Select(x => x.Split(s)[1]
-                .Trim())
-                .Select(z => DateTime.ParseExact(formatDanFrom(z), "dd.MM.yyyy HH:mm:ss.ffffff", CultureInfo.InvariantCulture))
-                .ToList();
+            {
+                return all.FindAll(x => x.Contains(s))
+                    .Select(x => x.Split(s)[1]
+                    .Trim())
+                    .Select(z => DateTime.ParseExact(formatDanFrom(z), "dd.MM.yyyy HH:mm:ss.ffffff", CultureInfo.InvariantCulture))
+                    .ToList();
             };
 
             var memory = danAll.FindAll(x => x.Contains("Memory F"))
@@ -147,7 +149,7 @@ namespace MLServer_2._0.Moduls.ClfFileType
 
                 _memInfo.AddOrUpdate(memory[i], memoryInfo, (_, _) => memoryInfo);
 
-                string fMem =( newFileName.ToLower().Contains("_m2_")? "M2_" : "M1_") + memoryInfo.FMemory;
+                var fMem =( newFileName.ToLower().Contains("_m2_")? "M2_" : "M1_") + memoryInfo.FMemory;
 
                 _config.FMem.AddOrUpdate(fMem, memoryInfo, (_, _) => memoryInfo);
             }
@@ -159,14 +161,14 @@ namespace MLServer_2._0.Moduls.ClfFileType
             _ = ErrorBasa.FError(-7, _filename);
             return false;
         }
-
         public override void CallBackFun(string line)
         {
             if (line.Length <= 0) return;
-//            Console.WriteLine(line);
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" {line} "));
             Lines.Add(line);
         }
+        #endregion
+
     }
 }
 

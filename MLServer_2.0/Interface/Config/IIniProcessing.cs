@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using MLServer_2._0.Logger;
-using MLServer_2._0.Moduls;
 using MLServer_2._0.Moduls.Config;
 
 namespace MLServer_2._0.Interface.Config
