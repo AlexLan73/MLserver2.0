@@ -8,15 +8,13 @@ namespace MLServer_2._0.Moduls.Config
 {
     public class ParsingXml
     {
-
-        private readonly ILogger _iLoger;
         private readonly Config0 _config;
         private string[] masTega1 = { "path", "bustype", "channel", "type" };
 
-
-        public ParsingXml(ILogger ilogger, ref Config0 config)
+        public ParsingXml(ref Config0 config)
         {
-            _iLoger = ilogger;
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class ParsingXml"));
+
             _config = config;
             _config.VSysVarPath = "";
             _config.VSysVarType = "";
@@ -59,11 +57,7 @@ namespace MLServer_2._0.Moduls.Config
                 s0 += sr.ReadToEnd();
             s0 += s;
 
-//            Task.Run(() => _iLoger.AddLoggerInfoAsync(
-///                new LoggerEvent(EnumError.Info, s0, EnumLogger.Monitor)));
-
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, s0, EnumLogger.Monitor));
-
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, s0, EnumLogger.MonitorFile));
 
             _config.SiglogFileInfo = s0;
 

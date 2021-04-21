@@ -37,7 +37,6 @@ namespace MLServer_2._0.Moduls.Config
         private const string Lrfdec = "lrf_dec";
         private const string Error = "error";
         private const string NameModulConfig = "Модуль ConfigProgramm->Iniciall ";
-        private readonly ILogger _iLogger;
         private readonly Config0 _config;
 
         private readonly string[] _fieldes = new[] { CarName, Clexport, Error };
@@ -46,12 +45,13 @@ namespace MLServer_2._0.Moduls.Config
 
         private readonly CarNameParams _carParams = new();
         private List<string> _lErrorConvert = new();
-        public MlServerJson(ILogger ilogger, ref Config0 config)
+        public MlServerJson( ref Config0 config)
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Обработка файла MlServerJson"));
+
             BasaParams = new ConcurrentDictionary<string, string>();
             ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>();
 
-            _iLogger = ilogger;
             _config = config;
         }
 
@@ -127,23 +127,7 @@ namespace MLServer_2._0.Moduls.Config
                                     Dictionary<string, string> htmlAttributes = JsonConvert.DeserializeObject<Dictionary<string, string>>(_zz2);
                                     ConcurrentDictionary<string, string> xx = new ConcurrentDictionary<string, string>(htmlAttributes);
                                     ClexportParams.AddOrUpdate(_name, xx, (_, _) => xx);
-                                    int k = 1;
-
-//                                    clexportParams.AddOrUpdate(_name,
-//                                        (string)((JProperty)item1).Value,
-//                                        (_, _) => (string)((JProperty)item1).Value);
-//                                    clexportParams.AddOrUpdate(((JProperty)item1).Name,
-//                                        (string)((JProperty)item1).Value,
-//                                        (_, _) => (string)((JProperty)item1).Value);
                                 }
-                            //                            string _name = ((JProperty)item).Name;
-                            //                            var _zz1 = ((JProperty)item).Value;
-                            //                            var _zz2 = (((JProperty)item).Value).ToString();
-                            //                            Dictionary<string, string> htmlAttributes = JsonConvert.DeserializeObject<Dictionary<string, string>>(_zz2);
-                            //                            ConcurrentDictionary<string, string> xx = new ConcurrentDictionary<string, string>(htmlAttributes);
-                            //                            ClexportParams.AddOrUpdate(_name, xx, (_, _) => xx);
-
-
                         }
 
                         if (((JProperty)item0).Name != Lrfdec) continue;
@@ -198,10 +182,6 @@ namespace MLServer_2._0.Moduls.Config
             {
                 _ = ErrorBasa.FError(-272, _config.MPath.MlServerJson);
                 return;
-
-//                var sResulT0 = new SResulT0(-272, $"Error c файлом конфигурации Нет конфиг. LRF_DEC(...)  {_config.MPath.MlServerJson} ", NameModulConfig);
-//                Task.Run(() => _iLogger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Error, sResulT0, EnumLogger.Monitor)));
-//                return new ResultTd<bool, SResulT0>(sResulT0);
             }
             else
             {
@@ -209,10 +189,6 @@ namespace MLServer_2._0.Moduls.Config
                 {
                     _ = ErrorBasa.FError(-272, _config.MPath.MlServerJson);
                     return;
-
-//                    var sResulT0 = new SResulT0(-272, $"Error c файлом конфигурации Нет конфиг. LRF_DEC(...)  {_config.MPath.MlServerJson} ", NameModulConfig);
-//                    Task.Run(() => _iLogger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Error, sResulT0, EnumLogger.Monitor)));
-//                    return new ResultTd<bool, SResulT0>(sResulT0);
                 }
                 BasaParams = new ConcurrentDictionary<string, string>(BasaParams);
             }
@@ -221,16 +197,11 @@ namespace MLServer_2._0.Moduls.Config
             {
                 _ = ErrorBasa.FError(-272, _config.MPath.MlServerJson);
                 return;
-
-//                var sResulT0 = new SResulT0(-271, $"Error c файлом конфигурации Нет конфиг. MDF(...)  {_config.MPath.MlServerJson} ", NameModulConfig);
-//                Task.Run(() => _iLogger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Error, sResulT0, EnumLogger.Monitor)));
-//                return new ResultTd<bool, SResulT0>(sResulT0);
             }
             else
             {
                 ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>(ClexportParams);
             }
-
         }
         public void IniciallMLServer(string namecar="")
         {
@@ -239,11 +210,6 @@ namespace MLServer_2._0.Moduls.Config
                 var __error = ErrorBasa.FError(-27, _config.MPath.MlServerJson);
                 __error.Wait();
                 return;
-
-
-//                var sResulT0 = new SResulT0(-27, $"Error c файлом конфигурации {_config.MPath.MlServerJson} ", NameModulConfig);
-//                Task.Run(() => _iLogger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Error, sResulT0, EnumLogger.Monitor)));
-//                return new ResultTd<bool, SResulT0>(sResulT0);
             }
 
             CarSetParam(namecar);
@@ -251,6 +217,5 @@ namespace MLServer_2._0.Moduls.Config
             _config.BasaParams = new ConcurrentDictionary<string, string>(BasaParams);
             _config.ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>(ClexportParams);
         }
-
     }
 }

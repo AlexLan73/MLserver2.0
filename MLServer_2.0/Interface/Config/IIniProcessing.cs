@@ -12,8 +12,6 @@ namespace MLServer_2._0.Interface.Config
         List<string> Ldata { get; set; }
         Dictionary<string, string> Data { get; set; }
         bool Convert();
-        ILogger ILoger { get; set; }
         Config0 Config { get; set; }
-
     }
 }

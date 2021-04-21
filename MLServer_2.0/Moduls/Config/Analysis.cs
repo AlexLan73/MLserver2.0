@@ -17,24 +17,11 @@ namespace MLServer_2._0.Moduls.Config
 
         private readonly string[] _dirs = new[] { "\\VEHICLE_CFG\\Analysis\\", "\\VEHICLE_CFG\\Analysis\\Archive\\" };
 
-//        private readonly Dictionary<string, string> _fields;
-        private readonly ILogger _iLoger;
-//        private readonly IMasPaths _mPaths;
+        public Analysis(ref Config0 config)
+        {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class Analysis"));
 
-        public Analysis(ConcurrentDictionary<string, string> fields, IMasPaths paths, ILogger ilogger)
-        {
-//            _fields = new Dictionary<string, string>(fields);
-//            _iLoger = ilogger;
-//            _mPaths = paths;
-//            RezDirAnalis = "";
-        }
-        public Analysis(ILogger ilogger, ref Config0 config)
-        {
             _config = config;
-            _iLoger = ilogger;
-
-  //          _fields = _config.Fields; new Dictionary<string, string>(fields);
-//            _mPaths = paths;
             RezDirAnalis = "";
         }
         public string Convert()
@@ -59,8 +46,6 @@ namespace MLServer_2._0.Moduls.Config
 
             if (RezDirAnalis != "")
             {
-//                Task.Run(() => _iLoger.AddLoggerInfoAsync
-//                            (new LoggerEvent(EnumError.Info, $"Конфигурацию берем из {RezDirAnalis}", EnumLogger.Monitor)));
 
                 _ = LoggerManager.AddLoggerAsync
                             (new LoggerEvent(EnumError.Info, $"Конфигурацию берем из {RezDirAnalis}", EnumLogger.Monitor));

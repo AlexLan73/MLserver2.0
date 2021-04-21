@@ -1,9 +1,6 @@
 ﻿using MLServer_2._0.Logger;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -47,7 +44,6 @@ namespace MLServer_2._0.Moduls.Error
     {
         #region data
         private ConcurrentDictionary<int, (object, object, EnumError)> DError = new ConcurrentDictionary<int, (object, object, EnumError)>();
-//        public ILogger  _iLogger;
         private static ErrorBasa _errorBasa = null;
         private DelegErrorNun en;
         private DelegErrorNunMessag enm;
@@ -85,12 +81,10 @@ namespace MLServer_2._0.Moduls.Error
         #endregion
         #endregion
 
-//        public ErrorBasa(ILogger iLogger)
         public ErrorBasa()
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class ErrorBasa"));
 
-//            _iLogger = iLogger;
             _errorBasa = this;
             en = _errorBasa.ErrorNun;
             enm = _errorBasa.ErrorNunMessag;
@@ -147,21 +141,17 @@ namespace MLServer_2._0.Moduls.Error
             var _info = _errorBasa.DError[cod];
             var _typeerror = _info.Item3;
 
-//            _iLogger.AddLoggerInfoAsync(new LoggerEvent(_typeerror, (string)_info.Item1));
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(_typeerror, (string)_info.Item1));
 
             if (_typeerror == EnumError.Error)
             {
-                //                Console.WriteLine(_nameerror);
                 LoggerManager.DisposeStatic();
-//                _iLogger.Dispose();
                 Thread.Sleep(1000);
                 Environment.Exit(cod); 
             }
         }
         public void ErrorNunMessag(int cod, string message = "")
         {
-//            var xx = DError[cod].Item1.GetType().Name;
             switch (DError[cod].Item1.GetType().Name)
             {
                 case "STypeError2":
@@ -183,13 +173,9 @@ namespace MLServer_2._0.Moduls.Error
         }
         public static async Task FError(int cod, string message = "")
         {
-//            var x111 = _errorBasa.DError[cod];
-//            var z = _errorBasa.DError[cod].Item2.GetType().Name;
-
             await Task.Factory.StartNew((object x0) =>
             {
                 var z1 = (S01)x0;
-//                Console.WriteLine($"  kod- {z1.Cod}    {z1.Mes}");
                 var _info = _errorBasa.DError[(int)z1.Cod];
                 switch (_info.Item2.GetType().Name)
                 {

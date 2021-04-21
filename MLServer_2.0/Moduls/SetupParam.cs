@@ -90,24 +90,24 @@ namespace MLServer_2._0.Moduls
 
             _jsonBasa.LoadFileJsoDbConfig();
 
-            var mlrt = new MlRt(_nameFile["ml_rt"], _fileDanMlRt, _iLogger, NameModulConfig, ref _config);
+            var mlrt = new MlRt(_nameFile["ml_rt"], _fileDanMlRt, ref _config);
            var resul = mlrt.Convert();
            if (resul)
                 return resul;
 
-            _mLServerJson = new MlServerJson(_iLogger, ref _config);
+            _mLServerJson = new MlServerJson(ref _config);
             _mLServerJson.IniciallMLServer(_config.Fields.ContainsKey("carname") ? _config.Fields["carname"] : "");
 
-            new MlRt2(_nameFile["ml_rt2"], _fildsMlRt2, _iLogger, NameModulConfig, ref _config).Convert();
+            new MlRt2(_nameFile["ml_rt2"], _fildsMlRt2, ref _config).Convert();
 
-            new TextLog(_nameFile["TextLog"], "trigger", _iLogger, NameModulConfig, ref _config).Convert();
+            new TextLog(_nameFile["TextLog"], "trigger",  ref _config).Convert();
 
-            string _analis = new Analysis(_iLogger, ref _config).Convert();
+            string _analis = new Analysis(ref _config).Convert();
             if (_analis == "")
                 _ = ErrorBasa.FError(-25);
             _config.MPath.Analis = _analis;
 
-            new ParsingXml(_iLogger, ref _config).Convert();
+            new ParsingXml(ref _config).Convert();
 
             //////
             ///      добавить обработку  InicialAnalysis InicialXml

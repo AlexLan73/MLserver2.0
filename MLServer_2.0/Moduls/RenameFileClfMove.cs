@@ -12,22 +12,16 @@ namespace MLServer_2._0.Moduls
 {
     public class RenameFileClfMoveBasa
     {
-//        private readonly ILogger _iLogger;
         private readonly IJsonBasa _jsonBasa;
         protected Config0 _config;
-
-
         public RenameFileClfMoveBasa(IJsonBasa jsonbasa, ref Config0 config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class RenameFileClfMoveBasa"));
-
-            //            _iLogger = ilogger;
             _jsonBasa = jsonbasa;
             _config = config;
-
     }
 
-    public virtual bool GetReturn()
+        public virtual bool GetReturn()
         {
             return Directory.GetFiles(_config.MPath.WorkDir, "*.clf").Length <= 0;
         }

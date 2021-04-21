@@ -11,10 +11,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using TypeDStringMemoryInfo = System.Collections.Concurrent.ConcurrentDictionary<string,
-        System.Collections.Concurrent.ConcurrentDictionary<string, MLServer_2._0.Moduls.ClfFileType.MemoryInfo>>;
-
-//public ConcurrentDictionary<string, ConcurrentDictionary<string, MemoryInfo>> DbConfig;
+//using TypeDStringMemoryInfo = System.Collections.Concurrent.ConcurrentDictionary<string,
+//        System.Collections.Concurrent.ConcurrentDictionary<string, MLServer_2._0.Moduls.ClfFileType.MemoryInfo>>;
 
 namespace MLServer_2._0.Moduls.Export
 {
@@ -60,10 +58,7 @@ namespace MLServer_2._0.Moduls.Export
                 ss0 += s.Replace("x", item);
             return ss0;
         }
-        //private List<string> _findFileDirClf() => Directory.GetFiles(_pathConvert, "*" + _ext)
-        //        .Where(x => Regex.Matches(x, _patternFile, RegexOptions.IgnoreCase).Count == 1)
-        //        .Select(z => Path.GetFileName(z))
-        //        .ToList();
+
         private List<string> _findFileDirClf()
         {
             List<string> ls = new List<string>();
@@ -81,7 +76,6 @@ namespace MLServer_2._0.Moduls.Export
             var x03 = x02.Select(z => Path.GetFileName(z)).ToList();
             return ls;
         }
-
         private async Task _rename_m1(List<string> ls)
         {
             await Task.Run(() =>

@@ -23,7 +23,6 @@ namespace MLServer_2._0.Moduls.Export
 
         public bool Run()
         {
-
             var result = ExeInfo();
 
             Console.WriteLine($"  Код завершения программы {result.CodeError}  ");

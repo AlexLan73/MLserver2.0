@@ -15,7 +15,6 @@ namespace MLServer_2._0.Moduls.ClfFileType
     public class ClfFileInfo : ExeFileInfo
     {
         #region data
-//        private readonly ILogger _ilogger;
         private readonly Config0 _config;
         private readonly string _filename;
         private readonly string _nameCar;
@@ -39,7 +38,6 @@ namespace MLServer_2._0.Moduls.ClfFileType
             IsError = false;
             _config = config;
             _nameCar = _config.Fields["carname"];
-            //            _ilogger = logger;
             _filename = filename;
             _renameFile = renameFile;
             FileInfo fileInf = new(_filename);
@@ -58,17 +56,13 @@ namespace MLServer_2._0.Moduls.ClfFileType
                 Console.WriteLine(" !!!  Бардак!! ");
             }
 
-//            SResulT0 sResulT0;
             var nameCarx = Lines.Find(x => x.Contains("Car: ["));
             if (nameCarx==null || nameCarx.Length<=0)
             {
                 _ = ErrorBasa.FError(-32);
                 return false;
-
-//                sResulT0 = new SResulT0(-32, "нет строки '$Car: [' в   FileType ", "  ClfFileInfo");
-//                Task.Run(() => _ilogger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Error, sResulT0, EnumLogger.MonitorFile)));
-//                return new ResultTd<bool, SResulT0>(sResulT0);
             }
+
             var x0 = Lines.Find(x => x.Contains("Contents:"));
             var i0 = Lines.IndexOf(x0);
             var x1 = Lines.Find(x => x.Contains("--- File Comment"));
@@ -80,11 +74,6 @@ namespace MLServer_2._0.Moduls.ClfFileType
                 File.Delete(_filename);
                 _ = ErrorBasa.FError(-34, _filename);
                 return false;
-
-//                sResulT0 = new SResulT0(-34, $"нет информации о Memory: в файле {_filename}  ", "  ClfFileInfo");
-//                Task.Run(() => _ilogger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Warning, sResulT0, EnumLogger.MonitorFile)));
-//                return new ResultTd<bool, SResulT0>(sResulT0);
-
             }
             Lines.CopyTo(i0, z0, 0, count);
 
@@ -99,17 +88,12 @@ namespace MLServer_2._0.Moduls.ClfFileType
                 };
                 return s.Substring(0, 26);
             };
-
             
             if (z0.Length <= 0)
             {
                 IsError = true;
                 _ = ErrorBasa.FError(-31);
                 return false;
-
-//                sResulT0 = new SResulT0(-31, "не правильно отработала программа FileType ", "  ClfFileInfo");
-//                Task.Run(() => _ilogger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Error, sResulT0, EnumLogger.MonitorFile)));
-//                return new ResultTd<bool, SResulT0>(sResulT0);
             }
 
             List<string> danAll = new(z0);
@@ -174,43 +158,15 @@ namespace MLServer_2._0.Moduls.ClfFileType
 
             _ = ErrorBasa.FError(-7, _filename);
             return false;
-
-//            sResulT0 = new SResulT0(-7, $" Проблема с чтением информации из {_filename}  ", " Ошибка в обработке -> ClfFileInfo ");
-//            Task.Run(() => _ilogger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Error, sResulT0, EnumLogger.Monitor)));
-//            return new ResultTd<bool, SResulT0>(sResulT0);
         }
 
         public override void CallBackFun(string line)
         {
             if (line.Length <= 0) return;
-            Console.WriteLine(line);
+//            Console.WriteLine(line);
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" {line} "));
             Lines.Add(line);
         }
-
-
     }
 }
 
-
-/*
-             var _trigger = _danAll.FindAll(x => x.Contains("Trigger :"))
-                .Select(x => x.Split("Trigger :")[1]
-                .Trim())
-                .Select(z => DateTime.ParseExact(formatDanFrom(z), "dd.MM.yyyy HH:mm:ss.ffffff", CultureInfo.InvariantCulture))
-                .ToList();
- 
-
-            var _start = _danAll.FindAll(x => x.Contains("Start:"))
-                .Select(x => x.Split("Start:")[1]
-                .Trim())
-                .Select(z => DateTime.ParseExact(formatDanFrom(z), "dd.MM.yyyy HH:mm:ss.ffffff", CultureInfo.InvariantCulture))
-                .ToList();
-
-            var _end = _danAll.FindAll(x => x.Contains("End :"))
-                .Select(x => x.Split("End :")[1]
-                .Trim())
-                .Select(z => DateTime.ParseExact(formatDanFrom(z), "dd.MM.yyyy HH:mm:ss.ffffff", CultureInfo.InvariantCulture))
-                .ToList();
-
-
- */

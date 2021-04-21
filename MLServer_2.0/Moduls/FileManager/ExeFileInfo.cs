@@ -68,16 +68,5 @@ namespace MLServer_2._0.Moduls.FileManager
         }
 
 
-        /*      
-                public void Test001()
-                {
-                    InfoExe _info = new InfoExe("01");
-                    _danPool.AddOrUpdate(_info.PathNameFile, _info, (_, _) => _info);
-
-                    ThreadPool.QueueUserWorkItem(ThreadProc, _info);
-                    Thread.Sleep(3000);
-                }
-        */
-
     }
 }

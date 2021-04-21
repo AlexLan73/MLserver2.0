@@ -28,14 +28,6 @@ namespace MLServer_2._0.Moduls
 
             _barrier.SignalAndWait();
 
-            //            var _dirAll = _dir0.Keys.Select(x => x.ToLower().Split("\\clf")[0]).ToArray();
-            //            var _dirx = _dirAll.Where(x => !File.Exists(x + "\\DbConfig.json")).ToArray();
-
-//            var dirAll0 = _dir0.Keys.Select(x => x.ToLower()).ToArray();
-//            var dirAll1 = dirAll0.Where(x => Directory.GetFiles(x).Length > 0);
-//            var dirAll = dirAll1.Select(x => x.Split("\\clf")[0]).ToArray();
-//            var dirx = dirAll.Where(x => !File.Exists(x + "\\DbConfig.json")).ToArray();
-
             var dirx = _dir0.Keys
                                 .Select(x => x.ToLower())
                                 .ToArray()

@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using MLServer_2._0.Logger;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace MLServer_2._0.Moduls.Config
         /// 
         public XmlProcessing(string filename, string[] masTega, string selectnodes = "AnalysisPackage/DatabaseList/Database")
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class XmlProcessing"));
             XmLstream = new TaskFactory().StartNew(() =>
             {
                 XmlDocument doc = new XmlDocument();

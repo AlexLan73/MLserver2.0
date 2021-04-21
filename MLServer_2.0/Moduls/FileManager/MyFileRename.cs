@@ -7,7 +7,6 @@ namespace MLServer_2._0.Moduls.FileManager
 {
     public class MyFileRename : AFileSystemBasa<TypeDanFromFile1>
     {
-
         public MyFileRename(int repit, int comparesec)
         {
             FilesNameQueue = new System.Collections.Concurrent.ConcurrentQueue<TypeDanFromFile1>();

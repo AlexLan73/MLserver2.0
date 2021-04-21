@@ -18,25 +18,10 @@ namespace MLServer_2._0.Moduls
 
     public class ConverExport
     {
-        //class soo
-        //{
-        //    public soo(string name, DateTime dt)
-        //    {
-        //        namefile = name;
-        //        this.dt = dt;
-        //    }
-        //    public string namefile { get; set; }
-        //    public DateTime dt { get; set; }
-        //}
-
         #region data
-//        private readonly ILogger _iLogger;
         private Config0 _config;
-//        private string _outDir;
-        private string _commandExport;
         private readonly string _patternFile;
         private ConcurrentDictionary<string, OneExport> _allRun;
-//        private ConcurrentDictionary<string, Task<int>> _allRun;
         private ConcurrentDictionary<string, bool> _dirClfRun;
 
         #endregion
@@ -49,22 +34,10 @@ namespace MLServer_2._0.Moduls
             _patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\).clf";
             _dirClfRun = new ConcurrentDictionary<string, bool>();
             _allRun = new ConcurrentDictionary<string, OneExport>();
-//            _allRun = new ConcurrentDictionary<string, Task<int>>();
-
-            //  вызвать по Task
-//            Run();
-
-
-//            _lTypePath = new ConcurrentDictionary<string, string>();
-//            foreach (var item in _config.ClexportParams)
-//                _lTypePath.AddOrUpdate(item.Key, _outDir + "\\" + item.Key, (_, _) => _outDir + "\\" + item.Key);
         }
-
 
         public void Run()
         {
-            //            _mdf0.AddOrUpdate("commanda", _mdf, (_, _) => _mdf);
-            //            _mdf0.AddOrUpdate("ext", "mdf", (_, _) => "mdf");
 
             copy_siglog();
             foreach (var item in _config.ClexportParams)
@@ -112,10 +85,8 @@ namespace MLServer_2._0.Moduls
                 }
                 catch (Exception e)
                 {
-                    var xx = e;
                     // ignor
                 }
-                
 
                 DirectoryInfo dirInfo = new(_pathConvert);
                 if (!dirInfo.Exists)

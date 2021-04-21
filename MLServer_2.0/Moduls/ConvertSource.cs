@@ -13,10 +13,7 @@ namespace MLServer_2._0.Moduls
     public class ConvertSource
     {
         #region data
-//        private readonly ILogger _iLogger;
         private readonly IJsonBasa _ijsonbasa;
-        private string _pathClf;
-        private string _pathLog;
         private Config0 _config;
         private ConverExport _converExport;
         private Task _converExportTask = null;
@@ -37,10 +34,8 @@ namespace MLServer_2._0.Moduls
 
                 return _s;
             };
-            _pathClf = _config.MPath.Clf;
-            _pathLog = _config.MPath.Log;
-            if (!Directory.Exists(_pathClf))
-                Directory.CreateDirectory(_pathClf);
+            if (!Directory.Exists(_config.MPath.Clf))
+                Directory.CreateDirectory(_config.MPath.Clf);
 
         }
 
@@ -103,9 +98,6 @@ namespace MLServer_2._0.Moduls
 
             _converExport = new ConverExport(ref _config);
             
-
-            if (!Directory.Exists(_pathClf))
-                Directory.CreateDirectory(_pathClf);
 
             bool resultat = false;
 

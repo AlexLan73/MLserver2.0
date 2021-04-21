@@ -17,31 +17,27 @@ namespace MLServer_2._0.Moduls.Config
         protected string Filename;
         public List<string> Ldata { get; set; }
         public string Field { get; set; }
-        public ILogger ILoger { get; set; }
         public Config0 Config { get; set; }
         #endregion
 
-        public IniProcessing(string filename, string[] fields, ILogger addLogger, ref Config0 config)
+        public IniProcessing(string filename, string[] fields, ref Config0 config)
         {
             Fields = fields;
-            Install(filename, addLogger, ref config);
+            Install(filename, ref config);
             Config = config;
         }
-        public IniProcessing(string filename, string field, ILogger addLogger, ref Config0 config)
+        public IniProcessing(string filename, string field, ref Config0 config)
         {
             Field = field;
-            Install(filename, addLogger, ref config);
-
+            Install(filename, ref config);
         }
 
-        private void Install(string filename, ILogger addLogger, ref Config0 config)
+        private void Install(string filename, ref Config0 config)
         {
-            ILoger = addLogger;
             this.Filename = filename;
             Ldata = new List<string>();
             Data = new Dictionary<string, string>();
             Config = config;
-
         }
 
         public virtual bool Convert()
@@ -53,10 +49,6 @@ namespace MLServer_2._0.Moduls.Config
 
             if (dan.Count != Data.Count)
                 _ = ErrorBasa.FError(-211);
-//            return false;
-
-  //          return new ResultTd<bool, SResulT0>(new SResulT0(-211,
-//                    " Нет соответствия запрашиваемых данных и полученных", "==> Модуль конфигурации инициал-ция"));
             return false;
         }
         public bool ReadIni()

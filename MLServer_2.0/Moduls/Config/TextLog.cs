@@ -11,15 +11,12 @@ namespace MLServer_2._0.Moduls.Config
 {
     public class TextLog : IniProcessing, ITriggerTimeName
     {
-        private DanTriggerTime _convert;
         public List<DanTriggerTime> _dateTimeTrigger;
-        private readonly string _nameModulConfig;
-        public TextLog(string filename, string field, ILogger llogger, string nameModulConfig, ref Config0 config) 
-                                : base(filename, field, llogger, ref config)
+        public TextLog(string filename, string field, ref Config0 config) : base(filename, field, ref config)
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class TextLog"));
+
             _dateTimeTrigger = new List<DanTriggerTime>();
-            _convert = new DanTriggerTime();
-            _nameModulConfig = nameModulConfig;
         }
 
         public sealed override bool Convert()
@@ -32,9 +29,6 @@ namespace MLServer_2._0.Moduls.Config
             {
                  _ = ErrorBasa.FError(-23, Filename);
                 return false;
-//                var sResulT0 = new SResulT0(-23, $"В файле {Filename} нет данных о Trigger и времени", _nameModulConfig);
-//                Task.Run(() => ILoger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Warning, sResulT0, EnumLogger.Monitor)));
-//                return new ResultTd<bool, SResulT0>(false);
             }
 
             foreach (var item in Ldata.Where(item => item.ToLower().Contains(Field)))
@@ -45,7 +39,6 @@ namespace MLServer_2._0.Moduls.Config
                 _ = ErrorBasa.FError(-213);
                 return false;
             }
-//            return new ResultTd<bool, SResulT0>(new SResulT0(-213, " Нет данных в TextLog, время срабатывания триггера ", "==> Модуль ConfigProgramm "));
 
             for (var i = 0; i < _dateTimeTrigger.Count; i++)
             {
