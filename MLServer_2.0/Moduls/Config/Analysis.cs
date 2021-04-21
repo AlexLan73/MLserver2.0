@@ -59,8 +59,12 @@ namespace MLServer_2._0.Moduls.Config
 
             if (RezDirAnalis != "")
             {
-                Task.Run(() => _iLoger.AddLoggerInfoAsync
-                            (new LoggerEvent(EnumError.Info, $"Конфигурацию берем из {RezDirAnalis}", EnumLogger.Monitor)));
+//                Task.Run(() => _iLoger.AddLoggerInfoAsync
+//                            (new LoggerEvent(EnumError.Info, $"Конфигурацию берем из {RezDirAnalis}", EnumLogger.Monitor)));
+
+                _ = LoggerManager.AddLoggerAsync
+                            (new LoggerEvent(EnumError.Info, $"Конфигурацию берем из {RezDirAnalis}", EnumLogger.Monitor));
+
                 return RezDirAnalis;
             }
             return "";

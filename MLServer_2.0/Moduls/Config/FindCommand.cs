@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MLServer_2._0.Logger;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -11,8 +12,8 @@ namespace MLServer_2._0.Moduls.Config
 
         public FindCommand(string pathBegin)
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Поиск каталога #COMMON "));
             PathBegin = new FileInfo(pathBegin).DirectoryName;
-
         }
 
         private void findDir(ref string sdir)

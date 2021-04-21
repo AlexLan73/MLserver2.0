@@ -22,19 +22,18 @@ namespace MLServer_2._0.Moduls.Export
     {
         #region data
         private Config0 _config;
-        private readonly ILogger _ilogger;
         public Task RunTask = null;
         public string _patternFile;
         private string _typeconvert;
         private string _ext;
         private string _pathConvert;
-//        private ConcurrentDictionary<string, string> _mem1 = new ConcurrentDictionary<string, string>();
         private readonly FileMove _renameFile;
         #endregion
-        public SetNameTrigger(ILogger ilogger, ref Config0 config, string typeconvert)
+        public SetNameTrigger(ref Config0 config, string typeconvert)
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class SetNameTrigger"));
+
             _config = config;
-            _ilogger = ilogger;
             _patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)F";
             _typeconvert = typeconvert.ToUpper();
             _pathConvert = _config.MPath.OutputDir + "\\" + _typeconvert + "\\";

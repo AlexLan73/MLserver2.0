@@ -17,7 +17,7 @@ namespace MLServer_2._0.Moduls.Export
     public class OneExport:IDisposable
     {
         #region data
-        private readonly ILogger _iLogger;
+//        private readonly ILogger _iLogger;
         private Config0 _config;
         private readonly string _patternFile;
 //        private ConcurrentDictionary<string, bool> _dirClfRun;
@@ -37,9 +37,10 @@ namespace MLServer_2._0.Moduls.Export
         #endregion
 
         #region Constructor
-        public OneExport(ILogger ilogger, ref Config0 config, (string, string, string) typeExport)
+        public OneExport(ref Config0 config, (string, string, string) typeExport)
         {
-            _iLogger = ilogger;
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class OneExport"));
+
             _config = config;
             _typeExport = typeExport.Item1;
             _commandExport = typeExport.Item2;
@@ -150,7 +151,7 @@ namespace MLServer_2._0.Moduls.Export
 
                 _config.IsRun.IsExport = true;
 
-                _setNameTrigger = new SetNameTrigger(_iLogger, ref _config, _ext);
+                _setNameTrigger = new SetNameTrigger( ref _config, _ext);
                 _waitNameTrigger = Task.Run(()=> _setNameTrigger.Run());
 
                 _startDateTime = DateTime.Now;

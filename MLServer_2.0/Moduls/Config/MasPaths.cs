@@ -64,11 +64,13 @@ namespace MLServer_2._0.Moduls.Config
         public string WorkDir { get; set; }
         public string OutputDir { get; set; }
         public string Analis { get; set; }
-        private readonly ILogger _iLoger;
+//        private readonly ILogger _iLoger;
 
-        public MasPaths(Dictionary<string, string> args, ILogger iLoger)
+        public MasPaths(Dictionary<string, string> args)
         {
-            _iLoger = iLoger;
+            //          _iLoger = iLoger;
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем класс MasPaths - конфиг. с путями"));
+
             ExeFile = args["ExeFile"];
             WorkDir = args["WorkDir"];
             OutputDir = args["OutputDir"];
@@ -78,7 +80,6 @@ namespace MLServer_2._0.Moduls.Config
         {
         }
 
-//        public ResultTd<bool, SResulT0> FormPath()
         public bool FormPath()
         {
             var findCommand = new FindCommand(ExeFile);
@@ -88,17 +89,11 @@ namespace MLServer_2._0.Moduls.Config
                 var __error = ErrorBasa.FError(-24);
                 __error.Wait();
                 return true;
-
-//                var sResulT0 = new SResulT0(-24, "Нет каталога #COMMON ", _nameModulConfig);
-//                Task.Run(() => _iLoger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Error, sResulT0, EnumLogger.MonitorFile)));
-//                return new ResultTd<bool, SResulT0>(sResulT0);
             }
 
             Common = common;
 
             Namesiglog = "siglog_config.ini";
-
-//            return new ResultTd<bool, SResulT0>(false);
             return false;
 
         }

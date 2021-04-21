@@ -47,7 +47,7 @@ namespace MLServer_2._0.Moduls.Error
     {
         #region data
         private ConcurrentDictionary<int, (object, object, EnumError)> DError = new ConcurrentDictionary<int, (object, object, EnumError)>();
-        public ILogger  _iLogger;
+//        public ILogger  _iLogger;
         private static ErrorBasa _errorBasa = null;
         private DelegErrorNun en;
         private DelegErrorNunMessag enm;
@@ -85,15 +85,17 @@ namespace MLServer_2._0.Moduls.Error
         #endregion
         #endregion
 
-        public ErrorBasa(ILogger iLogger)
+//        public ErrorBasa(ILogger iLogger)
+        public ErrorBasa()
         {
-            _iLogger=iLogger;
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class ErrorBasa"));
+
+//            _iLogger = iLogger;
             _errorBasa = this;
             en = _errorBasa.ErrorNun;
             enm = _errorBasa.ErrorNunMessag;
             inicial();
         }
-
 
         private void inicial()
         {
@@ -139,27 +141,23 @@ namespace MLServer_2._0.Moduls.Error
             DError.AddOrUpdate(-34, (new STypeError2(-34, _err_34, "ClfFileInfo"), enm, EnumError.Warning),
                           (_, _) => (new STypeError2(-34, _err_34, "ClfFileInfo"), enm, EnumError.Warning));
 
-
-
         }
         public void ErrorNun(int cod)
         {
             var _info = _errorBasa.DError[cod];
             var _typeerror = _info.Item3;
-//            var _nameerror = (string)_info.Item1;
-//            var _xx = new LoggerEvent(_typeerror, _nameerror);
-//            _iLogger.AddLoggerInfoAsync(_xx);
 
-            _iLogger.AddLoggerInfoAsync(new LoggerEvent(_typeerror, (string)_info.Item1));
+//            _iLogger.AddLoggerInfoAsync(new LoggerEvent(_typeerror, (string)_info.Item1));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(_typeerror, (string)_info.Item1));
 
             if (_typeerror == EnumError.Error)
             {
-//                Console.WriteLine(_nameerror);
-                _iLogger.Dispose();
+                //                Console.WriteLine(_nameerror);
+                LoggerManager.DisposeStatic();
+//                _iLogger.Dispose();
                 Thread.Sleep(1000);
                 Environment.Exit(cod); 
             }
-
         }
         public void ErrorNunMessag(int cod, string message = "")
         {
@@ -167,7 +165,8 @@ namespace MLServer_2._0.Moduls.Error
             switch (DError[cod].Item1.GetType().Name)
             {
                 case "STypeError2":
-                    _iLogger.AddLoggerInfoAsync(new LoggerEvent(_errorBasa.DError[cod].Item3, ((STypeError2)DError[cod].Item1).Set(message)));
+//                    _iLogger.AddLoggerInfoAsync(new LoggerEvent(_errorBasa.DError[cod].Item3, ((STypeError2)DError[cod].Item1).Set(message)));
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(_errorBasa.DError[cod].Item3, ((STypeError2)DError[cod].Item1).Set(message)));
                     break;
             }
 

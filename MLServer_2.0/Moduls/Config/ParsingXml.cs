@@ -58,7 +58,13 @@ namespace MLServer_2._0.Moduls.Config
             using (var sr = new StreamReader(_config.MPath.Siglogconfig))
                 s0 += sr.ReadToEnd();
             s0 += s;
-            Task.Run(() => _iLoger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Info, s0, EnumLogger.Monitor)));
+
+//            Task.Run(() => _iLoger.AddLoggerInfoAsync(
+///                new LoggerEvent(EnumError.Info, s0, EnumLogger.Monitor)));
+
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, s0, EnumLogger.Monitor));
+
+
             _config.SiglogFileInfo = s0;
 
             _config.VSysVarPath = processing.VSysVar != null && processing.VSysVar.ContainsKey("path") ? processing.VSysVar["path"] : "";

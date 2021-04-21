@@ -10,13 +10,15 @@ namespace MLServer_2._0.Moduls.FileManager
     public class LrdExeFile: ExeFileInfo
     {
         public FileDelete FileDelete;
-        private readonly ILogger _logger;
+//        private readonly ILogger _logger;
 
-        public LrdExeFile(string exefile, string filenamr, string command,  ILogger logger, ref Config0 config)
+        public LrdExeFile(string exefile, string filenamr, string command, ref Config0 config)
                      : base(exefile, filenamr, command)
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class LrdExeFile"));
+
             FileDelete = new FileDelete(ref config);
-            _logger = logger;
+//            _logger = logger;
         }
 
         public bool Run()

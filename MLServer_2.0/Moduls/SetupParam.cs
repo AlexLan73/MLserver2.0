@@ -43,13 +43,11 @@ namespace MLServer_2._0.Moduls
             //            JsonBasa jsonBasa = new JsonBasa();
             //                jsonBasa.LoadFileJso<ConcurrentDictionary<string, ConcurrentDictionary<string, MemoryInfo>>>(_workDir + "\\dbconfig.json");
 
-        public SetupParam(ref Config0 config, ILogger logger, IJsonBasa jsonBasa)
+        public SetupParam(ref Config0 config, IJsonBasa jsonBasa)
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Запуск class SetupParam "));
             _config = config;
-            _iLogger = logger;
             _jsonBasa = jsonBasa;
-
-//            _jsonBasa.LoadFileJsoDbConfig();
 
             _inicial01();
 
@@ -57,6 +55,13 @@ namespace MLServer_2._0.Moduls
 
         private void _inicial01()
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, 
+                    new []{ "SetupParam \n"
+                    , "инициализация параметров: \n"
+                    , " - для ml_rt, ml_rt2, TextLog \n"
+                    , " lrd = -S 20 -L 512 -n -k -v -i \n"
+                    , "_mdf = -v -~ -o -t -l \"file_clf\" -MB -O  \"my_dir\" SystemChannel=Binlog_GL.ini" }));
+
             _nameFile = new Dictionary<string, string>
             {
                 {"ml_rt",   _config.MPath.WorkDir + "\\ml_rt.ini"},
@@ -75,20 +80,14 @@ namespace MLServer_2._0.Moduls
             _config.ClexportParams.AddOrUpdate("MDF", _mdf0, (_, _) => _mdf0);
         }
 
-        public bool RunClr()
-        {
-            return false;
-        }
-        public bool RunExport()
-        {
-            return false;
-        }
-
-//        public ResultTd<bool, SResulT0> IniciaPathJson()
         public bool IniciaPathJson()
         {
-            //  !!!!!!!!!!!!!!!!!!!   
-            //     Настроить загрузку  
+            //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   
+            //     Настроить загрузку данных 
+
+            _ = LoggerManager.AddLoggerAsync(
+                new LoggerEvent(EnumError.Info, new[] { "SetupParam \n","Грузим файл конфигурации DbConfig " }));
+
             _jsonBasa.LoadFileJsoDbConfig();
 
             var mlrt = new MlRt(_nameFile["ml_rt"], _fileDanMlRt, _iLogger, NameModulConfig, ref _config);
@@ -111,11 +110,8 @@ namespace MLServer_2._0.Moduls
             new ParsingXml(_iLogger, ref _config).Convert();
 
             //////
-            ///      добавить обработку 
-            ///      InicialAnalysis
-            ///      InicialXml
+            ///      добавить обработку  InicialAnalysis InicialXml
             //////
-
 
             return false;
         }

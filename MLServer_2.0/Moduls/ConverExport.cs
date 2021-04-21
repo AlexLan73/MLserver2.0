@@ -30,7 +30,7 @@ namespace MLServer_2._0.Moduls
         //}
 
         #region data
-        private readonly ILogger _iLogger;
+//        private readonly ILogger _iLogger;
         private Config0 _config;
 //        private string _outDir;
         private string _commandExport;
@@ -40,9 +40,11 @@ namespace MLServer_2._0.Moduls
         private ConcurrentDictionary<string, bool> _dirClfRun;
 
         #endregion
-        public ConverExport(ILogger ilogger, ref Config0 config)
+        public ConverExport(ref Config0 config)
         {
-            _iLogger = ilogger;
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Создаем class ConverExport"));
+
+            //            _iLogger = ilogger;
             _config = config;
             _patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\).clf";
             _dirClfRun = new ConcurrentDictionary<string, bool>();
@@ -67,8 +69,8 @@ namespace MLServer_2._0.Moduls
             copy_siglog();
             foreach (var item in _config.ClexportParams)
             {
-                _allRun.AddOrUpdate(item.Key, new OneExport(_iLogger, ref _config, (item.Key, item.Value["commanda"], item.Value["ext"]))
-                    , (_, _) => new OneExport(_iLogger, ref _config, (item.Key, item.Value["commanda"], item.Value["ext"])));
+                _allRun.AddOrUpdate(item.Key, new OneExport(ref _config, (item.Key, item.Value["commanda"], item.Value["ext"]))
+                    , (_, _) => new OneExport(ref _config, (item.Key, item.Value["commanda"], item.Value["ext"])));
 
                 _allRun[item.Key].Run();
             }

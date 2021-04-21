@@ -16,7 +16,7 @@ namespace MLServer_2._0
     {
         #region data
         private Config0 _config;
-        private readonly LoggerManager _logger;
+//        private readonly LoggerManager _logger;
         private readonly JsonBasa _jsonBasa;
         private Task<bool> _resulClrExport = null;
         private ConverExport _converExport = null;
@@ -34,9 +34,9 @@ namespace MLServer_2._0
                     //--------
                 }
         */
-        public ConvertOne(LoggerManager logger, ref Config0 config, JsonBasa jsonbasa)
+        public ConvertOne(ref Config0 config, JsonBasa jsonbasa)
         {
-            _logger = logger;
+//            _logger = logger;
             _config = config;
             _jsonBasa = jsonbasa;
         }
@@ -66,7 +66,7 @@ namespace MLServer_2._0
             if (Directory.GetDirectories(_config.MPath.WorkDir, "!D*").Length > 0)
             {
                 //  запускаем конвертацию сырых данных
-                _convertSource = new ConvertSource(_logger, _jsonBasa, ref _config);
+                _convertSource = new ConvertSource(_jsonBasa, ref _config);
                 _resConvertSours = _convertSource.Run();
             }
             else
@@ -74,7 +74,7 @@ namespace MLServer_2._0
                 if (Directory.GetFiles(_config.MPath.WorkDir, "*.clf").Length > 0)
                 {
                     //  запустить переименование.
-                    _resulRename = Task<bool>.Factory.StartNew(() =>{ return new RenameFileClfMoveBasa(_logger, _jsonBasa, ref _config).Run(); });
+                    _resulRename = Task<bool>.Factory.StartNew(() =>{ return new RenameFileClfMoveBasa(_jsonBasa, ref _config).Run(); });
                 }
             }
 
@@ -109,13 +109,10 @@ namespace MLServer_2._0
         private void stopProcessing()
         {
             Task.WaitAll();
-            _logger.Dispose();
+            LoggerManager.DisposeStatic();
+//            _logger.Dispose();
             Thread.Sleep(600);
-
-            foreach (var item in _logger.CurrentProcess
-                .Where(x => x.Item1.Status != TaskStatus.Canceled))
-                    item.Item2();
-
+ 
         }
     }
 }

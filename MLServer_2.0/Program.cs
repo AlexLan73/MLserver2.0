@@ -50,16 +50,16 @@ namespace MLServer_2._0
                 Environment.Exit(-1);
             }
 
-            //            private Config0 _config;
-            //            private readonly LoggerManager _logger;
-            //            private readonly JsonBasa _jsonBasa;
-
             LoggerManager _logger = new(_inputArguments.DArgs["WorkDir"] + "\\Log");
-            ErrorBasa _errorBasa = new ErrorBasa(_logger);
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Входные данные проверенные"));
+
+//            ErrorBasa _errorBasa = new ErrorBasa(_logger);
+            ErrorBasa _errorBasa = new ErrorBasa();
             Config0 _config = new();
             JsonBasa _jsonBasa = new(ref _config);
-            _config.MPath = new MasPaths(_inputArguments.DArgs, _logger);
-            _jsonBasa.LoadFileJsoDbConfig();
+            _config.MPath = new MasPaths(_inputArguments.DArgs);
+
+//            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Поиск каталога #COMMON "));
 
             var resul = _config.MPath.FormPath();
             if (resul)
@@ -68,19 +68,19 @@ namespace MLServer_2._0
                 __error.Wait();
             }
 
-            SetupParam _setupParam = new(ref _config, _logger, _jsonBasa);
-//            var _mpathTask = Task<bool>.Factory.StartNew(_setupParam.IniciaPathJson);
+            SetupParam _setupParam = new(ref _config, _jsonBasa);
             var z = _setupParam.IniciaPathJson();
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " - Инициализация параметров закончилась "));
 
-
- //           SetNameTrigger _setNameTrigger = new SetNameTrigger(_logger, ref _config, "MDF");
-//            var _wait = _setNameTrigger.Run();
-//            _wait.Wait();
+            //            _logger.Dispose();
 //            Thread.Sleep(6000);
 
 
             if (_inputArguments.DArgs.ContainsKey("RenameDir"))
             {
+                _ = LoggerManager.AddLoggerAsync(
+                    new LoggerEvent(EnumError.Info, " - Включен режим переименования clf файлов и создание DbConfig.json  "));
+
                 var _files = new FindDirClf(_inputArguments.DArgs["RenameDir"]).Run();
                 foreach (var item in _files)
                 {
@@ -93,10 +93,14 @@ namespace MLServer_2._0
                     _inputArguments.DArgs["WorkDir"] = item;
                     _inputArguments.DArgs["OutputDir"] = item;
 
-                    ConvertOne _convertOne = new(_logger, ref _config, _jsonBasa);
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new []{ "  Включен режим переименования:\n "
+                                                                    , $" Работаем с каталогом - {item}" }));
+
+                    ConvertOne _convertOne = new(ref _config, _jsonBasa);
                     _convertOne.Run();
                 }
-
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Перебрали все каталоги " ));
+                _logger.Dispose();
             }
             else
             {
@@ -118,24 +122,30 @@ namespace MLServer_2._0
                 
                 if(Directory.GetDirectories(_inputArguments.DArgs["WorkDir"], "!D*").Length > 0)
                 {
-                    int k = 1;
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Запуск-> Обработка сырых данных "));
+
                     //  Class ConvertOne + Convert
-                    ConvertOne _convertOne = new ConvertOne(_logger, ref _config, _jsonBasa);
+                    ConvertOne _convertOne = new ConvertOne(ref _config, _jsonBasa);
                     _convertOne.Run();
 
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Завершение обработки"));
+
                 }
-                //  Существует каталог CLF с файлами + налисие файла файла DbConfig.json 
+                //  Существует каталог CLF с файлами + наличие файла файла DbConfig.json 
                 //  Нет clf файлов в корневом каталоге
                 else
                 {
                     if (File.Exists(_inputArguments.DArgs["WorkDir"] + "\\clf.json"))
                         File.Delete(_inputArguments.DArgs["WorkDir"] + "\\clf.json");
 
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Режим Конвертации -> CLF -> MDF (...) "));
+
                     if (!File.Exists(_inputArguments.DArgs["WorkDir"] + "\\DbConfig.json"))
                     {
-                        ConvertOne _convertOne = new(_logger, ref _config, _jsonBasa);
+                        _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " нет файла DbConfig.json создаем его "));
+                        ConvertOne _convertOne = new(ref _config, _jsonBasa);
                         _convertOne.Run();
-
+                        _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение"));
                     }
 
                     if (Directory.Exists(_config.MPath.Clf)
@@ -143,20 +153,15 @@ namespace MLServer_2._0
                         && (Directory.GetFiles(_config.MPath.WorkDir, "*.clf").Length == 0)
                         && File.Exists(_config.MPath.WorkDir + "\\DbConfig.json"))
                     {
-                        ConverExport _converExport = new ConverExport(_logger, ref _config);
+                        _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Конвертируем -> CLF -> MDF (...)  "));
+
+                        ConverExport _converExport = new ConverExport(ref _config);
                         _converExport.Run();
-
+                        _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение"));
                     }
-                    else
-                    {
-                        //  стандартный запуск
-
-                    }
-
                 }
-
             }
-//            var zzz = Directory.GetFiles(_inputArguments.DArgs["WorkDir"] + "\\", "*.clf").Length == 0;
+            _logger.Dispose();
 
             WriteLine("Все ))");
         }
@@ -164,90 +169,3 @@ namespace MLServer_2._0
     }
 }
 
-/*
-  
-             //            const string pathLog = @"E:\MLserver\Log";
-            _logger = new LoggerManager(_inputArguments.DArgs["WorkDir"]+"\\Log");
-
-            Task.Run(() => _logger.AddLoggerInfoAsync(
-                new LoggerEvent(EnumError.Info, " ==>> #### Входные аргументы проверены  ####",
-                    EnumLogger.MonitorFile)));
-
-            JsonBasa _jsonBasa = new JsonBasa();
-            SetupParam _setupParam = new(_inputArguments, _logger, _jsonBasa);
-            var _mpathTask = Task<ResultTd<bool, SResulT0>>.Factory.StartNew(_setupParam.IniciaPathJson);
-
-            _mpathTask.Wait();
-            if (_mpathTask.Result)
-            {
-                Task.Run(() => _logger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Error, " ==>> #### Ошибка формирования: путей, json, ml_rt  ####", EnumLogger.MonitorFile)));
-                Environment.Exit(-2);
-            }
-
-            //Task<ResultTd<bool, SResulT0>> resulRename = new();
-            ///////////////
-            ///    проверка есть ли файлы *.CLF в каталоге CLF если  есть то копируем в основной каталог
-
-            ConvertSource _convertSource;
-            Task<ResultTd<bool, SResulT0>> _resConvertSours = null;
-            Task<ResultTd<bool, SResulT0>> _resulRename = null;
-            TestClfMoveWorkDir();
-
- 
-  
-
-            if (Directory.GetDirectories(ConfigAll.MPath.WorkDir, "!D*").Length > 0)
-            {
-                //  запускаем конвертацию сырых данных
-                _convertSource = new ConvertSource(_logger, _jsonBasa);
-                _resConvertSours =_convertSource.Run();
-            }
-            else
-            {
-                if (Directory.GetFiles(ConfigAll.MPath.WorkDir, "*.clf").Length > 0)
-                {
-                    //  запустить переименование.
-                    _resulRename = Task<ResultTd<bool, SResulT0>>.Factory.StartNew(() => { return new RenameFileClfMoveBasa(_logger, _jsonBasa).Run(); });
-//                    ConfigAll.IsRun.IsSource = false;
-//                    var resulRename = Task<ResultTd<bool, SResulT0>>.Factory.StartNew(() => { return new RenameFileClfMove(_logger, _jsonBasa).Run(); });
-                }
-            }
-
-
-            /////////////////////////////////////////////////
-
-            Thread.Sleep(3000);
-
-            _resConvertSours?.Wait();
-            _resulRename?.Wait();
-            int k1111 = 1;
-
-
-        static void TestClfMoveWorkDir()
-        {
-            if (Directory.Exists(ConfigAll.MPath.Clf))
-            {
-                var files = Directory.GetFiles(ConfigAll.MPath.Clf);
-                foreach (var item in files)
-                {
-                    var fileOut = ConfigAll.MPath.WorkDir + "\\" + Path.GetFileName(item);
-                    File.Move(item, fileOut, true);
-                }
-            }
-        }
-
-
-        static void StopProcessing()
-        {
-            Task.WaitAll();
-            _logger.Dispose();
-            Thread.Sleep(600);
-
-            foreach (var item in _logger.CurrentProcess
-                .Where(x => x.Item1.Status != TaskStatus.Canceled))
-                item.Item2();
-
-        }
-
-
- */

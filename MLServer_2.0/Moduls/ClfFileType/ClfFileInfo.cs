@@ -15,7 +15,7 @@ namespace MLServer_2._0.Moduls.ClfFileType
     public class ClfFileInfo : ExeFileInfo
     {
         #region data
-        private readonly ILogger _ilogger;
+//        private readonly ILogger _ilogger;
         private readonly Config0 _config;
         private readonly string _filename;
         private readonly string _nameCar;
@@ -31,13 +31,15 @@ namespace MLServer_2._0.Moduls.ClfFileType
 
 
         #endregion
-        public ClfFileInfo(string filename, ref FileMove renameFile, ILogger logger, ref Config0 config) 
+        public ClfFileInfo(string filename, ref FileMove renameFile,  ref Config0 config) 
                              : base(config.MPath.FileType, filename, "")
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class ClfFileInfo"));
+
             IsError = false;
             _config = config;
             _nameCar = _config.Fields["carname"];
-            _ilogger = logger;
+            //            _ilogger = logger;
             _filename = filename;
             _renameFile = renameFile;
             FileInfo fileInf = new(_filename);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,14 +22,19 @@ namespace MLServer_2._0.Logger
 
         private readonly CancellationToken _ctWriteAsync;
         private readonly CancellationToken _ctReadLogger;
+        private static LoggerManager _loggerManager = null;
 
         //        public Task CurrentProcessWriteAsync;
-//        public Task [] CurrentProcess = new Task[2];
+        //        public Task [] CurrentProcess = new Task[2];
         public (Task, Action)[] CurrentProcess = new (Task, Action)[2];
 
         public LoggerManager(string filename)
         {
             _director = filename;
+
+            if (!Directory.Exists(_director))
+                Directory.CreateDirectory(_director);
+
             CreateNameFile();
 
             _ctWriteAsync = _tokenWriteAsync.Token;
@@ -40,6 +46,10 @@ namespace MLServer_2._0.Logger
             CurrentProcess[1] = (new Task(action: () =>{_ = ProcessWriteAsync();}, _tokenWriteAsync.Token), AbortWriteAsync);
             CurrentProcess[0].Item1.Start();
             CurrentProcess[1].Item1.Start();
+
+            _loggerManager = this;
+            AddLoggerAsync(new LoggerEvent(EnumError.Info, "Start programm convert " + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")));
+
         }
 
         public void SetExitProgrammAsync() => _isExitPrigram = true;
@@ -49,10 +59,13 @@ namespace MLServer_2._0.Logger
             _filename = _director + "\\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".log";
         
 
-        public void AddLoggerInfoAsync(LoggerEvent e)
+//        public void AddLoggerInfoAsync(LoggerEvent e)        {            _cq.Enqueue(e);        }
+
+        public static async Task AddLoggerAsync(LoggerEvent e) 
         {
-            _cq.Enqueue(e);
+            _loggerManager._cq.Enqueue(e);
         }
+
 
         public async Task ProcessWriteAsync()
         {
@@ -87,8 +100,12 @@ namespace MLServer_2._0.Logger
 
                     try
                     {
+                        
                         if (_ctWriteAsync.IsCancellationRequested)
-                            _ctWriteAsync.ThrowIfCancellationRequested();
+                        {
+                            await WriteTextAsync(_filename, text);
+                            _ctWriteAsync.ThrowIfCancellationRequested(); 
+                        }
                     }
                     catch (Exception)
                     {
@@ -127,9 +144,8 @@ namespace MLServer_2._0.Logger
             else
             {
                 await using var sourceStream =
-                    new FileStream(
-                        filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true);
-                await sourceStream.WriteAsync(encodedText, 0, encodedText.Length);
+                    new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true);
+                await sourceStream.WriteAsync(encodedText.AsMemory(0, encodedText.Length));
             }
             //            await sourceStream.WriteAsync(encodedText, 0, encodedText.Length);
 
@@ -184,7 +200,14 @@ namespace MLServer_2._0.Logger
             SetRun(false);
             SetExitProgrammAsync();
 
+            foreach (var item in CurrentProcess.Where(x => x.Item1.Status != TaskStatus.Canceled))
+                item.Item2();
         }
+        public static void DisposeStatic()
+        {
+            _loggerManager.Dispose();
+        }
+
     }
 }
 
