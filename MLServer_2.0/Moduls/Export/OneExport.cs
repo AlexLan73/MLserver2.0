@@ -151,7 +151,7 @@ namespace MLServer_2._0.Moduls.Export
                 _config.IsRun.IsExport = true;
 
                 _setNameTrigger = new SetNameTrigger(_iLogger, ref _config, _ext);
-                _waitNameTrigger = _setNameTrigger.Run();
+                _waitNameTrigger = Task.Run(()=> _setNameTrigger.Run());
 
                 _startDateTime = DateTime.Now;
                 //            bool _isTestRunSourse = true;
@@ -198,6 +198,7 @@ namespace MLServer_2._0.Moduls.Export
 
   
                 _waitNameTrigger?.Wait();
+
             });
         }
 

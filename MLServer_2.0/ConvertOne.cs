@@ -19,20 +19,21 @@ namespace MLServer_2._0
         private readonly LoggerManager _logger;
         private readonly JsonBasa _jsonBasa;
         private Task<bool> _resulClrExport = null;
+        private ConverExport _converExport = null;
         #endregion
 
-/*
-        public ConvertOne(Dictionary<string, string> args)
-        {
-            _logger =  new LoggerManager(args["WorkDir"] + "\\Log");
+        /*
+                public ConvertOne(Dictionary<string, string> args)
+                {
+                    _logger =  new LoggerManager(args["WorkDir"] + "\\Log");
 
-            _config = new Config0();
-            _jsonBasa = new JsonBasa(ref _config);
-            _config.MPath = new MasPaths(args, _logger);
-            _jsonBasa.LoadFileJsoDbConfig();
-            //--------
-        }
-*/
+                    _config = new Config0();
+                    _jsonBasa = new JsonBasa(ref _config);
+                    _config.MPath = new MasPaths(args, _logger);
+                    _jsonBasa.LoadFileJsoDbConfig();
+                    //--------
+                }
+        */
         public ConvertOne(LoggerManager logger, ref Config0 config, JsonBasa jsonbasa)
         {
             _logger = logger;
@@ -87,8 +88,11 @@ namespace MLServer_2._0
 
         public virtual bool RunClrExsport()
         {
-            return false;
+//            _converExport = new ConverExport(_logger, ref _config);
+//            _converExport.Run();
+            return true;
         }
+
         private void testClfMoveWorkDir()
         {
             if (Directory.Exists(_config.MPath.Clf))

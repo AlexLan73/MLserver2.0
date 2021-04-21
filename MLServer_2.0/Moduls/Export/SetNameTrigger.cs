@@ -28,7 +28,7 @@ namespace MLServer_2._0.Moduls.Export
         private string _typeconvert;
         private string _ext;
         private string _pathConvert;
-        private ConcurrentDictionary<string, string> _mem1 = new ConcurrentDictionary<string, string>();
+//        private ConcurrentDictionary<string, string> _mem1 = new ConcurrentDictionary<string, string>();
         private readonly FileMove _renameFile;
         #endregion
         public SetNameTrigger(ILogger ilogger, ref Config0 config, string typeconvert)
@@ -40,15 +40,12 @@ namespace MLServer_2._0.Moduls.Export
             _pathConvert = _config.MPath.OutputDir + "\\" + _typeconvert + "\\";
             _ext = "."+_config.ClexportParams[_typeconvert]["ext"];
 
-            var _x0 = _config.DbConfig.Where(x => x.Key.ToLower().Contains("_m2_")).Select(y=> y.Value);//
-            foreach (var item in _x0)
+            if (_config.FMem.Count == 0)
             {
-                foreach (var item1 in item)
-                {
-                    string s0 = _numTrigger(item1.Value);
-                    var ww = s0.Length >0? "_Trigger"+ s0 : "";
-                    _mem1.AddOrUpdate(item1.Key, ww, (_,_) => ww);
-                }
+                var _x0 = _config.DbConfig.Where(x => x.Key.ToLower().Contains("_m2_")).Select(y => y.Value);//
+                foreach (var item in _x0)
+                    foreach (var item1 in item)
+                        _config.FMem.AddOrUpdate("M2_" + item1.Key, item1.Value, (_, _) => item1.Value);
             }
 
             _renameFile = new FileMove(_pathConvert, _pathConvert);
@@ -94,6 +91,17 @@ namespace MLServer_2._0.Moduls.Export
                   foreach (var item in _ls)
                   {
                       string _file = Path.GetFileName(item);
+                      try
+                      {
+                          string filePatch = _pathConvert + item;
+                          using (var fs = File.Open(filePatch, FileMode.Open, FileAccess.Read, FileShare.None))
+                          { }
+                      }
+                      catch (IOException )
+                      {
+                          continue;
+                      }
+
                       _file = _file.ToUpper().Replace(")F", ")_F");
                     _renameFile.Add(item, _file);
 
@@ -108,6 +116,16 @@ namespace MLServer_2._0.Moduls.Export
                 foreach (var item in _ls)
                 {
                     string _file = Path.GetFileName(item).ToUpper();
+                    try
+                    {
+                        string filePatch = _pathConvert + item;
+                        using (var fs = File.Open(filePatch, FileMode.Open, FileAccess.Read, FileShare.None))
+                        { }
+                    }
+                    catch (IOException)
+                    {
+                        continue;
+                    }
 
                     int i = _file.IndexOf(")F");
                     var _file0 = _file.Substring(0, i+1)+"_";

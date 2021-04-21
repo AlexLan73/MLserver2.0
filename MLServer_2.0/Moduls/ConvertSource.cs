@@ -18,6 +18,8 @@ namespace MLServer_2._0.Moduls
         private string _pathClf;
         private string _pathLog;
         private Config0 _config;
+        private ConverExport _converExport;
+        private Task _converExportTask = null;
         #endregion
         public ConvertSource(ILogger ilogger, IJsonBasa ijsonbasa, ref Config0 config)
         {
@@ -33,9 +35,11 @@ namespace MLServer_2._0.Moduls
 
                 return _s;
             };
-
             _pathClf = _config.MPath.Clf;
             _pathLog = _config.MPath.Log;
+            if (!Directory.Exists(_pathClf))
+                Directory.CreateDirectory(_pathClf);
+
         }
 
         protected string[] FilesSourse() => Directory.GetDirectories(_config.MPath.WorkDir, "!D*");
@@ -95,6 +99,9 @@ namespace MLServer_2._0.Moduls
         {
             _config.IsRun.IsSource = true;
 
+            _converExport = new ConverExport(_iLogger, ref _config);
+            
+
             if (!Directory.Exists(_pathClf))
                 Directory.CreateDirectory(_pathClf);
 
@@ -103,6 +110,9 @@ namespace MLServer_2._0.Moduls
             TestFilesNullByte(Directory.GetDirectories(_config.MPath.WorkDir, "!D*"));
 
             var resulRename =  Task<bool>.Factory.StartNew(() => { return new RenameFileClfMove(_iLogger, _ijsonbasa, ref _config).Run(); });
+
+            _converExportTask = Task.Run(()=> _converExport.Run());
+             
             var res = Task<bool>.Factory.StartNew(() => 
             {
                 while (FilesSourse().Length > 0)
@@ -121,6 +131,7 @@ namespace MLServer_2._0.Moduls
             Console.WriteLine(" *****   ******  конвертация сырых данных завершена  ***** ");
             _config.IsRun.IsSource = false;
             resulRename.Wait();
+            _converExportTask.Wait();
             Console.WriteLine(" ***** ## ******  Переименование и перемецение CLF файлов завершена  ***** ");
 
             return resulRename.Result;

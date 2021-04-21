@@ -73,15 +73,12 @@ namespace MLServer_2._0.Moduls
                 _allRun[item.Key].Run();
             }
 
-
             foreach (var item in _allRun)
             {
                 item.Value.TaskRun.Wait();
             }
-
-
-
         }
+
         private void copy_siglog()
         {   //  copy_siglog_vsysvar
             if (_config.VSysVarPath.ToLower().Contains(_config.VSysVarType.ToLower()))

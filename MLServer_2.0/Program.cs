@@ -120,25 +120,25 @@ namespace MLServer_2._0
                 {
                     int k = 1;
                     //  Class ConvertOne + Convert
-                    //  ConvertOne _convertOne = new ConvertOne(_inputArguments.DArgs);
-                    //  _convertOne.Run();
+                    ConvertOne _convertOne = new ConvertOne(_logger, ref _config, _jsonBasa);
+                    _convertOne.Run();
 
                 }
                 //  Существует каталог CLF с файлами + налисие файла файла DbConfig.json 
                 //  Нет clf файлов в корневом каталоге
                 else
-
+                {
                     if (File.Exists(_inputArguments.DArgs["WorkDir"] + "\\clf.json"))
                         File.Delete(_inputArguments.DArgs["WorkDir"] + "\\clf.json");
 
-                if (!File.Exists(_inputArguments.DArgs["WorkDir"]+ "\\DbConfig.json"))
+                    if (!File.Exists(_inputArguments.DArgs["WorkDir"] + "\\DbConfig.json"))
                     {
                         ConvertOne _convertOne = new(_logger, ref _config, _jsonBasa);
                         _convertOne.Run();
 
                     }
-    
-                    if (Directory.Exists(_config.MPath.Clf) 
+
+                    if (Directory.Exists(_config.MPath.Clf)
                         && (Directory.GetFiles(_config.MPath.Clf, "*.clf").Length > 0)
                         && (Directory.GetFiles(_config.MPath.WorkDir, "*.clf").Length == 0)
                         && File.Exists(_config.MPath.WorkDir + "\\DbConfig.json"))
@@ -153,8 +153,9 @@ namespace MLServer_2._0
 
                     }
 
-            }
+                }
 
+            }
 //            var zzz = Directory.GetFiles(_inputArguments.DArgs["WorkDir"] + "\\", "*.clf").Length == 0;
 
             WriteLine("Все ))");
