@@ -1,9 +1,6 @@
 ﻿using MLServer_2._0.Logger;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -47,8 +44,7 @@ namespace MLServer_2._0.Moduls.Error
     {
         #region data
         private ConcurrentDictionary<int, (object, object, EnumError)> DError = new ConcurrentDictionary<int, (object, object, EnumError)>();
-        public ILogger  _iLogger;
-        private static ErrorBasa _errorBasa = null;
+        private static ErrorBasa _errorBasa;
         private DelegErrorNun en;
         private DelegErrorNunMessag enm;
         private const string NameModulConfig = "Модуль SetupParam ";
@@ -85,17 +81,17 @@ namespace MLServer_2._0.Moduls.Error
         #endregion
         #endregion
 
-        public ErrorBasa(ILogger iLogger)
+        public ErrorBasa()
         {
-            _iLogger=iLogger;
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class ErrorBasa"));
+
             _errorBasa = this;
             en = _errorBasa.ErrorNun;
             enm = _errorBasa.ErrorNunMessag;
-            inicial();
+            Inicial();
         }
 
-
-        private void inicial()
+        private void Inicial()
         {
             DError.AddOrUpdate(1, (_err1, en, EnumError.Info), (_, _) => (_err1, en, EnumError.Error));
             DError.AddOrUpdate(-1, (_err_1, en, EnumError.Error), (_, _) => (_err_1, en, EnumError.Error));
@@ -139,35 +135,27 @@ namespace MLServer_2._0.Moduls.Error
             DError.AddOrUpdate(-34, (new STypeError2(-34, _err_34, "ClfFileInfo"), enm, EnumError.Warning),
                           (_, _) => (new STypeError2(-34, _err_34, "ClfFileInfo"), enm, EnumError.Warning));
 
-
-
         }
         public void ErrorNun(int cod)
         {
-            var _info = _errorBasa.DError[cod];
-            var _typeerror = _info.Item3;
-//            var _nameerror = (string)_info.Item1;
-//            var _xx = new LoggerEvent(_typeerror, _nameerror);
-//            _iLogger.AddLoggerInfoAsync(_xx);
+            var info = _errorBasa.DError[cod];
+            var typeerror = info.Item3;
 
-            _iLogger.AddLoggerInfoAsync(new LoggerEvent(_typeerror, (string)_info.Item1));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(typeerror, (string)info.Item1));
 
-            if (_typeerror == EnumError.Error)
-            {
-//                Console.WriteLine(_nameerror);
-                _iLogger.Dispose();
-                Thread.Sleep(1000);
-                Environment.Exit(cod); 
-            }
+            if (typeerror != EnumError.Error) return;
 
+            LoggerManager.DisposeStatic();
+            Thread.Sleep(1000);
+            Environment.Exit(cod);
         }
         public void ErrorNunMessag(int cod, string message = "")
         {
-//            var xx = DError[cod].Item1.GetType().Name;
             switch (DError[cod].Item1.GetType().Name)
             {
                 case "STypeError2":
-                    _iLogger.AddLoggerInfoAsync(new LoggerEvent(_errorBasa.DError[cod].Item3, ((STypeError2)DError[cod].Item1).Set(message)));
+//                    _iLogger.AddLoggerInfoAsync(new LoggerEvent(_errorBasa.DError[cod].Item3, ((STypeError2)DError[cod].Item1).Set(message)));
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(_errorBasa.DError[cod].Item3, ((STypeError2)DError[cod].Item1).Set(message)));
                     break;
             }
 
@@ -184,21 +172,16 @@ namespace MLServer_2._0.Moduls.Error
         }
         public static async Task FError(int cod, string message = "")
         {
-//            var x111 = _errorBasa.DError[cod];
-//            var z = _errorBasa.DError[cod].Item2.GetType().Name;
-
-            await Task.Factory.StartNew((object x0) =>
+            await Task.Factory.StartNew(x0 =>
             {
                 var z1 = (S01)x0;
-//                Console.WriteLine($"  kod- {z1.Cod}    {z1.Mes}");
-                var _info = _errorBasa.DError[(int)z1.Cod];
-                switch (_info.Item2.GetType().Name)
+                var (_, item2, _) = _errorBasa.DError[z1.Cod];
+                switch (item2.GetType().Name)
                 {
                     case "DelegErrorNun":
-//                        var _deleg = (DelegErrorNun)_info.Item2; _deleg((int)z1.Cod);
-                        ((DelegErrorNun)_info.Item2)((int)z1.Cod);
+                        ((DelegErrorNun)item2)(z1.Cod);
                         break;
-                    case "DelegErrorNunMessag": ((DelegErrorNunMessag)_info.Item2)(z1.Cod, (string)z1.Mes); break;
+                    case "DelegErrorNunMessag": ((DelegErrorNunMessag)item2)(z1.Cod, (string)z1.Mes); break;
                 }
             }, new S01(cod, message));
         }

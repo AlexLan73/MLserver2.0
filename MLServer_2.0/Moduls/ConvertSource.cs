@@ -1,5 +1,4 @@
-﻿using MLServer_2._0.Interface.Config;
-using MLServer_2._0.Logger;
+﻿using MLServer_2._0.Logger;
 using MLServer_2._0.Moduls.Config;
 using MLServer_2._0.Moduls.FileManager;
 using System;
@@ -13,18 +12,13 @@ namespace MLServer_2._0.Moduls
     public class ConvertSource
     {
         #region data
-        private readonly ILogger _iLogger;
-        private readonly IJsonBasa _ijsonbasa;
-        private string _pathClf;
-        private string _pathLog;
         private Config0 _config;
         private ConverExport _converExport;
-        private Task _converExportTask = null;
+        private Task _converExportTask;
         #endregion
-        public ConvertSource(ILogger ilogger, IJsonBasa ijsonbasa, ref Config0 config)
+        public ConvertSource(ref Config0 config)
         {
-            _iLogger = ilogger;
-            _ijsonbasa = ijsonbasa;
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Создаем class ConvertSource"));
             _config = config;
             Func<string, string> dirCreate = (NameDir) =>
             {
@@ -32,13 +26,11 @@ namespace MLServer_2._0.Moduls
 
                 if (!Directory.Exists(_s))
                     Directory.CreateDirectory(_s);
-
+                
                 return _s;
             };
-            _pathClf = _config.MPath.Clf;
-            _pathLog = _config.MPath.Log;
-            if (!Directory.Exists(_pathClf))
-                Directory.CreateDirectory(_pathClf);
+            if (!Directory.Exists(_config.MPath.Clf))
+                Directory.CreateDirectory(_config.MPath.Clf);
 
         }
 
@@ -60,6 +52,8 @@ namespace MLServer_2._0.Moduls
             foreach (var item in direct)
             {
                 Console.WriteLine(item);
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" ConvertSource -> {item}"));
+
                 testByte.Add(Task.Factory.StartNew(() =>
                 {
                     var files = Directory.GetFiles(item);
@@ -99,17 +93,14 @@ namespace MLServer_2._0.Moduls
         {
             _config.IsRun.IsSource = true;
 
-            _converExport = new ConverExport(_iLogger, ref _config);
+            _converExport = new ConverExport(ref _config);
             
 
-            if (!Directory.Exists(_pathClf))
-                Directory.CreateDirectory(_pathClf);
-
-            bool resultat = false;
+            var resultat = false;
 
             TestFilesNullByte(Directory.GetDirectories(_config.MPath.WorkDir, "!D*"));
 
-            var resulRename =  Task<bool>.Factory.StartNew(() => { return new RenameFileClfMove(_iLogger, _ijsonbasa, ref _config).Run(); });
+            var resulRename =  Task<bool>.Factory.StartNew(() => { return new RenameFileClfMove(ref _config).Run(); });
 
             _converExportTask = Task.Run(()=> _converExport.Run());
              
@@ -120,8 +111,7 @@ namespace MLServer_2._0.Moduls
                     Console.WriteLine($"  кол-во файлов  ---  FilesSourse().Count()");
                     resultat = new LrdExeFile(_config.MPath.LrfDec, 
                                                 _config.MPath.WorkDir, 
-                                                _config.BasaParams["lrf_dec"], 
-                                                      _iLogger, ref _config).Run();
+                                                _config.BasaParams["lrf_dec"],  ref _config).Run();
                     DeleteDirsSourse();
                 }
 

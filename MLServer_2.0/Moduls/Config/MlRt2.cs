@@ -9,13 +9,13 @@ namespace MLServer_2._0.Moduls.Config
     public class MlRt2 : IniProcessing
     {
         public ConcurrentDictionary<string, string> NameTrigger;
-        private readonly string _nameModulConfig;
 
-        public MlRt2(string filename, string[] fields, ILogger ilogger, string nameModulConfig, ref Config0 config) : base(filename, fields, ilogger, ref config)
+        public MlRt2(string filename, string[] fields, ref Config0 config) 
+                                    : base(filename, fields, ref config)
         {
-            NameTrigger = new ConcurrentDictionary<string, string>();
-            _nameModulConfig = nameModulConfig;
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Обработка файла MlRt2"));
 
+            NameTrigger = new ConcurrentDictionary<string, string>();
         }
 
         public override bool Convert()
@@ -24,7 +24,9 @@ namespace MLServer_2._0.Moduls.Config
 
             if (result)  return true;
 
-            string ConvTriger(string s) => (s.Contains("Trigger")) ? "Trigger " + s.Replace("Trigger", "") : s;
+            string ConvTriger(string s) => (s.Contains("Trigger")) 
+                                                ? "Trigger " + s.Replace("Trigger", "") 
+                                                : s;
 
             var dan = Fields.Select(item => Ldata.FindAll(x => x.ToLower().Contains(item))).ToList();
 
@@ -56,7 +58,7 @@ namespace MLServer_2._0.Moduls.Config
                 }
             }
 
-            foreach ((var key, var val) in Data)
+            foreach (var (key, val) in Data)
                 Config.Fields.AddOrUpdate(key, val, (_, _) => val);
 
             Config.NameTrigger = new ConcurrentDictionary<string, string>(NameTrigger);

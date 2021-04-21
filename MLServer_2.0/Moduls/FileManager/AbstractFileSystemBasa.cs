@@ -1,38 +1,36 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MLServer_2._0.Moduls.FileManager
 {
-    public abstract class AFileSystemBasa<T>    //: IDisposable
+    public abstract class AFileSystemBasa<T> 
     {
         public ConcurrentQueue<T> FilesNameQueue;
 
-        protected int _repit;
-        protected int _compareSec;
+        protected int Repit;
+        protected int CompareSec;
         public Task MyTask { get; set; }
 
-        protected CancellationTokenSource tokenRepitExit = new();
-        protected CancellationToken ctTokenRepitExit = new();
+        protected CancellationTokenSource TokenRepitExit = new();
+        protected CancellationToken CtTokenRepitExit = new();
         public virtual void CallBackQueue(T dan) { }
-        public virtual void RunCommand(Action myfun, T _dan)
+        public virtual void RunCommand(Action myfun, T dan)
         {
             try
             {
                 myfun();
             }
-            catch (IOException e)
+            catch (IOException)
             {
-                CallBackQueue(_dan);
+                CallBackQueue(dan);
             }
         }
 
-        public void AbortRepit() => tokenRepitExit.Cancel();
-        public int GetCountFilesNameQueue() => FilesNameQueue != null ? FilesNameQueue.Count() : 0;
+        public void AbortRepit() => TokenRepitExit.Cancel();
+        public int GetCountFilesNameQueue() => FilesNameQueue?.Count() ?? 0;
     }
 }

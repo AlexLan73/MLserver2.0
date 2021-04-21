@@ -3,20 +3,19 @@ using MLServer_2._0.Moduls.Config;
 using MLServer_2._0.Moduls.Error;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace MLServer_2._0.Moduls.FileManager
 {
     public class LrdExeFile: ExeFileInfo
     {
         public FileDelete FileDelete;
-        private readonly ILogger _logger;
 
-        public LrdExeFile(string exefile, string filenamr, string command,  ILogger logger, ref Config0 config)
+        public LrdExeFile(string exefile, string filenamr, string command, ref Config0 config)
                      : base(exefile, filenamr, command)
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class LrdExeFile"));
+
             FileDelete = new FileDelete(ref config);
-            _logger = logger;
         }
 
         public bool Run()
@@ -44,10 +43,6 @@ namespace MLServer_2._0.Moduls.FileManager
 
             _ = ErrorBasa.FError(-5);
             return false;
-
-//            var sResulT0 = new SResulT0(-3, $" С конвертацией в lrf_dec  ", " Ошибка в обработке первоначальных данных");
-//            Task.Run(() => _logger.AddLoggerInfoAsync(new LoggerEvent(EnumError.Error, sResulT0, EnumLogger.Monitor)));
-//            return new ResultTd<bool, SResulT0>(sResulT0);
 
         }
         public override void CallBackFun(string line)

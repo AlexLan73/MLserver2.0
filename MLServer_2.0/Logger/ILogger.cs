@@ -5,7 +5,6 @@ namespace MLServer_2._0.Logger
 {
     public interface ILogger
     {
-        public void AddLoggerInfoAsync(LoggerEvent e);
         public void SetExitProgrammAsync();
         public void SetRun(bool t);
         public void Dispose();
@@ -20,18 +19,18 @@ namespace MLServer_2._0.Logger
             StringDan = stringDan;
             EnumLogger = enumLogger;
         }
-        public LoggerEvent(EnumError enumError, string[] stringDan, EnumLogger enumLogger)
+        public LoggerEvent(EnumError enumError, string[] stringDan, EnumLogger enumLogger = EnumLogger.MonitorFile)
         {
             DateTime = DateTime.Now;
             EnumError = enumError;
             StringDan = stringDan;
             EnumLogger = enumLogger;
         }
-        public LoggerEvent(EnumError enumError,  string stringDan, EnumLogger enumLogger=EnumLogger.MonitorFile)
+        public LoggerEvent(EnumError enumError, string stringDan, EnumLogger enumLogger = EnumLogger.MonitorFile)
         {
             DateTime = DateTime.Now;
             EnumError = enumError;
-            StringDan = new []{ stringDan };
+            StringDan = new[] { stringDan };
             EnumLogger = enumLogger;
         }
 
