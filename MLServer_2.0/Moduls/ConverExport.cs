@@ -20,7 +20,7 @@ namespace MLServer_2._0.Moduls
     {
         #region data
         private Config0 _config;
-        private readonly string _patternFile;
+        private readonly string _patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\).clf";
         private ConcurrentDictionary<string, OneExport> _allRun;
         private ConcurrentDictionary<string, bool> _dirClfRun;
 
@@ -29,9 +29,7 @@ namespace MLServer_2._0.Moduls
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Создаем class ConverExport"));
 
-            //            _iLogger = ilogger;
             _config = config;
-            _patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\).clf";
             _dirClfRun = new ConcurrentDictionary<string, bool>();
             _allRun = new ConcurrentDictionary<string, OneExport>();
         }

@@ -12,12 +12,10 @@ namespace MLServer_2._0.Moduls
 {
     public class RenameFileClfMoveBasa
     {
-        private readonly IJsonBasa _jsonBasa;
         protected Config0 _config;
-        public RenameFileClfMoveBasa(IJsonBasa jsonbasa, ref Config0 config)
+        public RenameFileClfMoveBasa(ref Config0 config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class RenameFileClfMoveBasa"));
-            _jsonBasa = jsonbasa;
             _config = config;
     }
 
@@ -87,7 +85,7 @@ namespace MLServer_2._0.Moduls
                 }
             }
 
-            _jsonBasa.AddFileMemInfo(_config.FileMemInfo);
+            _ = JsonBasa.AddFileMemInfo(_config.FileMemInfo);
 
             while (renameFile.GetCountFilesNameQueue() > 0)
                 Thread.Sleep(300);
@@ -95,14 +93,14 @@ namespace MLServer_2._0.Moduls
             renameFile.AbortRepit();
 
             _config.IsRun.IsRename =  false;
-            _ = _jsonBasa.SaveFileFileMemInfo();
+            _ = JsonBasa.SaveFileFileMemInfo();
             return false;
         }
     }
 
     public class RenameFileClfMove : RenameFileClfMoveBasa
     {
-        public RenameFileClfMove(IJsonBasa jsonbasa, ref Config0 config):base(jsonbasa, ref config)
+        public RenameFileClfMove(ref Config0 config):base(ref config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class RenameFileClfMove"));
 

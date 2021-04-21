@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MLServer_2._0.Logger;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,13 +26,19 @@ namespace MLServer_2._0.Moduls.FileManager
         public async void TestQueue()
         {
             bool _isRun = true;
+            string _sWrite = "";
             while (_isRun)
             {
                 var xx = FilesNameQueue.ToList().Where(x => x.Count > 3 | x.SecWait > 60).Select(x => (x.NameFile1, x.Count, x.SecWait));
-                Console.WriteLine($" count {FilesNameQueue.Count}    --------------------------------------------------");
+                _sWrite = $" count {FilesNameQueue.Count}    --------------------------------------------------";
+                Console.WriteLine(_sWrite);
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " MyFileRename =>  " + _sWrite));
+
                 foreach (var item in xx)
                 {
-                    Console.WriteLine($" path-> {item.NameFile1}  Count {item.Count} , SecWait {item.SecWait}");
+                    _sWrite = $" path-> {item.NameFile1}  Count {item.Count} , SecWait {item.SecWait}";
+                    Console.WriteLine(_sWrite);
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " MyFileRename =>  " + _sWrite));
                 }
                 Thread.Sleep(500);
                 Console.WriteLine("  цикл TestQueue ожидаем ");

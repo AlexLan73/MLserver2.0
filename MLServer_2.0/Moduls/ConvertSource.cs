@@ -13,12 +13,11 @@ namespace MLServer_2._0.Moduls
     public class ConvertSource
     {
         #region data
-        private readonly IJsonBasa _ijsonbasa;
         private Config0 _config;
         private ConverExport _converExport;
         private Task _converExportTask = null;
         #endregion
-        public ConvertSource(IJsonBasa ijsonbasa, ref Config0 config)
+        public ConvertSource(ref Config0 config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Создаем class ConvertSource"));
 
@@ -57,6 +56,8 @@ namespace MLServer_2._0.Moduls
             foreach (var item in direct)
             {
                 Console.WriteLine(item);
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" ConvertSource -> {item}"));
+
                 testByte.Add(Task.Factory.StartNew(() =>
                 {
                     var files = Directory.GetFiles(item);
@@ -103,7 +104,7 @@ namespace MLServer_2._0.Moduls
 
             TestFilesNullByte(Directory.GetDirectories(_config.MPath.WorkDir, "!D*"));
 
-            var resulRename =  Task<bool>.Factory.StartNew(() => { return new RenameFileClfMove(_ijsonbasa, ref _config).Run(); });
+            var resulRename =  Task<bool>.Factory.StartNew(() => { return new RenameFileClfMove(ref _config).Run(); });
 
             _converExportTask = Task.Run(()=> _converExport.Run());
              

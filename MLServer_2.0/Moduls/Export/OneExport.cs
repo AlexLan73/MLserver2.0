@@ -20,7 +20,6 @@ namespace MLServer_2._0.Moduls.Export
         private readonly string _typeExport;
         private readonly string _commandExport;
         private readonly string _outDir;
-        private readonly int _timeComp;
         private  DateTime _startDateTime;
         private int _timeWait;
         private List<string> _newFiles;
@@ -44,7 +43,6 @@ namespace MLServer_2._0.Moduls.Export
             _patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\).clf";
             _dirClfRun = new ConcurrentDictionary<string, Task>();
             _config.Time1Sec += _config_Time1Sec;
-            _timeComp = 60;                             // о
             _startDateTime = DateTime.Now;
             _newFiles = new List<string>();
         }
@@ -120,20 +118,24 @@ namespace MLServer_2._0.Moduls.Export
                 {
                     case 0:
                         Console.WriteLine("Error  - 0");
+                        _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Warning, " OneExport.Run() =>  Error - 0"));
                         ErrorRun = 0;
                         return;
 
                     case < 0:
                         Console.WriteLine("Error  -1");
+                        _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Warning, " OneExport.Run() =>  Error - -1"));
                         ErrorRun = -1;
                         return;
 
                     case > 0:
                         Console.WriteLine("Все нормально! ");
+                        _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " OneExport.Run() =>Start  Ok "));
                         break;
 
                     default:
                         ErrorRun = 0;
+                        _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Warning, " OneExport.Run() =>  Error - 0"));
                         return;
                 }
 

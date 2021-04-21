@@ -118,7 +118,10 @@ namespace MLServer_2._0.Logger
                 try
                 {
                     if (_ctWriteAsync.IsCancellationRequested)
-                        _ctWriteAsync.ThrowIfCancellationRequested();
+                    {
+                        await WriteTextAsync(_filename, text);
+                        _ctWriteAsync.ThrowIfCancellationRequested(); 
+                    }
                 }
                 catch (Exception)
                 {
@@ -162,24 +165,32 @@ namespace MLServer_2._0.Logger
                     if (dan == null) continue;
                     var s = dan.DateTime.ToString("yyyy-MM-dd_HH-mm-ss.fff") + "  " + dan.EnumError + "  ";
 
-                    if (EnumLogger.Monitor == dan.EnumLogger || EnumLogger.MonitorFile == dan.EnumLogger)
+                    foreach (var item in dan.StringDan)
                     {
-//                        Console.WriteLine($" кол-во {cq.Count} - {dan.DateTime} -{dan.EnumError} {dan.EnumLogger}");
-                        foreach (var item in dan.StringDan)
-                        {
-                            s += item;
-                            Console.WriteLine(item);
-                        }
+                        s += item;
+//                        Console.WriteLine(item);
                     }
 
-                    if (EnumLogger.File == dan.EnumLogger || EnumLogger.MonitorFile == dan.EnumLogger)
+                    if (EnumLogger.Monitor == dan.EnumLogger )
+                        Console.WriteLine(s);
+
+                    if (EnumLogger.File == dan.EnumLogger )
                         _strListWrite.Enqueue(s);
 
+                    if (EnumLogger.MonitorFile == dan.EnumLogger)
+                    {
+                        foreach (var item in dan.StringDan)
+                            s += item;
+                        Console.WriteLine(s);
+                        _strListWrite.Enqueue(s);
+                    }
                 }
                 try
                 {
                     if (_ctReadLogger.IsCancellationRequested)
+                    {
                         _ctReadLogger.ThrowIfCancellationRequested();
+                    }
                 }
                 catch (Exception)
                 {
@@ -190,6 +201,7 @@ namespace MLServer_2._0.Logger
 //                Console.WriteLine(" ожидание  ");
             }
             Console.WriteLine(" !!!!  больше не ждем  ");
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Logger save !!!!  больше не ждем  "));
         }
 
         public void AbortReadLogger() => _tokenReadLogger.Cancel();

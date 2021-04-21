@@ -40,7 +40,7 @@ namespace MLServer_2._0
             if (Directory.GetDirectories(_config.MPath.WorkDir, "!D*").Length > 0)
             {
                 //  запускаем конвертацию сырых данных
-                _convertSource = new ConvertSource(_jsonBasa, ref _config);
+                _convertSource = new ConvertSource(ref _config);
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "запускаем конвертации сырых данных"));
                 _resConvertSours = _convertSource.Run();
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "завершение конвертации сырых данных"));
@@ -51,7 +51,7 @@ namespace MLServer_2._0
                 {
                     _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "запустить переименование CLF файлов и перенос в каталог CLF."));
                     //  запустить переименование.
-                    _resulRename = Task<bool>.Factory.StartNew(() =>{ return new RenameFileClfMoveBasa(_jsonBasa, ref _config).Run(); });
+                    _resulRename = Task<bool>.Factory.StartNew(() =>{ return new RenameFileClfMoveBasa(ref _config).Run(); });
                 }
             }
 

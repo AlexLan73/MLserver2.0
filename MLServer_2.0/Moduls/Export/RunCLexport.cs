@@ -1,10 +1,7 @@
-﻿using MLServer_2._0.Moduls.Error;
+﻿using MLServer_2._0.Logger;
+using MLServer_2._0.Moduls.Error;
 using MLServer_2._0.Moduls.FileManager;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MLServer_2._0.Moduls.Export
 {
@@ -12,8 +9,6 @@ namespace MLServer_2._0.Moduls.Export
     {
         #region Data
         private readonly string _nameFile;
-        private readonly string _outDir;
-        private readonly string _maska;
         #endregion
         public RunCLexport(string exefile, string filenamr, string command)
                 :base(exefile, filenamr, command)
@@ -25,10 +20,15 @@ namespace MLServer_2._0.Moduls.Export
         {
             var result = ExeInfo();
 
-            Console.WriteLine($"  Код завершения программы {result.CodeError}  ");
+            string _sWrite = $"  Код завершения программы {result.CodeError}  ";
+            Console.WriteLine(_sWrite);
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " RunCLexport =>  " + _sWrite));
+
             if (result.CodeError != 0)
             {
-                Console.WriteLine(" !!!  Бардак!! ");
+                _sWrite = " !!!  Бардак!! ";
+                Console.WriteLine(_sWrite);
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " RunCLexport =>  " + _sWrite));
             }
 
             if (result.CodeError == 0) return false;
@@ -40,6 +40,7 @@ namespace MLServer_2._0.Moduls.Export
         {
             if (line.Length <= 0) return;
             Console.WriteLine(line);
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " RunCLexport =>  " + line));
         }
 
     }

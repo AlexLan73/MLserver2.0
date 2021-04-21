@@ -68,7 +68,7 @@ namespace MLServer_2._0
                 __error.Wait();
             }
 
-            SetupParam _setupParam = new(ref _config, _jsonBasa);
+            SetupParam _setupParam = new(ref _config);
             var z = _setupParam.IniciaPathJson();
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " - Инициализация параметров закончилась "));
 

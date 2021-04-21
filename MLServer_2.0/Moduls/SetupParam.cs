@@ -19,9 +19,7 @@ namespace MLServer_2._0.Moduls
 
         private Dictionary<string, string> _nameFile;
 
-        private readonly ILogger _iLogger;
         private readonly IInputArgumentsDop _inputArguments;
-        private readonly IJsonBasa _jsonBasa;
         private string[] _fileDanMlRt => new[] { "filename", "carname", "sernum" };
         private readonly string[] _fildsMlRt2 = { "trigger", "compilationtimestamp" };
         private const string NameModulConfig = "Модуль SetupParam ";
@@ -43,11 +41,10 @@ namespace MLServer_2._0.Moduls
             //            JsonBasa jsonBasa = new JsonBasa();
             //                jsonBasa.LoadFileJso<ConcurrentDictionary<string, ConcurrentDictionary<string, MemoryInfo>>>(_workDir + "\\dbconfig.json");
 
-        public SetupParam(ref Config0 config, IJsonBasa jsonBasa)
+        public SetupParam(ref Config0 config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Запуск class SetupParam "));
             _config = config;
-            _jsonBasa = jsonBasa;
 
             _inicial01();
 
@@ -88,7 +85,7 @@ namespace MLServer_2._0.Moduls
             _ = LoggerManager.AddLoggerAsync(
                 new LoggerEvent(EnumError.Info, new[] { "SetupParam \n","Грузим файл конфигурации DbConfig " }));
 
-            _jsonBasa.LoadFileJsoDbConfig();
+            JsonBasa.LoadFileJsoDbConfig();
 
             var mlrt = new MlRt(_nameFile["ml_rt"], _fileDanMlRt, ref _config);
            var resul = mlrt.Convert();

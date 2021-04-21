@@ -24,7 +24,7 @@ namespace MLServer_2._0.Moduls.FileManager
             {
                 myfun();
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 CallBackQueue(_dan);
             }
