@@ -41,20 +41,20 @@
 
     public class ResultTd1<T, E>
     {
-        private bool _is { get; set; }
+        private bool Is { get; set; }
         public ResultTd1(T value)
         {
-            _is = false;
+            Is = false;
             Value = value;
         }
 
         public ResultTd1(E error)
         {
-            _is = true;
+            Is = true;
             Error = error;
         }
 
-        public bool HasValue => _is;
+        public bool HasValue => Is;
 
 
         public static implicit operator bool(ResultTd1<T, E> result)

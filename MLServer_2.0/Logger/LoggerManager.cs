@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,10 +10,10 @@ namespace MLServer_2._0.Logger
 {
     public class LoggerManager:ILogger, IDisposable
     {
+        #region data
         private bool _isRun;
         private bool _isExitPrigram;
-        private string _filename;
-        private readonly string _director;
+        private readonly string _filename;
         private readonly ConcurrentQueue<LoggerEvent> _cq = new();
         private readonly ConcurrentQueue<string> _strListWrite = new();
 
@@ -21,15 +22,18 @@ namespace MLServer_2._0.Logger
 
         private readonly CancellationToken _ctWriteAsync;
         private readonly CancellationToken _ctReadLogger;
+        private static LoggerManager _loggerManager;
 
-        //        public Task CurrentProcessWriteAsync;
-//        public Task [] CurrentProcess = new Task[2];
         public (Task, Action)[] CurrentProcess = new (Task, Action)[2];
+        #endregion
 
+        #region constructor
         public LoggerManager(string filename)
         {
-            _director = filename;
-            CreateNameFile();
+            if (!Directory.Exists(filename))
+                Directory.CreateDirectory(filename);
+
+            _filename = filename + "\\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".log";
 
             _ctWriteAsync = _tokenWriteAsync.Token;
             _ctReadLogger = _tokenWriteAsync.Token;
@@ -40,33 +44,50 @@ namespace MLServer_2._0.Logger
             CurrentProcess[1] = (new Task(action: () =>{_ = ProcessWriteAsync();}, _tokenWriteAsync.Token), AbortWriteAsync);
             CurrentProcess[0].Item1.Start();
             CurrentProcess[1].Item1.Start();
-        }
 
+            _loggerManager = this;
+            _ = AddLoggerAsync(new LoggerEvent(EnumError.Info, "Start programm convert " + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")));
+        }
+        #endregion
+
+        #region Exit function
         public void SetExitProgrammAsync() => _isExitPrigram = true;
         public void SetRun(bool t) => _isRun = t;
+        public void AbortReadLogger() => _tokenReadLogger.Cancel();
+        public void AbortWriteAsync() => _tokenWriteAsync.Cancel();
 
-        private void CreateNameFile()=>
-            _filename = _director + "\\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".log";
-        
-
-        public void AddLoggerInfoAsync(LoggerEvent e)
+        public void Dispose()
         {
-            _cq.Enqueue(e);
-        }
+            SetRun(false);
+            SetExitProgrammAsync();
 
+            foreach (var item in CurrentProcess.Where(x => x.Item1.Status != TaskStatus.Canceled))
+                item.Item2();
+        }
+        public static void DisposeStatic()
+        {
+            _loggerManager.Dispose();
+        }
+        #endregion
+
+        #region Add data
+        public static Task AddLoggerAsync(LoggerEvent e)
+        {
+            _loggerManager._cq.Enqueue(e);
+            return Task.CompletedTask;
+        }
+        #endregion
+
+        #region Procecc 
         public async Task ProcessWriteAsync()
         {
             _ctWriteAsync.ThrowIfCancellationRequested();
-
             while (_isRun || !_strListWrite.IsEmpty)
             {
                 var text = "";
-
                 while (true)
                 {
-
-                    _strListWrite.TryDequeue(out string st);
-
+                    _strListWrite.TryDequeue(out var st);
                     if (st != null)
                     {
                         text += "\n" + st;
@@ -87,21 +108,28 @@ namespace MLServer_2._0.Logger
 
                     try
                     {
+                        
                         if (_ctWriteAsync.IsCancellationRequested)
-                            _ctWriteAsync.ThrowIfCancellationRequested();
+                        {
+                            await WriteTextAsync(_filename, text);
+                            _ctWriteAsync.ThrowIfCancellationRequested(); 
+                        }
                     }
                     catch (Exception)
                     {
                         // ignored
                     }
 
-                    Task.Delay(550).Wait();
+                    await Task.Delay(550, _ctWriteAsync);
                 }
 
                 try
                 {
                     if (_ctWriteAsync.IsCancellationRequested)
-                        _ctWriteAsync.ThrowIfCancellationRequested();
+                    {
+                        await WriteTextAsync(_filename, text);
+                        _ctWriteAsync.ThrowIfCancellationRequested(); 
+                    }
                 }
                 catch (Exception)
                 {
@@ -109,11 +137,11 @@ namespace MLServer_2._0.Logger
                 }
 
                 if (_strListWrite.IsEmpty)
-                    Task.Delay(550).Wait();
+                    Task.Delay(550, _ctWriteAsync).Wait(_ctWriteAsync);
             }
         }
 
-        async Task WriteTextAsync(string filePath, string  text)
+        private async Task WriteTextAsync(string filePath, string  text)
         {
             var encodedText = Encoding.Unicode.GetBytes(text);
 
@@ -127,12 +155,9 @@ namespace MLServer_2._0.Logger
             else
             {
                 await using var sourceStream =
-                    new FileStream(
-                        filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true);
-                await sourceStream.WriteAsync(encodedText, 0, encodedText.Length);
+                    new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true);
+                await sourceStream.WriteAsync(encodedText.AsMemory(0, encodedText.Length));
             }
-            //            await sourceStream.WriteAsync(encodedText, 0, encodedText.Length);
-
         }
 
         public void ReadLoggerInfo()
@@ -144,26 +169,34 @@ namespace MLServer_2._0.Logger
                 {
                     _cq.TryDequeue(out var dan);
                     if (dan == null) continue;
+
                     var s = dan.DateTime.ToString("yyyy-MM-dd_HH-mm-ss.fff") + "  " + dan.EnumError + "  ";
 
-                    if (EnumLogger.Monitor == dan.EnumLogger || EnumLogger.MonitorFile == dan.EnumLogger)
+                    s = dan.StringDan.Aggregate(s, (current, item) => current + item);
+
+                    switch (dan.EnumLogger)
                     {
-//                        Console.WriteLine($" кол-во {cq.Count} - {dan.DateTime} -{dan.EnumError} {dan.EnumLogger}");
-                        foreach (var item in dan.StringDan)
+                        case EnumLogger.Monitor:
+                            Console.WriteLine(s);
+                            break;
+                        case EnumLogger.File:
+                            _strListWrite.Enqueue(s);
+                            break;
+                        case EnumLogger.MonitorFile:
                         {
-                            s += item;
-                            Console.WriteLine(item);
+                            s = dan.StringDan.Aggregate(s, (current, item) => current + item);
+                            Console.WriteLine(s);
+                            _strListWrite.Enqueue(s);
+                            break;
                         }
                     }
-
-                    if (EnumLogger.File == dan.EnumLogger || EnumLogger.MonitorFile == dan.EnumLogger)
-                        _strListWrite.Enqueue(s);
-
                 }
                 try
                 {
                     if (_ctReadLogger.IsCancellationRequested)
+                    {
                         _ctReadLogger.ThrowIfCancellationRequested();
+                    }
                 }
                 catch (Exception)
                 {
@@ -171,24 +204,16 @@ namespace MLServer_2._0.Logger
                 }
 
                 Thread.Sleep(500);
-//                Console.WriteLine(" ожидание  ");
             }
             Console.WriteLine(" !!!!  больше не ждем  ");
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Logger save !!!!  больше не ждем  "));
         }
+        #endregion
 
-        public void AbortReadLogger() => _tokenReadLogger.Cancel();
-        public void AbortWriteAsync() => _tokenWriteAsync.Cancel();
-
-        public void Dispose()
-        {
-            SetRun(false);
-            SetExitProgrammAsync();
-
-        }
     }
 }
 
-
+#region Singleton пример
 /*
 public class Singleton
 {
@@ -216,3 +241,6 @@ public class Singleton
 Singleton singleton2 = Singleton.GetInstance();
 Console.WriteLine(singleton2.Date);
  */
+
+#endregion
+

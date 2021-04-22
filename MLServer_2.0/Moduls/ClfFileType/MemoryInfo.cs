@@ -8,10 +8,14 @@ namespace MLServer_2._0.Moduls.ClfFileType
 {
     public class MemoryInfo
     {
+        #region data
         public string FMemory { get; private set; }
         public DateTime Start { get; private set; }
         public DateTime End { get; private set; }
         public List<DanTriggerTime> TriggerInfo { get; private set; }
+        #endregion
+
+        #region constructor
         [JsonConstructor]
         public MemoryInfo(string fMemory, DateTime start, DateTime end, List<DanTriggerTime> triggerInfo)
         {
@@ -27,19 +31,26 @@ namespace MLServer_2._0.Moduls.ClfFileType
             End = end;
             TriggerInfo = new List<DanTriggerTime>();
         }
+        #endregion
 
+        #region GetTrigger
         public string GetNameTrigger()
         {
             if (TriggerInfo.Count <= 0)
                 return "";
 
-            string s = "_(x)";
-            string s0 = "";
-            foreach (var item in TriggerInfo.Select(x => x.Trigger.Split(" ")[1]).ToList().Distinct().ToArray())
-                s0 += s.Replace("x", item);
+            const string s = "_(x)";
+            var s0 = TriggerInfo
+                                .Select(x => x.Trigger
+                                .Split(" ")[1])
+                                .ToList()
+                                .Distinct()
+                                .ToArray()
+                                .Aggregate("", (current, item) => current + s.Replace("x", item));
 
             return s0.Length > 0 ? "_Trigger" + s0 : "";
         }
+        #endregion
 
     }
 }

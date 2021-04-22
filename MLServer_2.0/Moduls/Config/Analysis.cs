@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
-using System.Threading.Tasks;
-using MLServer_2._0.Interface.Config;
 using MLServer_2._0.Logger;
 
 namespace MLServer_2._0.Moduls.Config
@@ -17,24 +14,10 @@ namespace MLServer_2._0.Moduls.Config
 
         private readonly string[] _dirs = new[] { "\\VEHICLE_CFG\\Analysis\\", "\\VEHICLE_CFG\\Analysis\\Archive\\" };
 
-//        private readonly Dictionary<string, string> _fields;
-        private readonly ILogger _iLoger;
-//        private readonly IMasPaths _mPaths;
-
-        public Analysis(ConcurrentDictionary<string, string> fields, IMasPaths paths, ILogger ilogger)
+        public Analysis(ref Config0 config)
         {
-//            _fields = new Dictionary<string, string>(fields);
-//            _iLoger = ilogger;
-//            _mPaths = paths;
-//            RezDirAnalis = "";
-        }
-        public Analysis(ILogger ilogger, ref Config0 config)
-        {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class Analysis"));
             _config = config;
-            _iLoger = ilogger;
-
-  //          _fields = _config.Fields; new Dictionary<string, string>(fields);
-//            _mPaths = paths;
             RezDirAnalis = "";
         }
         public string Convert()
@@ -43,9 +26,11 @@ namespace MLServer_2._0.Moduls.Config
 
             var filenameOld = filename.Split("_#")[0];
 
-            var compilationtimestamp = _config.Fields.ContainsKey("compilationtimestamp") ? _config.Fields["compilationtimestamp"] : "";
+            var compilationtimestamp = _config.Fields.ContainsKey("compilationtimestamp") 
+                                                        ? _config.Fields["compilationtimestamp"] 
+                                                        : "";
 
-            string pathBasa = _config.MPath.Common + "\\Configuration\\" + filenameOld;
+            var pathBasa = _config.MPath.Common + "\\Configuration\\" + filenameOld;
 
             if (compilationtimestamp != "")
                 RezDirAnalis = FindDirectAnalis(pathBasa, _dirs, filename, compilationtimestamp);
@@ -57,13 +42,12 @@ namespace MLServer_2._0.Moduls.Config
                     RezDirAnalis = _findDirectAnalis(allfiles[0].Split(".zip")[0]);
             }
 
-            if (RezDirAnalis != "")
-            {
-                Task.Run(() => _iLoger.AddLoggerInfoAsync
-                            (new LoggerEvent(EnumError.Info, $"Конфигурацию берем из {RezDirAnalis}", EnumLogger.Monitor)));
-                return RezDirAnalis;
-            }
-            return "";
+            if (RezDirAnalis == "") return "";
+
+            _ = LoggerManager.AddLoggerAsync
+                (new LoggerEvent(EnumError.Info, $"Конфигурацию берем из {RezDirAnalis}", EnumLogger.Monitor));
+
+            return RezDirAnalis;
         }
 
         private string _findDirectAnalis(string pathAnalis)
@@ -85,7 +69,7 @@ namespace MLServer_2._0.Moduls.Config
             return "";
         }
 
-        private string FindDirectAnalis(string pathBasa, string[] dirs, string filename, string compilationtimestamp)
+        private string FindDirectAnalis(string pathBasa, IEnumerable<string> dirs, string filename, string compilationtimestamp)
         {
             var sdt = DateTime.ParseExact(compilationtimestamp, "dd.MM.yyyy HH:mm:ss",
                             CultureInfo.InvariantCulture).ToString("yyyy-MM-dd_HH-mm-ss");

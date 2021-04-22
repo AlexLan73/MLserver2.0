@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MLServer_2._0.Logger;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -6,15 +7,20 @@ namespace MLServer_2._0.Moduls.Config
 {
     public class FindCommand
     {
+        #region data
         private string PathBegin { get; set; }
         private const string Common = "#COMMON";
+        #endregion
 
+        #region constructor
         public FindCommand(string pathBegin)
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Поиск каталога #COMMON "));
             PathBegin = new FileInfo(pathBegin).DirectoryName;
-
         }
+        #endregion
 
+        #region Find
         private void findDir(ref string sdir)
         {
             if (sdir.Length == 0)
@@ -55,6 +61,7 @@ namespace MLServer_2._0.Moduls.Config
 
             return path0;
         }
+        #endregion
 
     }
 }

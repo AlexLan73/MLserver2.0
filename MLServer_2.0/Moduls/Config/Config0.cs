@@ -5,7 +5,7 @@ using TypeDStringMemoryInfo = System.Collections.Concurrent.ConcurrentDictionary
         System.Collections.Concurrent.ConcurrentDictionary<string,  MLServer_2._0.Moduls.ClfFileType.MemoryInfo>>;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
+using MLServer_2._0.Logger;
 
 //using LXmld = System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, string>>;
 
@@ -37,6 +37,8 @@ namespace MLServer_2._0.Moduls.Config
         #endregion
         public Config0()
         {
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class Config0"));
+
             IsRun = new IsRun();
             BasaParams = new ConcurrentDictionary<string, string>();
             ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>();
@@ -48,13 +50,13 @@ namespace MLServer_2._0.Moduls.Config
             DbConfig = new();
             Time1Sec += Config0_Time1Sec;
 
-            _timer1sec = new Timer(fTime1Sec, null, 0, 1000);
+            _timer1sec = new Timer(FTime1Sec, null, 0, 1000);
         }
 
         private void Config0_Time1Sec(object sender, EventArgs e)   {}
-        private void fTime1Sec(Object stateInfo) 
-        { 
-            Time1Sec(this, null); 
+        private void FTime1Sec(object stateInfo)
+        {
+            Time1Sec?.Invoke(this, null!);
         }
         public void StopTime()
         {
@@ -64,41 +66,3 @@ namespace MLServer_2._0.Moduls.Config
     }
 }
 
-
-/*
- 
-         public class Config //: IInterface
-        {
-
-            public ConcurrentDictionary<int, string> DError;
-
-            public async Task ErrorRunAsync(int error)
-            {
-
-                await Task.Factory.StartNew((object nError) =>
-                {
-                    WriteLine($"  kod- {(int) nError} ");
-                }, error);
-            }
-            public async Task ForErrorRunAsync(int nnn)
-            {
-
-                await Task.Factory.StartNew((object nError) =>
-                {
-                    for (int i = 0; i < (int)nnn; i++)
-                    {
-                        ErrorRunAsync(i);
-
-                    }
-                }, nnn);
-            }
-
-        }
-        public static async Task Main(string[] args)
-        {
-            Config _config = new Config();
-            _config.ErrorRunAsync(-10);
-            _config.ForErrorRunAsync(20);
-
- 
- */

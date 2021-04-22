@@ -17,7 +17,7 @@ namespace MLServer_2._0.Moduls.FileManager
             _outputDir = outputDir;
             _isExitRepitFilesNameQueue = false;
             FilesNameQueue = new System.Collections.Concurrent.ConcurrentQueue<TypeDanFromFile1>();
-            ctTokenRepitExit = tokenRepitExit.Token;
+            CtTokenRepitExit = TokenRepitExit.Token;
         }
 
         public void Add(string namefile0, string namefile1)
@@ -55,7 +55,7 @@ namespace MLServer_2._0.Moduls.FileManager
 
                             try
                             {
-                                if (ctTokenRepitExit.IsCancellationRequested) ctTokenRepitExit.ThrowIfCancellationRequested();
+                                if (CtTokenRepitExit.IsCancellationRequested) CtTokenRepitExit.ThrowIfCancellationRequested();
                             }
                             catch (Exception) 
                             { 

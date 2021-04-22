@@ -14,6 +14,7 @@ namespace MLServer_2._0.Moduls.Config
 
         #endregion
 
+        #region constructor
         public DanTriggerTime(string dan)
         {
             Convert(dan);
@@ -30,7 +31,6 @@ namespace MLServer_2._0.Moduls.Config
         public DanTriggerTime()
         {
         }
-
         public DanTriggerTime Convert(string dan)
         {
             var d0 = dan.Split(",")[1];
@@ -44,5 +44,7 @@ namespace MLServer_2._0.Moduls.Config
             DateTime = DateTime.ParseExact(data, "dd.MM.yyyy HH:mm:ss.ff", CultureInfo.InvariantCulture);
             return this;
         }
+        #endregion
+
     }
 }
