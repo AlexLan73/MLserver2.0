@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MLServer_2._0.Logger;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
@@ -47,7 +48,10 @@ namespace MLServer_2._0.Moduls
                 foreach (var item in _dir0.Keys.Where(x => !x.ToLower().Contains("\\clf")))
                 {
                     if (!_dir0.ContainsKey(item)) continue;
-                    Console.WriteLine(item);
+
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" FindDirClf - {item}  "));
+
+//                    Console.WriteLine(item);
                     _dir0.TryRemove(item, out _);
                     foreach (var item0 in Directory.GetDirectories(item))
                         _dir0.AddOrUpdate(item0, true, (_, _) => true);

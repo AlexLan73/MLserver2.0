@@ -13,7 +13,7 @@ namespace MLServer_2._0.Moduls
     {
         #region data
         private Config0 _config;
-        private readonly string patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\).clf";
+//        private readonly string patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\).clf";
         private ConcurrentDictionary<string, OneExport> _allRun;
 
         #endregion

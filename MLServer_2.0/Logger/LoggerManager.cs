@@ -23,8 +23,9 @@ namespace MLServer_2._0.Logger
         private readonly CancellationToken _ctWriteAsync;
         private readonly CancellationToken _ctReadLogger;
         private static LoggerManager _loggerManager;
-
-        public (Task, Action)[] CurrentProcess = new (Task, Action)[2];
+        private Task readDanTask;
+        private Task writeDanTask;
+//        public (Task, Action)[] CurrentProcess = new (Task, Action)[2];
         #endregion
 
         #region constructor
@@ -40,10 +41,13 @@ namespace MLServer_2._0.Logger
             _isRun = true;
             _isExitPrigram = false;
 
-            CurrentProcess[0] = (new Task(ReadLoggerInfo, _tokenReadLogger.Token), AbortReadLogger);
-            CurrentProcess[1] = (new Task(action: () =>{_ = ProcessWriteAsync();}, _tokenWriteAsync.Token), AbortWriteAsync);
-            CurrentProcess[0].Item1.Start();
-            CurrentProcess[1].Item1.Start();
+            readDanTask = Task.Run(()=> ReadLoggerInfo(), _tokenReadLogger.Token);
+            writeDanTask = Task.Run(() => ProcessWriteAsync(), _tokenWriteAsync.Token);
+
+            //        CurrentProcess[0] = (new Task(ReadLoggerInfo, _tokenReadLogger.Token), AbortReadLogger);
+            //            CurrentProcess[1] = (new Task(action: () =>{_ = ProcessWriteAsync();}, _tokenWriteAsync.Token), AbortWriteAsync);
+            //            CurrentProcess[0].Item1.Start();
+            //            CurrentProcess[1].Item1.Start();
 
             _loggerManager = this;
             _ = AddLoggerAsync(new LoggerEvent(EnumError.Info, "Start programm convert " + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")));
@@ -58,11 +62,22 @@ namespace MLServer_2._0.Logger
 
         public void Dispose()
         {
-            SetRun(false);
-            SetExitProgrammAsync();
 
-            foreach (var item in CurrentProcess.Where(x => x.Item1.Status != TaskStatus.Canceled))
-                item.Item2();
+            while (_cq.Count > 0 || _strListWrite.Count>0)
+            {
+                Task.Delay(250);
+            }
+            SetExitProgrammAsync();
+            //            SetRun(false);
+            AbortReadLogger();
+            AbortWriteAsync();
+            //            Task.Delay(1000);
+
+            readDanTask.Wait();
+            writeDanTask.Wait();
+            
+//            foreach (var item in CurrentProcess.Where(x => x.Item1.Status != TaskStatus.Canceled))
+//                item.Item2();
         }
         public static void DisposeStatic()
         {
@@ -82,7 +97,7 @@ namespace MLServer_2._0.Logger
         public async Task ProcessWriteAsync()
         {
             _ctWriteAsync.ThrowIfCancellationRequested();
-            while (_isRun || !_strListWrite.IsEmpty)
+            while (true) // _isRun || !_strListWrite.IsEmpty
             {
                 var text = "";
                 while (true)
@@ -91,18 +106,21 @@ namespace MLServer_2._0.Logger
                     if (st != null)
                     {
                         text += "\n" + st;
-                        if (text.Length * 2 >= 4096 * 4)
+                        if (text.Length * 2 >= 4096 * 12)
                         {
                             await WriteTextAsync(_filename, text);
                             break;
                         }
+                        if (_strListWrite.Count > 0)
+                            continue;
                     }
 
-                    if (!_strListWrite.IsEmpty) continue;
+//                    if (!_strListWrite.IsEmpty) continue;
 
-                    if (_isExitPrigram)
+                    if (_isExitPrigram && _strListWrite.IsEmpty)
                     {
-                        await WriteTextAsync(_filename, text);
+                        var xwait=  WriteTextAsync(_filename, text);
+                        xwait.Wait();
                         return;                                
                     }
 
@@ -111,7 +129,16 @@ namespace MLServer_2._0.Logger
                         
                         if (_ctWriteAsync.IsCancellationRequested)
                         {
-                            await WriteTextAsync(_filename, text);
+                            while (_strListWrite.Count > 0)
+                            {
+                                _strListWrite.TryDequeue(out  st);
+                                if (st != null)
+                                {
+                                    text += "\n" + st;
+                                }
+                            }
+                            var xwait = WriteTextAsync(_filename, text);
+                            xwait.Wait();
                             _ctWriteAsync.ThrowIfCancellationRequested(); 
                         }
                     }
@@ -120,14 +147,15 @@ namespace MLServer_2._0.Logger
                         // ignored
                     }
 
-                    await Task.Delay(550, _ctWriteAsync);
+                    await Task.Delay(550);
                 }
 
                 try
                 {
                     if (_ctWriteAsync.IsCancellationRequested)
                     {
-                        await WriteTextAsync(_filename, text);
+                        var xwait = WriteTextAsync(_filename, text);
+                        xwait.Wait();
                         _ctWriteAsync.ThrowIfCancellationRequested(); 
                     }
                 }
@@ -137,9 +165,10 @@ namespace MLServer_2._0.Logger
                 }
 
                 if (_strListWrite.IsEmpty)
-                    Task.Delay(550, _ctWriteAsync).Wait(_ctWriteAsync);
+                    Task.Delay(550).Wait(_ctWriteAsync);
             }
         }
+
 
         private async Task WriteTextAsync(string filePath, string  text)
         {
@@ -162,7 +191,7 @@ namespace MLServer_2._0.Logger
 
         public void ReadLoggerInfo()
         {
-            while (_isRun || !_cq.IsEmpty)
+            while (true)
             {
 
                 while (_cq.Count>0)
@@ -191,16 +220,23 @@ namespace MLServer_2._0.Logger
                         }
                     }
                 }
+
                 try
                 {
                     if (_ctReadLogger.IsCancellationRequested)
                     {
                         _ctReadLogger.ThrowIfCancellationRequested();
+                        return;
                     }
                 }
                 catch (Exception)
                 {
                     // ignored
+                }
+
+                if (_isExitPrigram && _cq.IsEmpty)
+                {
+                    return;
                 }
 
                 Thread.Sleep(500);

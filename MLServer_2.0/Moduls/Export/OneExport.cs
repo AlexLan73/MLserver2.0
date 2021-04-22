@@ -57,10 +57,20 @@ namespace MLServer_2._0.Moduls.Export
         private List<string> _newFileWorkDir() => Directory.GetFiles(_config.MPath.WorkDir, "*.clf")
                         .Where(x => Regex.Matches(x, _patternFile, RegexOptions.IgnoreCase).Count == 1)
                         .Select(z => Path.GetFileName(z)).ToList();
-        private int _countSourseFiles()=> Directory.GetDirectories(_config.MPath.WorkDir, "!D*")
-                        .Select(item => ((string, int)) new(item, Directory.GetFiles(item, "D?F*.").Length))
+        //private int _countSourseFiles()=> Directory.GetDirectories(_config.MPath.WorkDir, "!D*")
+        //                .Select(item => ((string, int)) new(item, Directory.GetFiles(item, "D?F*.").Length))
+        //                .ToList()
+        //                .Sum(x => x.Item2);
+        private int _countSourseFiles()
+        {
+            var _directSour = Directory.GetDirectories(_config.MPath.WorkDir, "!D*");
+            if (_directSour == null || _directSour.Count() ==0)
+                return 0;
+            
+            return _directSour.Select(item => ((string, int)) new(item, Directory.GetFiles(item, "D?F*.").Length))
                         .ToList()
                         .Sum(x => x.Item2);
+        }
 
         private int _runTestStartProcess()
         {
@@ -114,19 +124,19 @@ namespace MLServer_2._0.Moduls.Export
                 switch (_runTestStartProcess())
                 {
                     case 0:
-                        Console.WriteLine("Error  - 0");
+//                        Console.WriteLine("Error  - 0");
                         _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Warning, " OneExport.Run() =>  Error - 0"));
                         ErrorRun = 0;
                         return;
 
                     case < 0:
-                        Console.WriteLine("Error  -1");
+//                        Console.WriteLine("Error  -1");
                         _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Warning, " OneExport.Run() =>  Error - -1"));
                         ErrorRun = -1;
                         return;
 
                     case > 0:
-                        Console.WriteLine("Все нормально! ");
+//                        Console.WriteLine("Все нормально! ");
                         _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " OneExport.Run() =>Start  Ok "));
                         break;
                 }

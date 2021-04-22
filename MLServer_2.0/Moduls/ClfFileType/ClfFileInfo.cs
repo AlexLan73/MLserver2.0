@@ -52,10 +52,13 @@ namespace MLServer_2._0.Moduls.ClfFileType
         {
             var result = ExeInfo();
 
-            Console.WriteLine($"  Код завершения программы {result.CodeError}  ");
+//            Console.WriteLine($"  Код завершения программы {result.CodeError}  ");
+            string s = $"  Код завершения программы {result.CodeError}  ";
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { "-ClfFileInfo => ", s }));
             if (result.CodeError != 0)
             {
-                Console.WriteLine(" !!!  Бардак!! ");
+//                Console.WriteLine(" !!!  Бардак!! ");
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { "-ClfFileInfo => ", "!!!  Бардак!! " }));
             }
 
             var nameCarx = Lines.Find(x => x.Contains("Car: ["));

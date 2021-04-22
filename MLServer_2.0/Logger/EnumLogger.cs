@@ -4,14 +4,14 @@
     {
         Monitor, 
         File, 
-        MonitorFile
+        MonitorFile,
+        DeskTop
     }
 
     public enum EnumError
     {
         Info,
         Warning,
-        Error,
-        DeskTop
+        Error
     }
 }

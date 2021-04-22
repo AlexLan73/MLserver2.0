@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MLServer_2._0.Logger;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,8 +29,10 @@ namespace MLServer_2._0.Moduls.FileManager
         public virtual void CallBackFun(string line)
         {
             if (line.Length <= 0) return;
-            Console.WriteLine(line);
+//            Console.WriteLine(line);
             Lines.Add(line);
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" ExeFileInfo =->  {line} "));
+
         }
 
         public virtual InfoExe ExeInfo()

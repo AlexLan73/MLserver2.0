@@ -13,6 +13,7 @@
 
 using System;
 using System.IO;
+using System.Threading;
 using MLServer_2._0.Logger;
 using MLServer_2._0.Moduls;
 using MLServer_2._0.Moduls.Config;
@@ -93,7 +94,7 @@ namespace MLServer_2._0
                     convertOne.Run();
                 }
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Перебрали все каталоги " ));
-                logger.Dispose();
+//                logger.Dispose();
             }
             else
             {
@@ -156,14 +157,16 @@ namespace MLServer_2._0
                     }
                 }
             }
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Exit programm - " + DateTime.Now));
+
             logger.Dispose();
 
             WriteLine("Все ))");
+//            Thread.Sleep(60000);
         }
 
     }
 }
 
 
-//            _logger.Dispose();
 //            Thread.Sleep(6000);

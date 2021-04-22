@@ -51,7 +51,7 @@ namespace MLServer_2._0.Moduls
             List<Task> testByte = new List<Task>();
             foreach (var item in direct)
             {
-                Console.WriteLine(item);
+             //   Console.WriteLine(item);
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" ConvertSource -> {item}"));
 
                 testByte.Add(Task.Factory.StartNew(() =>
@@ -108,7 +108,8 @@ namespace MLServer_2._0.Moduls
             {
                 while (FilesSourse().Length > 0)
                 {
-                    Console.WriteLine($"  кол-во файлов  ---  FilesSourse().Count()");
+                    //Console.WriteLine($"  кол-во файлов  ---  FilesSourse().Count()");
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $"  кол-во файлов  ---  {FilesSourse().Count()}"));
                     resultat = new LrdExeFile(_config.MPath.LrfDec, 
                                                 _config.MPath.WorkDir, 
                                                 _config.BasaParams["lrf_dec"],  ref _config).Run();
@@ -118,11 +119,14 @@ namespace MLServer_2._0.Moduls
                 return resultat;
             });
             res.Wait();
-            Console.WriteLine(" *****   ******  конвертация сырых данных завершена  ***** ");
+            // Console.WriteLine(" *****   ******  конвертация сырых данных завершена  ***** ");
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " *****   ******  конвертация сырых данных завершена  ***** "));
             _config.IsRun.IsSource = false;
             resulRename.Wait();
             _converExportTask.Wait();
-            Console.WriteLine(" ***** ## ******  Переименование и перемецение CLF файлов завершена  ***** ");
+
+            // Console.WriteLine(" ***** ## ******  Переименование и перемецение CLF файлов завершена  ***** ");
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " ***** ## ******  Переименование и перемецение CLF файлов завершена  ***** "));
 
             return resulRename.Result;
         }

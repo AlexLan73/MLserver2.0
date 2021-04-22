@@ -11,7 +11,7 @@ namespace MLServer_2._0
     {
         #region data
         private Config0 _config;
-        private Task<bool> _resulClrExport = null;
+//        private Task<bool> _resulClrExport = null;
         #endregion
 
         public ConvertOne(ref Config0 config)
@@ -50,8 +50,8 @@ namespace MLServer_2._0
 
             resConvertSours?.Wait();
             resulRename?.Wait();
-            _resulClrExport?.Wait();
-            StopProcessing();
+//            _resulClrExport?.Wait();
+//            StopProcessing();
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Завершение class ConvertOne.Run() "));
             return false;
         }
@@ -128,7 +128,6 @@ WriteLine("Hello World!");
 static void StopProcessing()
 {
     Task.WaitAll();
-    _logger.Dispose();
     Thread.Sleep(600);
 
     foreach (var item in _logger.CurrentProcess

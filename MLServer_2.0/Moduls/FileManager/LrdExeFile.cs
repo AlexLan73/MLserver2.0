@@ -24,17 +24,24 @@ namespace MLServer_2._0.Moduls.FileManager
 
             var result = ExeInfo();
 
-            Console.WriteLine($"  Код завершения программы {result.CodeError}  ");
+//            Console.WriteLine($"  Код завершения программы {result.CodeError}  ");
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { " LrdExeFile:\n ", $"  Код завершения программы { result.CodeError }  " }));
+
             if (result.CodeError != 0)
             {
-                    Console.WriteLine(" !!!  Бардак!! ");
+                //Console.WriteLine(" !!!  Бардак!! ");
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "  LrdExeFile ->  !!!  Бардак!!  "));
+
             }
 
             FileDelete.SetExitRepit();
 
             while (FileDelete.GetCountFilesName() >0)
             {
-                Console.WriteLine($"Удаляем файлы, ожидаем завершение, осталось -> {FileDelete.GetCountFilesName()}");
+//                Console.WriteLine($"Удаляем файлы, ожидаем завершение, осталось -> {FileDelete.GetCountFilesName()}");
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { " LrdExeFile:\n "
+                                                            , $"Удаляем файлы, ожидаем завершение, осталось -> {FileDelete.GetCountFilesName()}" }));
+
                 Thread.Sleep(1000);
             }
             FileDelete.AbortRepit();
@@ -49,7 +56,9 @@ namespace MLServer_2._0.Moduls.FileManager
         {
             if (line.Length <= 0) return;
 
-            Console.WriteLine(line);
+//            Console.WriteLine(line);
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $"  LrdExeFile ->  {line}  "));
+
             if (!line.ToLower().Contains("file")) return;
 
             try

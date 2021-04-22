@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MLServer_2._0.Logger;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -51,7 +52,8 @@ namespace MLServer_2._0.Moduls.FileManager
                             if (!File.Exists(_value.NameFile0))
                                 continue;
 
-                            Console.WriteLine($" ==--> {_value.NameFile0} ");
+//                            Console.WriteLine($" ==--> {_value.NameFile0} ");
+                            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" FileMove -> {_value.NameFile0} "));
 
                             try
                             {
