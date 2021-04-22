@@ -35,7 +35,7 @@ namespace MLServer_2._0.Moduls
                     , "инициализация параметров: \n"
                     , " - для ml_rt, ml_rt2, TextLog \n"
                     , " lrd = -S 20 -L 512 -n -k -v -i \n"
-                    , "_mdf = -v -~ -o -t -l \"file_clf\" -MB -O  \"my_dir\" SystemChannel=Binlog_GL.ini" }));
+                    , "_mdf = -v -~ -o -t -l \"file_clf\" -MB -O  \"my_dir\"    \"SystemChannel=Binlog_GL.ini\"" }));
 
             _nameFile = new Dictionary<string, string>
             {

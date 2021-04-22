@@ -43,7 +43,8 @@ namespace MLServer_2._0.Moduls.Config
                 return;
             }
 
-            filename = _config.MPath.Siglogconfig;
+
+            filename = _config.MPath.Analis;
             IList<Dictionary<string, string>> lDxml = processing.Dxml;
             var s = "";
             if (lDxml != null)

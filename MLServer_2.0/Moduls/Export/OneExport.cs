@@ -197,6 +197,8 @@ namespace MLServer_2._0.Moduls.Export
                 {
                     Directory.SetCurrentDirectory(_config.MPath.Mlserver);
 
+                    var xxx = Directory.GetCurrentDirectory();
+
                     var file = _config.MPath.Clf + "\\" + (string)info1;
                     var maska = _commandExport.Replace("file_clf", file);
                     maska = maska.Replace("my_dir", _outDir);
