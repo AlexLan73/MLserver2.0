@@ -54,7 +54,7 @@ namespace MLServer_2._0.Moduls.Config
                         var val = key1 switch
                         {
                             "path" => item0.ContainsKey(key1) ? item0[key1] : "path",
-                            "bustype" => item0.ContainsKey(key1) ? item0[key1] : "bt_bustype",
+                            "bustype" => item0.ContainsKey(key1) ? (item0[key1].Contains("bt_") ? "CAN" : item0[key1]) : "bt_bustype",
                             "channel" => item0.ContainsKey(key1) ? item0[key1] : "-1",
                             "type" => item0.ContainsKey(key1) ? item0[key1] : "type",
                             _ => ""

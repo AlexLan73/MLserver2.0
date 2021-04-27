@@ -202,6 +202,9 @@ namespace MLServer_2._0.Moduls.Export
                     var file = _config.MPath.Clf + "\\" + (string)info1;
                     var maska = _commandExport.Replace("file_clf", file);
                     maska = maska.Replace("my_dir", _outDir);
+
+//                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " OneExport.Run() =>Start  Ok "));
+
                     var runCLexport = new RunCLexport(_config.MPath.CLexport, maska, "");
                     runCLexport.Run();
                 }, item);
