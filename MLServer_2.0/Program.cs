@@ -155,6 +155,18 @@ namespace MLServer_2._0
                         converExport.Run();
                         _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение"));
                     }
+                    else if(!Directory.Exists(config.MPath.Clf)
+                        && (Directory.GetFiles(config.MPath.WorkDir, "*.clf").Length > 0))
+                    {
+                        ConvertOne convertOne = new(ref config);
+                        convertOne.Run();
+                        var converExport = new ConverExport(ref config);
+                        converExport.Run();
+
+                        _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение"));
+
+                    }
+
                 }
             }
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Exit programm - " + DateTime.Now));

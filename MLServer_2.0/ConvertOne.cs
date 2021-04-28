@@ -18,6 +18,8 @@ namespace MLServer_2._0
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class ConvertOne"));
             _config = config;
+            if (!Directory.Exists(_config.MPath.Clf))
+                Directory.CreateDirectory(_config.MPath.Clf);
         }
 
         public bool Run()

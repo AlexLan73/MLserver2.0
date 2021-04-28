@@ -22,6 +22,10 @@ namespace MLServer_2._0.Moduls
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Создаем class ConverExport"));
 
             _config = config;
+
+            if (!Directory.Exists(_config.MPath.Clf))
+                Directory.CreateDirectory(_config.MPath.Clf);
+
             _allRun = new ConcurrentDictionary<string, OneExport>();
         }
 

@@ -24,7 +24,7 @@ namespace MLServer_2._0.Moduls.Config
                                 }
         public string MlServerJson
                                 {
-                                    get => Common != "" ? Dll + "mlserver.json" : "";
+                                    get => Common != "" ? Dll + "mlserverNew.json" : "";
                                     set => _ = value;
                                 }
         public string LrfDec
