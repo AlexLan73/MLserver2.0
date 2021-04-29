@@ -2,6 +2,7 @@
 using MLServer_2._0.Logger;
 using MLServer_2._0.Moduls.Error;
 using System.Collections.Generic;
+using System;
 
 namespace MLServer_2._0.Moduls.Config
 {
@@ -83,12 +84,15 @@ namespace MLServer_2._0.Moduls.Config
         {
             var findCommand = new FindCommand(ExeFile);
             var common = findCommand.FindCommon();
+            Console.WriteLine($"1. common =>  {common} ");
+
             if (common == "")
             {
                 var error = ErrorBasa.FError(-24);
                 error.Wait();
                 return true;
             }
+            Console.WriteLine($"2. common =>  {common} ");
 
             Common = common;
 

@@ -29,7 +29,16 @@ namespace MLServer_2._0
 
         static void Main(string[] args)
         {
-
+            WriteLine("---------------------------------------------------------------------");
+            WriteLine("---------------------------------------------------------------------");
+            WriteLine("----   Версия программы 2.0  ----------------------------------------");
+            WriteLine("----    параметры:           ----------------------------------------");
+            WriteLine("----     1. Путь где лежит запускаемый файл  ------------------------");
+            WriteLine("----     2. Рабочий каталог                  ------------------------");
+            WriteLine("----     3. rename:Каталог (каталоги) создаем DBConfig  -------------");
+            WriteLine("----     4. out:Каталог куда нужно вывести конвертацию  -------------");
+            WriteLine("---------------------------------------------------------------------");
+            WriteLine("---------------------------------------------------------------------");
 
             var inputArguments = new InputArguments(args);
             var resultError = inputArguments.Parser();
@@ -50,6 +59,7 @@ namespace MLServer_2._0
             }
 
             LoggerManager logger = new(inputArguments.DArgs["WorkDir"] + "\\Log");
+//            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" Рабочий каталог {inputArguments.DArgs["WorkDir"]}"));
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Входные данные проверенные"));
 
             var errorBasa = new ErrorBasa();
