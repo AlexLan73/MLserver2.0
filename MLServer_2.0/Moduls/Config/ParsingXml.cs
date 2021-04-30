@@ -1,9 +1,9 @@
 ﻿
-using MLServer_2._0.Logger;
+using Convert.Logger;
 using System.Collections.Generic;
 using System.IO;
-using MLServer_2._0.Moduls.Error;
-namespace MLServer_2._0.Moduls.Config
+using Convert.Moduls.Error;
+namespace Convert.Moduls.Config
 {
     public class ParsingXml
     {

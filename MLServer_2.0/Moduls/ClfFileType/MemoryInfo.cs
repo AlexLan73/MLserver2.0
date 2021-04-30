@@ -1,10 +1,10 @@
-﻿using MLServer_2._0.Moduls.Config;
+﻿using Convert.Moduls.Config;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MLServer_2._0.Moduls.ClfFileType
+namespace Convert.Moduls.ClfFileType
 {
     public class MemoryInfo
     {

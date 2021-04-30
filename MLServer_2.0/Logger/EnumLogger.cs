@@ -1,4 +1,4 @@
-﻿namespace MLServer_2._0.Logger
+﻿namespace Convert.Logger
 {
     public enum  EnumLogger
     {

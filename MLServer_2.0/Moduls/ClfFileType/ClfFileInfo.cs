@@ -1,16 +1,16 @@
 ﻿using System;
 using System.IO;
-using MLServer_2._0.Logger;
-using MLServer_2._0.Moduls.Config;
-using MLServer_2._0.Moduls.FileManager;
+using Convert.Logger;
+using Convert.Moduls.Config;
+using Convert.Moduls.FileManager;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using MLServer_2._0.Moduls.Error;
+using Convert.Moduls.Error;
 
-namespace MLServer_2._0.Moduls.ClfFileType
+namespace Convert.Moduls.ClfFileType
 {
     public class ClfFileInfo : ExeFileInfo
     {

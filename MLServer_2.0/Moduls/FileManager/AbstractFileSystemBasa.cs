@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MLServer_2._0.Moduls.FileManager
+namespace Convert.Moduls.FileManager
 {
     public abstract class AFileSystemBasa<T> 
     {

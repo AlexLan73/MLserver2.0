@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
-using MLServer_2._0.Logger;
+using Convert.Logger;
 
-namespace MLServer_2._0.Moduls.Config
+namespace Convert.Moduls.Config
 {
     public class Analysis
     {

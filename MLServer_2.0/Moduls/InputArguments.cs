@@ -6,10 +6,10 @@ using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using MLServer_2._0.Interface.Config;
+using Convert.Interface.Config;
 
 
-namespace MLServer_2._0.Moduls
+namespace Convert.Moduls
 {
     public class InputArguments : IInputArgumentsDop
     {
@@ -31,15 +31,37 @@ namespace MLServer_2._0.Moduls
         {
             string _exe = null;
             string _fileName = null;
-            Process[] localByName = Process.GetProcessesByName("Convert")
-                                .Where(x => x.MainModule.FileName.Contains("#COMMON\\DLL\\Convert.exe")).ToArray();
 
-            if (localByName.Length > 0)
+            Process[] localAll = Process.GetProcesses();
+            int _count = localAll.Length - 1;
+
+            while (_fileName == null && _count >= 0)
             {
-                Console.WriteLine($"----->    {localByName[0]}");
-                Console.WriteLine($"----->    {localByName[0].MainModule.FileName}");
-                _fileName = localByName[0].MainModule.FileName;
+                try
+                {
+//                    Console.WriteLine($"  №-{_count}   {localAll[_count].MainModule.FileName}");
+                    _fileName = localAll[_count].MainModule.FileName.ToLower().Contains("dll\\convert.exe")
+                                    ? localAll[_count].MainModule.FileName
+                                    : null;
+                }
+                catch (Exception)
+                { }
+                _count--;
             }
+
+            if (_fileName != null)
+                Console.WriteLine($"  ------->>>  {_fileName}");
+
+            /*            Process[] localByName = Process.GetProcessesByName("Convert")
+                                            .Where(x => x.MainModule.FileName.Contains("#COMMON\\DLL\\Convert.exe")).ToArray();
+
+                        if (localByName.Length > 0)
+                        {
+                            Console.WriteLine($"----->    {localByName[0]}");
+                            Console.WriteLine($"----->    {localByName[0].MainModule.FileName}");
+                            _fileName = localByName[0].MainModule.FileName;
+                        }
+            */
 
             var _z = _Args.Where(x => x.Length <= 3).ToList();
             foreach (var item in _z)

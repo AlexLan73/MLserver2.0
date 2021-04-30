@@ -1,4 +1,4 @@
-﻿namespace MLServer_2._0.Moduls
+﻿namespace Convert.Moduls
 {
     public struct SResulT0
     {

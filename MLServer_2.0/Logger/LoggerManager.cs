@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MLServer_2._0.Logger
+namespace Convert.Logger
 {
     public class LoggerManager:ILogger, IDisposable
     {

@@ -1,4 +1,4 @@
-﻿namespace MLServer_2._0.Moduls.FileManager
+﻿namespace Convert.Moduls.FileManager
 {
     public interface ITypeDanFromFile1: ITypeDanFromFile0
     {

@@ -1,8 +1,8 @@
-﻿using MLServer_2._0.Logger;
-using MLServer_2._0.Moduls.Error;
-using MLServer_2._0.Moduls.FileManager;
+﻿using Convert.Logger;
+using Convert.Moduls.Error;
+using Convert.Moduls.FileManager;
 
-namespace MLServer_2._0.Moduls.Export
+namespace Convert.Moduls.Export
 {
     public class RunCLexport: ExeFileInfo
     {

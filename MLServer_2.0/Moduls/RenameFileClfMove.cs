@@ -1,13 +1,13 @@
 ﻿using System.IO;
-using MLServer_2._0.Moduls.ClfFileType;
-using MLServer_2._0.Moduls.Config;
-using MLServer_2._0.Moduls.FileManager;
+using Convert.Moduls.ClfFileType;
+using Convert.Moduls.Config;
+using Convert.Moduls.FileManager;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using MLServer_2._0.Logger;
+using Convert.Logger;
 
-namespace MLServer_2._0.Moduls
+namespace Convert.Moduls
 {
     public class RenameFileClfMoveBasa
     {

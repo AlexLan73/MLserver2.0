@@ -1,10 +1,10 @@
-﻿using MLServer_2._0.Logger;
+﻿using Convert.Logger;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MLServer_2._0.Moduls.Error
+namespace Convert.Moduls.Error
 {
     public delegate void DelegErrorNun(int errorcod);
     public delegate void DelegErrorNunMessag(int errorcod, string message = "");

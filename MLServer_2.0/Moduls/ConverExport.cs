@@ -1,12 +1,12 @@
-﻿using MLServer_2._0.Logger;
-using MLServer_2._0.Moduls.Config;
-using MLServer_2._0.Moduls.Error;
-using MLServer_2._0.Moduls.Export;
+﻿using Convert.Logger;
+using Convert.Moduls.Config;
+using Convert.Moduls.Error;
+using Convert.Moduls.Export;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
 
-namespace MLServer_2._0.Moduls
+namespace Convert.Moduls
 {
 
     public class ConverExport

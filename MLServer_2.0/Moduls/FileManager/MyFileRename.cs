@@ -1,10 +1,10 @@
-﻿using MLServer_2._0.Logger;
+﻿using Convert.Logger;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MLServer_2._0.Moduls.FileManager
+namespace Convert.Moduls.FileManager
 {
     public class MyFileRename : AFileSystemBasa<TypeDanFromFile1>
     {

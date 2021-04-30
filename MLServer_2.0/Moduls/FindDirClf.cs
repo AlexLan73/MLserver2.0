@@ -1,10 +1,10 @@
-﻿using MLServer_2._0.Logger;
+﻿using Convert.Logger;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Threading;
 
-namespace MLServer_2._0.Moduls
+namespace Convert.Moduls
 {
     public class FindDirClf
     {

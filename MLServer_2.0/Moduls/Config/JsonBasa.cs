@@ -1,16 +1,16 @@
-﻿using MLServer_2._0.Logger;
-using MLServer_2._0.Moduls.ClfFileType;
+﻿using Convert.Logger;
+using Convert.Moduls.ClfFileType;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using TypeDStringMemoryInfo1 = System.Collections.Concurrent.ConcurrentDictionary<string,
-        System.Collections.Concurrent.ConcurrentDictionary<string, MLServer_2._0.Moduls.ClfFileType.MemoryInfo>>;
+        System.Collections.Concurrent.ConcurrentDictionary<string, Convert.Moduls.ClfFileType.MemoryInfo>>;
 
 
 
-namespace MLServer_2._0.Moduls.Config
+namespace Convert.Moduls.Config
 {
     public class JsonBasa
     {

@@ -1,5 +1,5 @@
-﻿using MLServer_2._0.Logger;
-using MLServer_2._0.Moduls.Config;
+﻿using Convert.Logger;
+using Convert.Moduls.Config;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 
-namespace MLServer_2._0.Moduls.Export
+namespace Convert.Moduls.Export
 {
     public class OneExport:IDisposable
     {

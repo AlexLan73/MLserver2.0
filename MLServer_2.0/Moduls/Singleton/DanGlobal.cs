@@ -6,7 +6,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace MLServer_2._0.Moduls.Singleton
+namespace Convert.Moduls.Singleton
 {
     public class DanGlobal
     {

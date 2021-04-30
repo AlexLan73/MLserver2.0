@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MLServer_2._0.Moduls.FileManager
+namespace Convert.Moduls.FileManager
 {
     public interface ITypeDanFromFile0
     {

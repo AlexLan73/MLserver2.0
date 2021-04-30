@@ -1,6 +1,6 @@
-﻿using MLServer_2._0.Interface.Config;
+﻿using Convert.Interface.Config;
 
-namespace MLServer_2._0.Moduls.Config
+namespace Convert.Moduls.Config
 {
     public class IsRun : IIsRun
     {

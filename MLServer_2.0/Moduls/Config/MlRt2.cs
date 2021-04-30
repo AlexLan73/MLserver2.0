@@ -1,10 +1,10 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using MLServer_2._0.Logger;
+using Convert.Logger;
 
 
-namespace MLServer_2._0.Moduls.Config
+namespace Convert.Moduls.Config
 {
     public class MlRt2 : IniProcessing
     {

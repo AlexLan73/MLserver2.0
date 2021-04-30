@@ -1,11 +1,11 @@
-﻿using MLServer_2._0.Moduls.Config;
+﻿using Convert.Moduls.Config;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MLServer_2._0.Moduls.FileManager
+namespace Convert.Moduls.FileManager
 {
     public class FileDelete : AFileSystemBasa<TypeDanFromFile0>
     {

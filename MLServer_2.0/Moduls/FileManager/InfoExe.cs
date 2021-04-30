@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MLServer_2._0.Moduls.FileManager
+namespace Convert.Moduls.FileManager
 {
     public class InfoExe
     {

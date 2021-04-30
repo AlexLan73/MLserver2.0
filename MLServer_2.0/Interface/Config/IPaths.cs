@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MLServer_2._0.Interface.Config
+namespace Convert.Interface.Config
 {
     public interface IInputArguments
     {

@@ -1,5 +1,5 @@
 ﻿#nullable enable
-using MLServer_2._0.Logger;
+using Convert.Logger;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using LXmld = System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, string>>;
 
-namespace MLServer_2._0.Moduls.Config
+namespace Convert.Moduls.Config
 {
     public class XmlProcessing
     {

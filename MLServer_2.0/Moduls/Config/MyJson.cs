@@ -3,12 +3,12 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MLServer_2._0.Logger;
-using MLServer_2._0.Moduls.Error;
+using Convert.Logger;
+using Convert.Moduls.Error;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace MLServer_2._0.Moduls.Config
+namespace Convert.Moduls.Config
 {
     public class CarNameDan
     {

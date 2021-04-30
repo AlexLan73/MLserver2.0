@@ -1,10 +1,10 @@
-﻿using MLServer_2._0.Logger;
+﻿using Convert.Logger;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace MLServer_2._0.Moduls.FileManager
+namespace Convert.Moduls.FileManager
 {
     public class ExeFileInfo
     {

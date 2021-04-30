@@ -1,10 +1,10 @@
-﻿using MLServer_2._0.Logger;
+﻿using Convert.Logger;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MLServer_2._0.Moduls.FileManager
+namespace Convert.Moduls.FileManager
 {
     public class FileMove : AFileSystemBasa<TypeDanFromFile1>
     {

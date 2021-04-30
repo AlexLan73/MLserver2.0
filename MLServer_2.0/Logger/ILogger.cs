@@ -1,7 +1,7 @@
 ﻿using System;
-using MLServer_2._0.Moduls;
+using Convert.Moduls;
 
-namespace MLServer_2._0.Logger
+namespace Convert.Logger
 {
     public interface ILogger
     {

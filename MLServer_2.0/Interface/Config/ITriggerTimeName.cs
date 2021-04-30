@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using MLServer_2._0.Moduls.Config;
+using Convert.Moduls.Config;
 
-namespace MLServer_2._0.Interface.Config
+namespace Convert.Interface.Config
 {
     public interface ITriggerTimeName
     {

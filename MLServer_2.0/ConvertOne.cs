@@ -1,11 +1,11 @@
-﻿using MLServer_2._0.Logger;
-using MLServer_2._0.Moduls;
-using MLServer_2._0.Moduls.Config;
+﻿using Convert.Logger;
+using Convert.Moduls;
+using Convert.Moduls.Config;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MLServer_2._0
+namespace Convert
 {
     public class ConvertOne
     {

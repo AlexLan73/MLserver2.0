@@ -1,15 +1,15 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
-using MLServer_2._0.Moduls.ClfFileType;
+using Convert.Moduls.ClfFileType;
 using TypeDStringMemoryInfo = System.Collections.Concurrent.ConcurrentDictionary<string,
-        System.Collections.Concurrent.ConcurrentDictionary<string,  MLServer_2._0.Moduls.ClfFileType.MemoryInfo>>;
+        System.Collections.Concurrent.ConcurrentDictionary<string,  Convert.Moduls.ClfFileType.MemoryInfo>>;
 using System;
 using System.Threading;
-using MLServer_2._0.Logger;
+using Convert.Logger;
 
 //using LXmld = System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, string>>;
 
-namespace MLServer_2._0.Moduls.Config
+namespace Convert.Moduls.Config
 {
     public class Config0
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using MLServer_2._0.Logger;
-using MLServer_2._0.Moduls.Config;
-using MLServer_2._0.Moduls.FileManager;
+using Convert.Logger;
+using Convert.Moduls.Config;
+using Convert.Moduls.FileManager;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MLServer_2._0.Moduls.Export
+namespace Convert.Moduls.Export
 {
     public class SetNameTrigger
     {

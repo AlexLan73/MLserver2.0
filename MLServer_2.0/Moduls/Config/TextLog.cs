@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using MLServer_2._0.Interface.Config;
-using MLServer_2._0.Logger;
-using MLServer_2._0.Moduls.Error;
+using Convert.Interface.Config;
+using Convert.Logger;
+using Convert.Moduls.Error;
 
-namespace MLServer_2._0.Moduls.Config
+namespace Convert.Moduls.Config
 {
     public class TextLog : IniProcessing, ITriggerTimeName
     {
