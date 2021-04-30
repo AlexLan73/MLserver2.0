@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Convert.Interface.Config;
+using System;
 using System.Globalization;
-using Convert.Interface.Config;
 
 namespace Convert.Moduls.Config
 {

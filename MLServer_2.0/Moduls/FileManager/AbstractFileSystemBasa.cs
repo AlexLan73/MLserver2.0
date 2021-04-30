@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Convert.Moduls.FileManager
 {
-    public abstract class AFileSystemBasa<T> 
+    public abstract class AFileSystemBasa<T>
     {
         public ConcurrentQueue<T> FilesNameQueue;
 

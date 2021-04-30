@@ -4,6 +4,10 @@
 
 //     ! "E:\MLserver\data\PS18SED\log\2020-08-19_12-59-54
 //      \\mlmsrv\MLServer\PS18SED\log\2020-09-01_12-54-14
+using Convert.Logger;
+using Convert.Moduls;
+using Convert.Moduls.Config;
+using Convert.Moduls.Error;
 ///    !  E:\MLserver\data\PS14SED\2021-03-05_14-18-26\CLF
 ///    ! "E:\MLserver\data\PS14SED\2021-03-05_14-18-26"
 ///    E:\MLserver\data\PS33SED\log\2020-09-15_15-43-43 — копия
@@ -13,11 +17,6 @@
 
 using System;
 using System.IO;
-using System.Threading;
-using Convert.Logger;
-using Convert.Moduls;
-using Convert.Moduls.Config;
-using Convert.Moduls.Error;
 using static System.Console;
 
 namespace Convert
@@ -25,7 +24,7 @@ namespace Convert
 
     class Program
     {
-//        static LoggerManager _logger;
+        //        static LoggerManager _logger;
 
         static void Main(string[] args)
         {
@@ -59,7 +58,7 @@ namespace Convert
             }
 
             LoggerManager logger = new(inputArguments.DArgs["WorkDir"] + "\\Log");
-//            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" Рабочий каталог {inputArguments.DArgs["WorkDir"]}"));
+            //            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" Рабочий каталог {inputArguments.DArgs["WorkDir"]}"));
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Входные данные проверенные"));
 
             var errorBasa = new ErrorBasa();
@@ -67,7 +66,7 @@ namespace Convert
             var jsonBasa = new JsonBasa(ref config);
             config.MPath = new MasPaths(inputArguments.DArgs);
 
-//            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Поиск каталога #COMMON "));
+            //            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Поиск каталога #COMMON "));
 
             var resul = config.MPath.FormPath();
             if (resul)
@@ -97,14 +96,14 @@ namespace Convert
                     inputArguments.DArgs["WorkDir"] = item;
                     inputArguments.DArgs["OutputDir"] = item;
 
-                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new []{ "  Включен режим переименования:\n "
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[]{ "  Включен режим переименования:\n "
                                                                     , $" Работаем с каталогом - {item}" }));
 
                     ConvertOne convertOne = new(ref config);
                     convertOne.Run();
                 }
-                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Перебрали все каталоги " ));
-//                logger.Dispose();
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Перебрали все каталоги "));
+                //                logger.Dispose();
             }
             else
             {
@@ -165,7 +164,7 @@ namespace Convert
                         converExport.Run();
                         _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение"));
                     }
-                    else if(!Directory.Exists(config.MPath.Clf)
+                    else if (!Directory.Exists(config.MPath.Clf)
                         && (Directory.GetFiles(config.MPath.WorkDir, "*.clf").Length > 0))
                     {
                         ConvertOne convertOne = new(ref config);
@@ -184,7 +183,7 @@ namespace Convert
             logger.Dispose();
 
             WriteLine("Все ))");
-//            Thread.Sleep(60000);
+            //            Thread.Sleep(60000);
         }
 
     }

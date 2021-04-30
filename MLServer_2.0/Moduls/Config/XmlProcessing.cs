@@ -30,9 +30,9 @@ namespace Convert.Moduls.Config
                 XmlDocument doc = new XmlDocument();
                 doc.Load(filename);
 
-//                var rezultat = (from XmlNode elem in doc.SelectNodes(selectnodes)
-//                    select elem.Cast<XmlNode>()
-//                        .ToDictionary(elem1 => elem1.Name.ToLower(), elem1 => elem1.InnerText.ToLower())).ToList();
+                //                var rezultat = (from XmlNode elem in doc.SelectNodes(selectnodes)
+                //                    select elem.Cast<XmlNode>()
+                //                        .ToDictionary(elem1 => elem1.Name.ToLower(), elem1 => elem1.InnerText.ToLower())).ToList();
 
                 var rezultat = new LXmld();
                 foreach (XmlNode elem in doc.SelectNodes(selectnodes)!)
@@ -46,7 +46,7 @@ namespace Convert.Moduls.Config
 
                 Dxml = new LXmld();
 
-                Func<string, string> f001 = (s) => 
+                Func<string, string> f001 = (s) =>
                 {
                     if (s.Contains("bt_"))
                         return s.Split("_")[1].ToUpper();
@@ -64,7 +64,7 @@ namespace Convert.Moduls.Config
                             "path" => item0.ContainsKey(key1) ? item0[key1] : "path",
                             //                            "bustype" => item0.ContainsKey(key1) ? (item0[key1].Contains("bt_") ? "CAN" : item0[key1]) : "bt_bustype",
                             //                            "bustype" => item0.ContainsKey(key1) ? (item0[key1].Contains("bt_can") ? "CAN" : item0[key1]) : "bt_bustype",
-//                            "bustype" => item0.ContainsKey(key1) ? f001(item0[key1]) : "bt_bustype",
+                            //                            "bustype" => item0.ContainsKey(key1) ? f001(item0[key1]) : "bt_bustype",
                             "bustype" => item0.ContainsKey(key1) ? item0[key1].Contains("bt_") ? item0[key1].Split("_")[1].ToUpper() : item0[key1] : "bt_bustype",
                             "channel" => item0.ContainsKey(key1) ? item0[key1] : "-1",
                             "type" => item0.ContainsKey(key1) ? item0[key1] : "type",

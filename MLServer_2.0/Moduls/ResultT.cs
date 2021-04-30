@@ -2,7 +2,7 @@
 {
     public struct SResulT0
     {
-        public SResulT0(int error, string nameError, string nameRazdel, int? id=null)
+        public SResulT0(int error, string nameError, string nameRazdel, int? id = null)
         {
             Error = error;
             NameError = nameError;

@@ -4,13 +4,13 @@ using Convert.Moduls.FileManager;
 
 namespace Convert.Moduls.Export
 {
-    public class RunCLexport: ExeFileInfo
+    public class RunCLexport : ExeFileInfo
     {
         #region Data
         private readonly string _nameFile;
         #endregion
         public RunCLexport(string exefile, string filenamr, string command)
-                :base(exefile, filenamr, command)
+                : base(exefile, filenamr, command)
         {
             _nameFile = filenamr;
         }
@@ -30,7 +30,7 @@ namespace Convert.Moduls.Export
 
             if (result.CodeError == 0) return false;
 
-            _ = ErrorBasa.FError(-8, "№-"+result.CodeError+ " "+_nameFile);
+            _ = ErrorBasa.FError(-8, "№-" + result.CodeError + " " + _nameFile);
             return true;
         }
         public override void CallBackFun(string line)

@@ -1,14 +1,14 @@
-﻿using System;
-using System.IO;
-using Convert.Logger;
+﻿using Convert.Logger;
 using Convert.Moduls.Config;
+using Convert.Moduls.Error;
 using Convert.Moduls.FileManager;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Convert.Moduls.Error;
 
 namespace Convert.Moduls.ClfFileType
 {
@@ -23,14 +23,14 @@ namespace Convert.Moduls.ClfFileType
         private ConcurrentDictionary<string, MemoryInfo> _memInfo;
         private readonly FileMove _renameFile;
         public string NumMemory { get; private set; }
-        public string FileName {get; set;}
+        public string FileName { get; set; }
         public bool IsError { get; set; }
         public long FileSize { get; set; }
         public DateTime FileDate { get; set; }
         #endregion
 
         #region constructor
-        public ClfFileInfo(string filename, ref FileMove renameFile,  ref Config0 config) 
+        public ClfFileInfo(string filename, ref FileMove renameFile, ref Config0 config)
                              : base(config.MPath.FileType, filename, "")
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class ClfFileInfo"));
@@ -52,17 +52,17 @@ namespace Convert.Moduls.ClfFileType
         {
             var result = ExeInfo();
 
-//            Console.WriteLine($"  Код завершения программы {result.CodeError}  ");
+            //            Console.WriteLine($"  Код завершения программы {result.CodeError}  ");
             string s = $"  Код завершения программы {result.CodeError}  ";
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { "-ClfFileInfo => ", s }));
             if (result.CodeError != 0)
             {
-//                Console.WriteLine(" !!!  Бардак!! ");
+                //                Console.WriteLine(" !!!  Бардак!! ");
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { "-ClfFileInfo => ", "!!!  Бардак!! " }));
             }
 
             var nameCarx = Lines.Find(x => x.Contains("Car: ["));
-            if (nameCarx==null || nameCarx.Length<=0)
+            if (nameCarx == null || nameCarx.Length <= 0)
             {
                 _ = ErrorBasa.FError(-32);
                 return false;
@@ -93,7 +93,7 @@ namespace Convert.Moduls.ClfFileType
                 };
                 return s.Substring(0, 26);
             };
-            
+
             if (z0.Length <= 0)
             {
                 IsError = true;
@@ -103,7 +103,7 @@ namespace Convert.Moduls.ClfFileType
 
             List<string> danAll = new(z0);
 
-            Func<List<string>, string, List<DateTime>> FParser = (all, s) => 
+            Func<List<string>, string, List<DateTime>> FParser = (all, s) =>
             {
                 return all.FindAll(x => x.Contains(s))
                     .Select(x => x.Split(s)[1]
@@ -126,7 +126,7 @@ namespace Convert.Moduls.ClfFileType
 
             var newFileName = _nameCar + NumMemory
                                        + start[0].ToString("(yyyy-MM-dd_HH-mm-ss)") + "_"
-                                       + end[^1].ToString("(yyyy-MM-dd_HH-mm-ss)")+".clf";
+                                       + end[^1].ToString("(yyyy-MM-dd_HH-mm-ss)") + ".clf";
 
             _renameFile.Add(Path.GetFileName(Path.GetFileName(_filename)), newFileName);
 
@@ -152,7 +152,7 @@ namespace Convert.Moduls.ClfFileType
 
                 _memInfo.AddOrUpdate(memory[i], memoryInfo, (_, _) => memoryInfo);
 
-                var fMem =( newFileName.ToLower().Contains("_m2_")? "M2_" : "M1_") + memoryInfo.FMemory;
+                var fMem = (newFileName.ToLower().Contains("_m2_") ? "M2_" : "M1_") + memoryInfo.FMemory;
 
                 _config.FMem.AddOrUpdate(fMem, memoryInfo, (_, _) => memoryInfo);
             }

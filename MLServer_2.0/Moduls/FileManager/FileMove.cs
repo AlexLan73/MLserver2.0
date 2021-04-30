@@ -52,19 +52,21 @@ namespace Convert.Moduls.FileManager
                             if (!File.Exists(_value.NameFile0))
                                 continue;
 
-//                            Console.WriteLine($" ==--> {_value.NameFile0} ");
+                            //                            Console.WriteLine($" ==--> {_value.NameFile0} ");
                             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" FileMove -> {_value.NameFile0} "));
 
                             try
                             {
                                 if (CtTokenRepitExit.IsCancellationRequested) CtTokenRepitExit.ThrowIfCancellationRequested();
                             }
-                            catch (Exception) 
-                            { 
-                                break; 
+                            catch (Exception)
+                            {
+                                break;
                             }
-                            RunCommand(() => { 
-                                File.Move(_value.NameFile0, _value.NameFile1, true); }, _value);
+                            RunCommand(() =>
+                            {
+                                File.Move(_value.NameFile0, _value.NameFile1, true);
+                            }, _value);
                         }
                     }
                 }

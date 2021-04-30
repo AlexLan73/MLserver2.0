@@ -26,7 +26,7 @@ namespace Convert.Moduls
 
                 if (!Directory.Exists(_s))
                     Directory.CreateDirectory(_s);
-                
+
                 return _s;
             };
             if (!Directory.Exists(_config.MPath.Clf))
@@ -39,7 +39,7 @@ namespace Convert.Moduls
         private IEnumerable<(string, int)> FilesCountDirs()
         {
             return FilesSourse()
-                .Select(item => ((string, int)) new(item, Directory.GetFiles(item, "D?F*.").Length))
+                .Select(item => ((string, int))new(item, Directory.GetFiles(item, "D?F*.").Length))
                 .ToList();
         }
 
@@ -51,7 +51,7 @@ namespace Convert.Moduls
             List<Task> testByte = new List<Task>();
             foreach (var item in direct)
             {
-             //   Console.WriteLine(item);
+                //   Console.WriteLine(item);
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" ConvertSource -> {item}"));
 
                 testByte.Add(Task.Factory.StartNew(() =>
@@ -89,30 +89,32 @@ namespace Convert.Moduls
             }
         }
 
+#pragma warning disable CS1998 // В данном асинхронном методе отсутствуют операторы await, поэтому метод будет выполняться синхронно. Воспользуйтесь оператором await для ожидания неблокирующих вызовов API или оператором await Task.Run(...) для выполнения связанных с ЦП заданий в фоновом потоке.
         public virtual async Task<bool> Run()
+#pragma warning restore CS1998 // В данном асинхронном методе отсутствуют операторы await, поэтому метод будет выполняться синхронно. Воспользуйтесь оператором await для ожидания неблокирующих вызовов API или оператором await Task.Run(...) для выполнения связанных с ЦП заданий в фоновом потоке.
         {
             _config.IsRun.IsSource = true;
 
             _converExport = new ConverExport(ref _config);
-            
+
 
             var resultat = false;
 
             TestFilesNullByte(Directory.GetDirectories(_config.MPath.WorkDir, "!D*"));
 
-            var resulRename =  Task<bool>.Factory.StartNew(() => { return new RenameFileClfMove(ref _config).Run(); });
+            var resulRename = Task<bool>.Factory.StartNew(() => { return new RenameFileClfMove(ref _config).Run(); });
 
-            _converExportTask = Task.Run(()=> _converExport.Run());
-             
-            var res = Task<bool>.Factory.StartNew(() => 
+            _converExportTask = Task.Run(() => _converExport.Run());
+
+            var res = Task<bool>.Factory.StartNew(() =>
             {
                 while (FilesSourse().Length > 0)
                 {
                     //Console.WriteLine($"  кол-во файлов  ---  FilesSourse().Count()");
                     _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $"  кол-во файлов  ---  {FilesSourse().Count()}"));
-                    resultat = new LrdExeFile(_config.MPath.LrfDec, 
-                                                _config.MPath.WorkDir, 
-                                                _config.BasaParams["lrf_dec"],  ref _config).Run();
+                    resultat = new LrdExeFile(_config.MPath.LrfDec,
+                                                _config.MPath.WorkDir,
+                                                _config.BasaParams["lrf_dec"], ref _config).Run();
                     DeleteDirsSourse();
                 }
 

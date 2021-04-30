@@ -1,8 +1,8 @@
 ﻿using Convert.Interface.Config;
 using Convert.Logger;
 using Convert.Moduls.Error;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace Convert.Moduls.Config
 {
@@ -10,40 +10,43 @@ namespace Convert.Moduls.Config
     {
         #region data
         public string Common { get; set; }
-        public string Dll {
-                            get => Common != "" ? Common + "\\DLL\\" : "";
-                            set => _ = value; 
-                          } 
-        public string Siglogconfig { 
-                                    get=> Common != "" ? Dll + "siglog_config.ini" : "";
-                                    set => _ = value;
-                                    }
+        public string Dll
+        {
+            get => Common != "" ? Common + "\\DLL\\" : "";
+            set => _ = value;
+        }
+        public string Siglogconfig
+        {
+            get => Common != "" ? Dll + "siglog_config.ini" : "";
+            set => _ = value;
+        }
         public string Namesiglog { get; set; }
-        public string Mlserver { 
-                                get => Common != "" ? Dll + "MLserver\\" : "";
-                                set => _ = value; 
-                                }
+        public string Mlserver
+        {
+            get => Common != "" ? Dll + "MLserver\\" : "";
+            set => _ = value;
+        }
         public string MlServerJson
-                                {
-                                    get => Common != "" ? Dll + "mlserverNew.json" : "";
-                                    set => _ = value;
-                                }
+        {
+            get => Common != "" ? Dll + "mlserverNew.json" : "";
+            set => _ = value;
+        }
         public string LrfDec
-                            {
-                                get => Common != "" ? Dll + "lrf_dec.exe" : "";
-                                set => _ = value;
-                            }
+        {
+            get => Common != "" ? Dll + "lrf_dec.exe" : "";
+            set => _ = value;
+        }
         public string FileType
-                            {
-                                get => Common != "" ? Dll + "fileType.exe" : "";
-                                set => _ = value;
-                            }
+        {
+            get => Common != "" ? Dll + "fileType.exe" : "";
+            set => _ = value;
+        }
         public string CLexport
         {
             get => Common != "" ? Mlserver + "CLexport.exe" : "";
             set => _ = value;
         }
-        public string Clf 
+        public string Clf
         {
             get => WorkDir != "" ? WorkDir + "\\CLF" : "";
             set => _ = value;

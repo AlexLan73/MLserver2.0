@@ -1,7 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿using Convert.Logger;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Convert.Logger;
 
 
 namespace Convert.Moduls.Config
@@ -10,7 +10,7 @@ namespace Convert.Moduls.Config
     {
         public ConcurrentDictionary<string, string> NameTrigger;
 
-        public MlRt2(string filename, string[] fields, ref Config0 config) 
+        public MlRt2(string filename, string[] fields, ref Config0 config)
                                     : base(filename, fields, ref config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Обработка файла MlRt2"));
@@ -22,10 +22,10 @@ namespace Convert.Moduls.Config
         {
             var result = ReadIni();
 
-            if (result)  return true;
+            if (result) return true;
 
-            string ConvTriger(string s) => (s.Contains("Trigger")) 
-                                                ? "Trigger " + s.Replace("Trigger", "") 
+            string ConvTriger(string s) => (s.Contains("Trigger"))
+                                                ? "Trigger " + s.Replace("Trigger", "")
                                                 : s;
 
             var dan = Fields.Select(item => Ldata.FindAll(x => x.ToLower().Contains(item))).ToList();
@@ -33,13 +33,13 @@ namespace Convert.Moduls.Config
             if (dan.Count == 0)
                 return true;
 
-            foreach (var item in dan[0].Where(item => item != null))  
+            foreach (var item in dan[0].Where(item => item != null))
             {
                 var s1 = item.Split("=")[1];
                 NameTrigger.AddOrUpdate(ConvTriger(item.Split("=")[0]), s1, (_, _) => s1);
             }
 
-            if (dan.Count < 2 )
+            if (dan.Count < 2)
                 return false;
 
             var temp = new List<string>();

@@ -30,8 +30,8 @@ namespace Convert.Moduls
 
         private void _inicial01()
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, 
-                    new []{ "SetupParam \n"
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info,
+                    new[]{ "SetupParam \n"
                     , "инициализация параметров: \n"
                     , " - для ml_rt, ml_rt2, TextLog \n"
                     , " lrd = -S 20 -L 512 -n -k -v -i \n"
@@ -61,13 +61,13 @@ namespace Convert.Moduls
             //     Настроить загрузку данных 
 
             _ = LoggerManager.AddLoggerAsync(
-                new LoggerEvent(EnumError.Info, new[] { "SetupParam \n","Грузим файл конфигурации DbConfig " }));
+                new LoggerEvent(EnumError.Info, new[] { "SetupParam \n", "Грузим файл конфигурации DbConfig " }));
 
             JsonBasa.LoadFileJsoDbConfig();
 
             var mlrt = new MlRt(_nameFile["ml_rt"], _fileDanMlRt, ref _config);
-           var resul = mlrt.Convert();
-           if (resul)
+            var resul = mlrt.Convert();
+            if (resul)
                 return true;
 
             _mLServerJson = new MlServerJson(ref _config);
@@ -75,7 +75,7 @@ namespace Convert.Moduls
 
             new MlRt2(_nameFile["ml_rt2"], _fildsMlRt2, ref _config).Convert();
 
-            new TextLog(_nameFile["TextLog"], "trigger",  ref _config).Convert();
+            new TextLog(_nameFile["TextLog"], "trigger", ref _config).Convert();
 
             var analis = new Analysis(ref _config).Convert();
             if (analis == "")

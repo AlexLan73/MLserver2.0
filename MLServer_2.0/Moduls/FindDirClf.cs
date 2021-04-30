@@ -24,7 +24,7 @@ namespace Convert.Moduls
         public string[] Run()
         {
             for (int i = 0; i < _numberTasks; i++)
-                ThreadPool.QueueUserWorkItem(F0,  _barrier);
+                ThreadPool.QueueUserWorkItem(F0, _barrier);
 
             _barrier.SignalAndWait();
 

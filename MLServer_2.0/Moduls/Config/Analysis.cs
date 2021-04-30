@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Convert.Logger;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
-using Convert.Logger;
 
 namespace Convert.Moduls.Config
 {
@@ -26,8 +26,8 @@ namespace Convert.Moduls.Config
 
             var filenameOld = filename.Split("_#")[0];
 
-            var compilationtimestamp = _config.Fields.ContainsKey("compilationtimestamp") 
-                                                        ? _config.Fields["compilationtimestamp"] 
+            var compilationtimestamp = _config.Fields.ContainsKey("compilationtimestamp")
+                                                        ? _config.Fields["compilationtimestamp"]
                                                         : "";
 
             var pathBasa = _config.MPath.Common + "\\Configuration\\" + filenameOld;

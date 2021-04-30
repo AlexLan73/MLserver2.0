@@ -28,7 +28,7 @@ namespace Convert.Moduls.Config
             _jsonBasa = this;
         }
         #endregion
-        
+
         #region Func -> ADD
         public static Task AddFileMemInfo(TypeDStringMemoryInfo1 fileMemInfo)
         {
@@ -50,7 +50,7 @@ namespace Convert.Moduls.Config
         }
         public static async Task SaveFileFileMemInfo()
         {
-            await File.WriteAllTextAsync(_jsonBasa._config.MPath.DbConfig, 
+            await File.WriteAllTextAsync(_jsonBasa._config.MPath.DbConfig,
                 JsonConvert.SerializeObject(_jsonBasa._config.FileMemInfo, Formatting.Indented));
 
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Сохранить данные в DbConfig.json"));
@@ -60,13 +60,14 @@ namespace Convert.Moduls.Config
         #region Load File   
         public static T LoadFileJso<T>(string filejson)
         {
-            return !File.Exists(filejson) 
-                ? default 
+            return !File.Exists(filejson)
+                ? default
                 : JsonConvert.DeserializeObject<T>(File.ReadAllText(filejson));
         }
 
-        public static void LoadFileJsoDbConfig() {
-            if(File.Exists(_jsonBasa._config.MPath.DbConfig))
+        public static void LoadFileJsoDbConfig()
+        {
+            if (File.Exists(_jsonBasa._config.MPath.DbConfig))
             {
                 var dbConfig = LoadFileJso<ConcurrentDictionary<string, ConcurrentDictionary<string, MemoryInfo>>>(_jsonBasa._config.MPath.DbConfig);
                 _jsonBasa._config.DbConfig = dbConfig ?? new TypeDStringMemoryInfo1();

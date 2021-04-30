@@ -8,12 +8,12 @@ namespace Convert.Interface.Config
         string WorkDir { get; set; }
         string OutputDir { get; set; }
     }
-    public interface IInputArgumentsDop: IInputArguments
+    public interface IInputArgumentsDop : IInputArguments
     {
         Dictionary<string, string> DArgs { get; set; }
     }
 
-    public interface IMasPaths: IInputArguments
+    public interface IMasPaths : IInputArguments
     {
         string Common { get; set; }
         string Dll { get; set; }

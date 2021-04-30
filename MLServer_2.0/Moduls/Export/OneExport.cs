@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Convert.Moduls.Export
 {
-    public class OneExport:IDisposable
+    public class OneExport : IDisposable
     {
         #region data
         private Config0 _config;
@@ -19,7 +19,7 @@ namespace Convert.Moduls.Export
         private ConcurrentDictionary<string, Task> _dirClfRun;
         private readonly string _commandExport;
         private readonly string _outDir;
-        private  DateTime _startDateTime;
+        private DateTime _startDateTime;
         private int _timeWait;
         public int ErrorRun { get; private set; }
         public Task TaskRun { get; set; }
@@ -45,7 +45,7 @@ namespace Convert.Moduls.Export
 
         private void _config_Time1Sec(object sender, EventArgs e)
         {
-           _timeWait = (int) (DateTime.Now - _startDateTime).TotalSeconds;
+            _timeWait = (int)(DateTime.Now - _startDateTime).TotalSeconds;
         }
         #endregion
 
@@ -64,10 +64,10 @@ namespace Convert.Moduls.Export
         private int _countSourseFiles()
         {
             var _directSour = Directory.GetDirectories(_config.MPath.WorkDir, "!D*");
-            if (_directSour == null || _directSour.Count() ==0)
+            if (_directSour == null || _directSour.Count() == 0)
                 return 0;
-            
-            return _directSour.Select(item => ((string, int)) new(item, Directory.GetFiles(item, "D?F*.").Length))
+
+            return _directSour.Select(item => ((string, int))new(item, Directory.GetFiles(item, "D?F*.").Length))
                         .ToList()
                         .Sum(x => x.Item2);
         }
@@ -91,22 +91,22 @@ namespace Convert.Moduls.Export
             /// </summary>
             _startDateTime = DateTime.Now;
             var isTestRunSourse = true;
-            while (_timeWait <120)
+            while (_timeWait < 120)
             {
                 // 1.1.
                 if (_findFileDirClf().Count > 0)
                     return 1;
                 // 1.2. и 1.3.
                 if (_newFileWorkDir().Count > 0 && (_config.IsRun.IsSource || _config.IsRun.IsRename))
-                        _startDateTime = DateTime.Now;      // Процесс работает и пока таймер не запускаем
+                    _startDateTime = DateTime.Now;      // Процесс работает и пока таймер не запускаем
                 else
                 {   //  1.4.
                     if (_countSourseFiles() <= 0)
-                         return -1;     //  1.5.
+                        return -1;     //  1.5.
 
                     //  1.6.
                     if ((_config.IsRun.IsSource || _config.IsRun.IsRename) && isTestRunSourse)
-                    { 
+                    {
                         _startDateTime = DateTime.Now;
                         isTestRunSourse = false;
                     }
@@ -117,34 +117,34 @@ namespace Convert.Moduls.Export
         }
         public void Run()
         {
-            TaskRun = Task.Run(async ()=> 
+            TaskRun = Task.Run(async () =>
             {
                 _config.IsRun.IsExport = false;
 
                 switch (_runTestStartProcess())
                 {
                     case 0:
-//                        Console.WriteLine("Error  - 0");
+                        //                        Console.WriteLine("Error  - 0");
                         _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Warning, " OneExport.Run() =>  Error - 0"));
                         ErrorRun = 0;
                         return;
 
                     case < 0:
-//                        Console.WriteLine("Error  -1");
+                        //                        Console.WriteLine("Error  -1");
                         _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Warning, " OneExport.Run() =>  Error - -1"));
                         ErrorRun = -1;
                         return;
 
                     case > 0:
-//                        Console.WriteLine("Все нормально! ");
+                        //                        Console.WriteLine("Все нормально! ");
                         _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " OneExport.Run() =>Start  Ok "));
                         break;
                 }
 
                 _config.IsRun.IsExport = true;
 
-                _setNameTrigger = new SetNameTrigger( ref _config, _ext);
-                _waitNameTrigger = Task.Run(()=> _setNameTrigger.Run());
+                _setNameTrigger = new SetNameTrigger(ref _config, _ext);
+                _waitNameTrigger = Task.Run(() => _setNameTrigger.Run());
 
                 _startDateTime = DateTime.Now;
 
@@ -193,7 +193,7 @@ namespace Convert.Moduls.Export
                 if (_dirClfRun.ContainsKey(item))
                     continue;
 
-                var tast = Task.Factory.StartNew(info1 => 
+                var tast = Task.Factory.StartNew(info1 =>
                 {
                     Directory.SetCurrentDirectory(_config.MPath.Mlserver);
 
@@ -203,7 +203,7 @@ namespace Convert.Moduls.Export
                     var maska = _commandExport.Replace("file_clf", file);
                     maska = maska.Replace("my_dir", _outDir);
 
-//                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " OneExport.Run() =>Start  Ok "));
+                    //                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " OneExport.Run() =>Start  Ok "));
 
                     var runCLexport = new RunCLexport(_config.MPath.CLexport, maska, "");
                     runCLexport.Run();
@@ -236,7 +236,7 @@ namespace Convert.Moduls.Export
         }
         public void Dispose()
         {
-           
+
         }
         #endregion
     }

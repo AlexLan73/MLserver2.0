@@ -111,9 +111,9 @@ namespace Convert.Moduls.Error
                           (_, _) => (new STypeError2(-201, _err_201, NameModulConfig), enm, EnumError.Warning));
             DError.AddOrUpdate(-202, (new STypeError2(-202, _err_202, NameModulConfig), enm, EnumError.Warning),
                           (_, _) => (new STypeError2(-202, _err_202, NameModulConfig), enm, EnumError.Warning));
-            DError.AddOrUpdate(-23, (new STypeError2(-23, _err_23, NameModulConfig), enm, EnumError.Warning), 
+            DError.AddOrUpdate(-23, (new STypeError2(-23, _err_23, NameModulConfig), enm, EnumError.Warning),
                           (_, _) => (new STypeError2(-23, _err_23, NameModulConfig), enm, EnumError.Warning));
-            DError.AddOrUpdate(-231, (new STypeError2(-231, _err_231, NameModulConfig), enm, EnumError.Warning), 
+            DError.AddOrUpdate(-231, (new STypeError2(-231, _err_231, NameModulConfig), enm, EnumError.Warning),
                            (_, _) => (new STypeError2(-231, _err_231, NameModulConfig), enm, EnumError.Warning));
             DError.AddOrUpdate(-24, (_err_24, en, EnumError.Error), (_, _) => (_err_24, en, EnumError.Error));
             DError.AddOrUpdate(-25, (_err_25, en, EnumError.Warning), (_, _) => (_err_25, en, EnumError.Warning));
@@ -154,7 +154,7 @@ namespace Convert.Moduls.Error
             switch (DError[cod].Item1.GetType().Name)
             {
                 case "STypeError2":
-//                    _iLogger.AddLoggerInfoAsync(new LoggerEvent(_errorBasa.DError[cod].Item3, ((STypeError2)DError[cod].Item1).Set(message)));
+                    //                    _iLogger.AddLoggerInfoAsync(new LoggerEvent(_errorBasa.DError[cod].Item3, ((STypeError2)DError[cod].Item1).Set(message)));
                     _ = LoggerManager.AddLoggerAsync(new LoggerEvent(_errorBasa.DError[cod].Item3, ((STypeError2)DError[cod].Item1).Set(message)));
                     break;
             }

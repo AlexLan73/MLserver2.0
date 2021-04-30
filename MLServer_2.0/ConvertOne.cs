@@ -11,7 +11,7 @@ namespace Convert
     {
         #region data
         private Config0 _config;
-//        private Task<bool> _resulClrExport = null;
+        //        private Task<bool> _resulClrExport = null;
         #endregion
 
         public ConvertOne(ref Config0 config)
@@ -46,14 +46,14 @@ namespace Convert
                 {
                     _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "запустить переименование CLF файлов и перенос в каталог CLF."));
                     //  запустить переименование.
-                    resulRename = Task<bool>.Factory.StartNew(() =>{ return new RenameFileClfMoveBasa(ref _config).Run(); });
+                    resulRename = Task<bool>.Factory.StartNew(() => { return new RenameFileClfMoveBasa(ref _config).Run(); });
                 }
             }
 
             resConvertSours?.Wait();
             resulRename?.Wait();
-//            _resulClrExport?.Wait();
-//            StopProcessing();
+            //            _resulClrExport?.Wait();
+            //            StopProcessing();
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Завершение class ConvertOne.Run() "));
             return false;
         }
@@ -71,7 +71,7 @@ namespace Convert
             }
         }
 
-        private  void StopProcessing()
+        private void StopProcessing()
         {
             LoggerManager.DisposeStatic();
             Thread.Sleep(600);
@@ -79,7 +79,7 @@ namespace Convert
     }
 }
 
-    
+
 
 
 /*

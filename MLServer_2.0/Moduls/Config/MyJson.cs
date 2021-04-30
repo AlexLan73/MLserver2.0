@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Convert.Logger;
+using Convert.Moduls.Error;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Convert.Logger;
-using Convert.Moduls.Error;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Convert.Moduls.Config
 {
@@ -29,7 +29,7 @@ namespace Convert.Moduls.Config
     }
 
 
-    public class MlServerJson 
+    public class MlServerJson
     {
         private const string CarName = "car name";
         private const string Clexport = "clexport";
@@ -42,8 +42,8 @@ namespace Convert.Moduls.Config
         private ConcurrentDictionary<string, ConcurrentDictionary<string, string>> ClexportParams { get; set; }
 
         private readonly CarNameParams _carParams = new();
-        private  List<string> _lErrorConvert;
-        public MlServerJson( ref Config0 config)
+        private List<string> _lErrorConvert;
+        public MlServerJson(ref Config0 config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Обработка файла MlServerJson"));
             _lErrorConvert = new();
@@ -157,7 +157,7 @@ namespace Convert.Moduls.Config
             }
         }
 
-        public void CarSetParam(string nameCar="")
+        public void CarSetParam(string nameCar = "")
         {
             if (nameCar != "")
             {
@@ -168,7 +168,7 @@ namespace Convert.Moduls.Config
                         BasaParams.AddOrUpdate(key, val, (_, _) => val);
                 }
 
-                if (paramsCar.ClexportParams.IsEmpty) return; 
+                if (paramsCar.ClexportParams.IsEmpty) return;
 
                 foreach (var (key, val) in paramsCar.ClexportParams)
                     ClexportParams.AddOrUpdate(key, val, (_, _) => val);
@@ -194,7 +194,7 @@ namespace Convert.Moduls.Config
             else
                 ClexportParams = new ConcurrentDictionary<string, ConcurrentDictionary<string, string>>(ClexportParams);
         }
-        public void IniciallMLServer(string namecar="")
+        public void IniciallMLServer(string namecar = "")
         {
             if (FormDanJson(_config.MPath.MlServerJson))
             {

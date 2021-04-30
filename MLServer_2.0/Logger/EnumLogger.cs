@@ -1,9 +1,9 @@
 ﻿namespace Convert.Logger
 {
-    public enum  EnumLogger
+    public enum EnumLogger
     {
-        Monitor, 
-        File, 
+        Monitor,
+        File,
         MonitorFile,
         DeskTop
     }

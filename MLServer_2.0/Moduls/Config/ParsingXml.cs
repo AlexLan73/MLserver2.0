@@ -1,8 +1,8 @@
 ﻿
 using Convert.Logger;
+using Convert.Moduls.Error;
 using System.Collections.Generic;
 using System.IO;
-using Convert.Moduls.Error;
 namespace Convert.Moduls.Config
 {
     public class ParsingXml
@@ -35,8 +35,8 @@ namespace Convert.Moduls.Config
             XmlProcessing processing = new(filename, masTega1);
             processing.XmLstream.Wait();
 
-            if (processing.VSysVar != null 
-                && processing.Dxml != null 
+            if (processing.VSysVar != null
+                && processing.Dxml != null
                 && (processing.Dxml.Count == 0 || processing.VSysVar.Count == 0))
             {
                 _ = ErrorBasa.FError(-261, filename);

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Convert.Moduls.Config;
+﻿using Convert.Moduls.Config;
+using System.Collections.Generic;
 
 namespace Convert.Interface.Config
 {

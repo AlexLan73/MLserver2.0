@@ -1,7 +1,7 @@
-﻿using System;
-using Convert.Logger;
+﻿using Convert.Logger;
 using Convert.Moduls.Config;
 using Convert.Moduls.FileManager;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -39,8 +39,8 @@ namespace Convert.Moduls.Export
                         .Contains("_m2_"))
                     .Select(y => y.Value);
                 foreach (var item in x0)
-                foreach (var (key, value) in item)
-                    _config.FMem.AddOrUpdate("M2_" + key, value, (_, _) => value);
+                    foreach (var (key, value) in item)
+                        _config.FMem.AddOrUpdate("M2_" + key, value, (_, _) => value);
             }
 
             _renameFile = new FileMove(_pathConvert, _pathConvert);
@@ -94,9 +94,9 @@ namespace Convert.Moduls.Export
             var ss = "*" + _ext;
             var path = _pathConvert;
             var x01 = Directory.GetFiles(path, ss);
-            return (from item in x01 
-                        where Regex.Matches(item, PatternFile, RegexOptions.IgnoreCase).Count == 1 
-                        select Path.GetFileName(item))
+            return (from item in x01
+                    where Regex.Matches(item, PatternFile, RegexOptions.IgnoreCase).Count == 1
+                    select Path.GetFileName(item))
                         .ToList();
         }
         private async Task _rename_m1(List<string> ls1)
@@ -113,13 +113,13 @@ namespace Convert.Moduls.Export
                           using (File.Open(filePatch, FileMode.Open, FileAccess.Read, FileShare.None))
                           { }
                       }
-                      catch (IOException )
+                      catch (IOException)
                       {
                           continue;
                       }
 
                       file = file.ToUpper().Replace(")F", ")_F");
-                    _renameFile.Add(item, file);
+                      _renameFile.Add(item, file);
 
                   }
               });
@@ -144,13 +144,13 @@ namespace Convert.Moduls.Export
                     }
 
                     var i = file.IndexOf(")F", StringComparison.Ordinal);
-                    var file0 = file.Substring(0, i+1)+"_";
+                    var file0 = file.Substring(0, i + 1) + "_";
                     var file1 = file[(i + 1)..].Split(".");
                     var fnum = "";
                     var m2Fmem = "M2_" + file1[0];
                     if (_config.FMem.ContainsKey(m2Fmem))
                         fnum = _config.FMem[m2Fmem].GetNameTrigger();
-                    var s0 = file0 + file1[0] + fnum +"."+ file1[1];
+                    var s0 = file0 + file1[0] + fnum + "." + file1[1];
                     _renameFile.Add(item, s0);
                 }
             });

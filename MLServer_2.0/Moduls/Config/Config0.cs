@@ -1,11 +1,11 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using Convert.Logger;
 using Convert.Moduls.ClfFileType;
-using TypeDStringMemoryInfo = System.Collections.Concurrent.ConcurrentDictionary<string,
-        System.Collections.Concurrent.ConcurrentDictionary<string,  Convert.Moduls.ClfFileType.MemoryInfo>>;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
-using Convert.Logger;
+using TypeDStringMemoryInfo = System.Collections.Concurrent.ConcurrentDictionary<string,
+        System.Collections.Concurrent.ConcurrentDictionary<string, Convert.Moduls.ClfFileType.MemoryInfo>>;
 
 //using LXmld = System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, string>>;
 
@@ -53,7 +53,7 @@ namespace Convert.Moduls.Config
             _timer1sec = new Timer(FTime1Sec, null, 0, 1000);
         }
 
-        private void Config0_Time1Sec(object sender, EventArgs e)   {}
+        private void Config0_Time1Sec(object sender, EventArgs e) { }
         private void FTime1Sec(object stateInfo)
         {
             Time1Sec?.Invoke(this, null!);

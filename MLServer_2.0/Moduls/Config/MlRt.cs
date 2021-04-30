@@ -6,7 +6,7 @@ namespace Convert.Moduls.Config
     public class MlRt : IniProcessing
     {
 
-        public MlRt(string filename, string[] fields, ref Config0 config) 
+        public MlRt(string filename, string[] fields, ref Config0 config)
                                     : base(filename, fields, ref config)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Обработка файла MlRt"));

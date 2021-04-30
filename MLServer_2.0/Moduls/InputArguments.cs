@@ -1,12 +1,10 @@
 ﻿// ReSharper disable all StringLiteralTypo
+using Convert.Interface.Config;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using Convert.Interface.Config;
 
 
 namespace Convert.Moduls
@@ -39,7 +37,7 @@ namespace Convert.Moduls
             {
                 try
                 {
-//                    Console.WriteLine($"  №-{_count}   {localAll[_count].MainModule.FileName}");
+                    //                    Console.WriteLine($"  №-{_count}   {localAll[_count].MainModule.FileName}");
                     _fileName = localAll[_count].MainModule.FileName.ToLower().Contains("dll\\convert.exe")
                                     ? localAll[_count].MainModule.FileName
                                     : null;

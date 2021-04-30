@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Convert.Interface.Config;
+using Convert.Moduls.Error;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Convert.Interface.Config;
-using Convert.Moduls.Error;
 
 namespace Convert.Moduls.Config
 {

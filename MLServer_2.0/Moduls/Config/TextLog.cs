@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Convert.Interface.Config;
+using Convert.Logger;
+using Convert.Moduls.Error;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Convert.Interface.Config;
-using Convert.Logger;
-using Convert.Moduls.Error;
 
 namespace Convert.Moduls.Config
 {
@@ -22,11 +22,11 @@ namespace Convert.Moduls.Config
         {
             var result = ReadIni();
 
-            if (result)  return true;
+            if (result) return true;
 
             if (Config.NameTrigger.Count <= 0)
             {
-                 _ = ErrorBasa.FError(-23, Filename);
+                _ = ErrorBasa.FError(-23, Filename);
                 return false;
             }
 

@@ -15,7 +15,7 @@ namespace Convert.Moduls.FileManager
         public FileDelete(ref Config0 config)
         {
             _config = config;
-            _workDir = _config.MPath.WorkDir; 
+            _workDir = _config.MPath.WorkDir;
             _isExitRepitFilesNameQueue = false;
             FilesNameQueue = new System.Collections.Concurrent.ConcurrentQueue<TypeDanFromFile0>();
             CtTokenRepitExit = TokenRepitExit.Token;
@@ -23,7 +23,7 @@ namespace Convert.Moduls.FileManager
 
         public void Add(string namefile0)
         {
-            TypeDanFromFile0 dan = new TypeDanFromFile0(_workDir +"\\" +namefile0);
+            TypeDanFromFile0 dan = new TypeDanFromFile0(_workDir + "\\" + namefile0);
             FilesNameQueue.Enqueue(dan);
         }
         public override void CallBackQueue(TypeDanFromFile0 dan)

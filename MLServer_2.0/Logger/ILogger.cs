@@ -1,5 +1,5 @@
-﻿using System;
-using Convert.Moduls;
+﻿using Convert.Moduls;
+using System;
 
 namespace Convert.Logger
 {
@@ -38,7 +38,7 @@ namespace Convert.Logger
         {
 
             DateTime = DateTime.Now;
-            StringDan = new[] {$"код ошибки - {souese.Error}; название -{souese.NameError} ", $" =>=> {souese.NameRazdel} "};
+            StringDan = new[] { $"код ошибки - {souese.Error}; название -{souese.NameError} ", $" =>=> {souese.NameRazdel} " };
             EnumError = enumErro;
             EnumLogger = enumLogger;
         }

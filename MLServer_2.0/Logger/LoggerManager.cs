@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Convert.Logger
 {
-    public class LoggerManager:ILogger, IDisposable
+    public class LoggerManager : ILogger, IDisposable
     {
         #region data
         private bool _isRun;
@@ -25,7 +25,7 @@ namespace Convert.Logger
         private static LoggerManager _loggerManager;
         private Task readDanTask;
         private Task writeDanTask;
-//        public (Task, Action)[] CurrentProcess = new (Task, Action)[2];
+        //        public (Task, Action)[] CurrentProcess = new (Task, Action)[2];
         #endregion
 
         #region constructor
@@ -41,7 +41,7 @@ namespace Convert.Logger
             _isRun = true;
             _isExitPrigram = false;
 
-            readDanTask = Task.Run(()=> ReadLoggerInfo(), _tokenReadLogger.Token);
+            readDanTask = Task.Run(() => ReadLoggerInfo(), _tokenReadLogger.Token);
             writeDanTask = Task.Run(() => ProcessWriteAsync(), _tokenWriteAsync.Token);
 
             //        CurrentProcess[0] = (new Task(ReadLoggerInfo, _tokenReadLogger.Token), AbortReadLogger);
@@ -63,7 +63,7 @@ namespace Convert.Logger
         public void Dispose()
         {
 
-            while (_cq.Count > 0 || _strListWrite.Count>0)
+            while (_cq.Count > 0 || _strListWrite.Count > 0)
             {
                 Task.Delay(250);
             }
@@ -75,9 +75,9 @@ namespace Convert.Logger
 
             readDanTask.Wait();
             writeDanTask.Wait();
-            
-//            foreach (var item in CurrentProcess.Where(x => x.Item1.Status != TaskStatus.Canceled))
-//                item.Item2();
+
+            //            foreach (var item in CurrentProcess.Where(x => x.Item1.Status != TaskStatus.Canceled))
+            //                item.Item2();
         }
         public static void DisposeStatic()
         {
@@ -115,23 +115,23 @@ namespace Convert.Logger
                             continue;
                     }
 
-//                    if (!_strListWrite.IsEmpty) continue;
+                    //                    if (!_strListWrite.IsEmpty) continue;
 
                     if (_isExitPrigram && _strListWrite.IsEmpty)
                     {
-                        var xwait=  WriteTextAsync(_filename, text);
+                        var xwait = WriteTextAsync(_filename, text);
                         xwait.Wait();
-                        return;                                
+                        return;
                     }
 
                     try
                     {
-                        
+
                         if (_ctWriteAsync.IsCancellationRequested)
                         {
                             while (_strListWrite.Count > 0)
                             {
-                                _strListWrite.TryDequeue(out  st);
+                                _strListWrite.TryDequeue(out st);
                                 if (st != null)
                                 {
                                     text += "\n" + st;
@@ -139,7 +139,7 @@ namespace Convert.Logger
                             }
                             var xwait = WriteTextAsync(_filename, text);
                             xwait.Wait();
-                            _ctWriteAsync.ThrowIfCancellationRequested(); 
+                            _ctWriteAsync.ThrowIfCancellationRequested();
                         }
                     }
                     catch (Exception)
@@ -156,7 +156,7 @@ namespace Convert.Logger
                     {
                         var xwait = WriteTextAsync(_filename, text);
                         xwait.Wait();
-                        _ctWriteAsync.ThrowIfCancellationRequested(); 
+                        _ctWriteAsync.ThrowIfCancellationRequested();
                     }
                 }
                 catch (Exception)
@@ -170,7 +170,7 @@ namespace Convert.Logger
         }
 
 
-        private async Task WriteTextAsync(string filePath, string  text)
+        private async Task WriteTextAsync(string filePath, string text)
         {
             var encodedText = Encoding.Unicode.GetBytes(text);
 
@@ -194,7 +194,7 @@ namespace Convert.Logger
             while (true)
             {
 
-                while (_cq.Count>0)
+                while (_cq.Count > 0)
                 {
                     _cq.TryDequeue(out var dan);
                     if (dan == null) continue;
@@ -212,12 +212,12 @@ namespace Convert.Logger
                             _strListWrite.Enqueue(s);
                             break;
                         case EnumLogger.MonitorFile:
-                        {
-                            s = dan.StringDan.Aggregate(s, (current, item) => current + item);
-                            Console.WriteLine(s);
-                            _strListWrite.Enqueue(s);
-                            break;
-                        }
+                            {
+                                s = dan.StringDan.Aggregate(s, (current, item) => current + item);
+                                Console.WriteLine(s);
+                                _strListWrite.Enqueue(s);
+                                break;
+                            }
                     }
                 }
 
@@ -241,7 +241,9 @@ namespace Convert.Logger
 
                 Thread.Sleep(500);
             }
+#pragma warning disable CS0162 // Обнаружен недостижимый код
             Console.WriteLine(" !!!!  больше не ждем  ");
+#pragma warning restore CS0162 // Обнаружен недостижимый код
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Logger save !!!!  больше не ждем  "));
         }
         #endregion

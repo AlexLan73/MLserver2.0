@@ -48,9 +48,9 @@ namespace Convert.Moduls.Config
             path0 = path0.Replace("//", "\\");
             var i = path0.IndexOf(Common, StringComparison.Ordinal);
             if (i > 0)
-                return path0.Substring(0, i)+ Common;
+                return path0.Substring(0, i) + Common;
 
-            
+
             if (Directory.Exists(path0))
             {
                 findDir(ref path0);
