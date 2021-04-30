@@ -1,4 +1,5 @@
-﻿namespace Convert.Logger
+﻿// ReSharper disable once CheckNamespace
+namespace Convert.Logger
 {
     public enum EnumLogger
     {

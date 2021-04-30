@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Export
 {
     public class OneExport : IDisposable
@@ -57,17 +58,13 @@ namespace Convert.Moduls.Export
         private List<string> _newFileWorkDir() => Directory.GetFiles(_config.MPath.WorkDir, "*.clf")
                         .Where(x => Regex.Matches(x, _patternFile, RegexOptions.IgnoreCase).Count == 1)
                         .Select(z => Path.GetFileName(z)).ToList();
-        //private int _countSourseFiles()=> Directory.GetDirectories(_config.MPath.WorkDir, "!D*")
-        //                .Select(item => ((string, int)) new(item, Directory.GetFiles(item, "D?F*.").Length))
-        //                .ToList()
-        //                .Sum(x => x.Item2);
         private int _countSourseFiles()
         {
-            var _directSour = Directory.GetDirectories(_config.MPath.WorkDir, "!D*");
-            if (_directSour == null || _directSour.Count() == 0)
+            var directSour = Directory.GetDirectories(_config.MPath.WorkDir, "!D*");
+            if (!directSour.Any())
                 return 0;
 
-            return _directSour.Select(item => ((string, int))new(item, Directory.GetFiles(item, "D?F*.").Length))
+            return directSour.Select(item => ((string, int))new(item, Directory.GetFiles(item, "D?F*.").Length))
                         .ToList()
                         .Sum(x => x.Item2);
         }
@@ -186,7 +183,7 @@ namespace Convert.Moduls.Export
             });
         }
 
-        private void _startConvert(List<string> newFiles)
+        private void _startConvert(IEnumerable<string> newFiles)
         {
             foreach (var item in newFiles)
             {
@@ -197,13 +194,9 @@ namespace Convert.Moduls.Export
                 {
                     Directory.SetCurrentDirectory(_config.MPath.Mlserver);
 
-                    var xxx = Directory.GetCurrentDirectory();
-
                     var file = _config.MPath.Clf + "\\" + (string)info1;
                     var maska = _commandExport.Replace("file_clf", file);
                     maska = maska.Replace("my_dir", _outDir);
-
-                    //                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " OneExport.Run() =>Start  Ok "));
 
                     var runCLexport = new RunCLexport(_config.MPath.CLexport, maska, "");
                     runCLexport.Run();

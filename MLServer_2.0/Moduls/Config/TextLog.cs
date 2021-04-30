@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class TextLog : IniProcessing, ITriggerTimeName

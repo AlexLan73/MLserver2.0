@@ -4,6 +4,7 @@ using Convert.Moduls.Error;
 using System;
 using System.Collections.Generic;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class MasPaths : IMasPaths

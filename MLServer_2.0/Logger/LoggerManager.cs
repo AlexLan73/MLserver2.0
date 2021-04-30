@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Logger
 {
     public class LoggerManager : ILogger, IDisposable
     {
         #region data
-        private bool _isRun;
         private bool _isExitPrigram;
         private readonly string _filename;
         private readonly ConcurrentQueue<LoggerEvent> _cq = new();
@@ -23,9 +23,8 @@ namespace Convert.Logger
         private readonly CancellationToken _ctWriteAsync;
         private readonly CancellationToken _ctReadLogger;
         private static LoggerManager _loggerManager;
-        private Task readDanTask;
-        private Task writeDanTask;
-        //        public (Task, Action)[] CurrentProcess = new (Task, Action)[2];
+        private readonly Task _readDanTask;
+        private readonly Task _writeDanTask;
         #endregion
 
         #region constructor
@@ -38,16 +37,10 @@ namespace Convert.Logger
 
             _ctWriteAsync = _tokenWriteAsync.Token;
             _ctReadLogger = _tokenWriteAsync.Token;
-            _isRun = true;
             _isExitPrigram = false;
 
-            readDanTask = Task.Run(() => ReadLoggerInfo(), _tokenReadLogger.Token);
-            writeDanTask = Task.Run(() => ProcessWriteAsync(), _tokenWriteAsync.Token);
-
-            //        CurrentProcess[0] = (new Task(ReadLoggerInfo, _tokenReadLogger.Token), AbortReadLogger);
-            //            CurrentProcess[1] = (new Task(action: () =>{_ = ProcessWriteAsync();}, _tokenWriteAsync.Token), AbortWriteAsync);
-            //            CurrentProcess[0].Item1.Start();
-            //            CurrentProcess[1].Item1.Start();
+            _readDanTask = Task.Run(ReadLoggerInfo, _tokenReadLogger.Token);
+            _writeDanTask = Task.Run(ProcessWriteAsync, _tokenWriteAsync.Token);
 
             _loggerManager = this;
             _ = AddLoggerAsync(new LoggerEvent(EnumError.Info, "Start programm convert " + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")));
@@ -56,7 +49,6 @@ namespace Convert.Logger
 
         #region Exit function
         public void SetExitProgrammAsync() => _isExitPrigram = true;
-        public void SetRun(bool t) => _isRun = t;
         public void AbortReadLogger() => _tokenReadLogger.Cancel();
         public void AbortWriteAsync() => _tokenWriteAsync.Cancel();
 
@@ -68,16 +60,11 @@ namespace Convert.Logger
                 Task.Delay(250);
             }
             SetExitProgrammAsync();
-            //            SetRun(false);
             AbortReadLogger();
             AbortWriteAsync();
-            //            Task.Delay(1000);
 
-            readDanTask.Wait();
-            writeDanTask.Wait();
-
-            //            foreach (var item in CurrentProcess.Where(x => x.Item1.Status != TaskStatus.Canceled))
-            //                item.Item2();
+            _readDanTask.Wait(_ctWriteAsync);
+            _writeDanTask.Wait(_ctWriteAsync);
         }
         public static void DisposeStatic()
         {
@@ -97,7 +84,7 @@ namespace Convert.Logger
         public async Task ProcessWriteAsync()
         {
             _ctWriteAsync.ThrowIfCancellationRequested();
-            while (true) // _isRun || !_strListWrite.IsEmpty
+            while (true) 
             {
                 var text = "";
                 while (true)
@@ -238,13 +225,8 @@ namespace Convert.Logger
                 {
                     return;
                 }
-
                 Thread.Sleep(500);
             }
-#pragma warning disable CS0162 // Обнаружен недостижимый код
-            Console.WriteLine(" !!!!  больше не ждем  ");
-#pragma warning restore CS0162 // Обнаружен недостижимый код
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Logger save !!!!  больше не ждем  "));
         }
         #endregion
 

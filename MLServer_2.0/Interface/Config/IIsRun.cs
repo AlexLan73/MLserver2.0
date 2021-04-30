@@ -1,4 +1,5 @@
-﻿namespace Convert.Interface.Config
+﻿// ReSharper disable once CheckNamespace
+namespace Convert.Interface.Config
 {
     public interface IIsRun
     {

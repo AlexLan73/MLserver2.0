@@ -1,5 +1,6 @@
 ﻿using System;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.FileManager
 {
     public interface ITypeDanFromFile0

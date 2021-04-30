@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class FindCommand
@@ -21,7 +22,7 @@ namespace Convert.Moduls.Config
         #endregion
 
         #region Find
-        private void findDir(ref string sdir)
+        private void FindDir(ref string sdir)
         {
             if (sdir.Length == 0)
                 return;
@@ -39,7 +40,7 @@ namespace Convert.Moduls.Config
 
             sdir = s.Length == 0 ? "" : s.Substring(0, s.Length - 1);
 
-            findDir(ref sdir);
+            FindDir(ref sdir);
         }
 
         public string FindCommon(string path = "")
@@ -53,7 +54,7 @@ namespace Convert.Moduls.Config
 
             if (Directory.Exists(path0))
             {
-                findDir(ref path0);
+                FindDir(ref path0);
                 path0 += "\\" + Common;
             }
             else

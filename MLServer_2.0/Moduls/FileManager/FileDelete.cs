@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.FileManager
 {
     public class FileDelete : AFileSystemBasa<TypeDanFromFile0>

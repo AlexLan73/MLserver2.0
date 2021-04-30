@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls
 {
     public class FindDirClf
@@ -11,7 +12,7 @@ namespace Convert.Moduls
         #region data
         private readonly int _numberTasks;
         private readonly Barrier _barrier;
-        static private ConcurrentDictionary<string, bool> _dir0 = new ConcurrentDictionary<string, bool>();
+        private ConcurrentDictionary<string, bool> _dir0 = new ConcurrentDictionary<string, bool>();
         #endregion
         public FindDirClf(string path)
         {

@@ -1,8 +1,8 @@
 ﻿using Convert.Logger;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.FileManager
 {
     public class ExeFileInfo
@@ -13,7 +13,6 @@ namespace Convert.Moduls.FileManager
         private readonly string _command;
         private readonly string _exefile;
 
-        private ConcurrentDictionary<string, InfoExe> _danPool = new();
 
         public ExeFileInfo(string exefile, string filenamr, string command)
         {
@@ -23,15 +22,13 @@ namespace Convert.Moduls.FileManager
         }
         public virtual void CallBackFun()
         {
-
         }
+
         public virtual void CallBackFun(string line)
         {
             if (line.Length <= 0) return;
-            //            Console.WriteLine(line);
             Lines.Add(line);
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" ExeFileInfo =->  {line} "));
-
         }
 
         public virtual InfoExe ExeInfo()

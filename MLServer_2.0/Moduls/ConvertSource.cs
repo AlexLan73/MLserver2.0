@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls
 {
     public class ConvertSource
@@ -22,16 +23,15 @@ namespace Convert.Moduls
             _config = config;
             Func<string, string> dirCreate = (NameDir) =>
             {
-                var _s = _config.MPath.WorkDir + $"\\{NameDir}";
+                var s = _config.MPath.WorkDir + $"\\{NameDir}";
 
-                if (!Directory.Exists(_s))
-                    Directory.CreateDirectory(_s);
+                if (!Directory.Exists(s))
+                    Directory.CreateDirectory(s);
 
-                return _s;
+                return s;
             };
             if (!Directory.Exists(_config.MPath.Clf))
                 Directory.CreateDirectory(_config.MPath.Clf);
-
         }
 
         protected string[] FilesSourse() => Directory.GetDirectories(_config.MPath.WorkDir, "!D*");
@@ -48,10 +48,9 @@ namespace Convert.Moduls
             if (direct == null)
                 return;
 
-            List<Task> testByte = new List<Task>();
+            var testByte = new List<Task>();
             foreach (var item in direct)
             {
-                //   Console.WriteLine(item);
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" ConvertSource -> {item}"));
 
                 testByte.Add(Task.Factory.StartNew(() =>
@@ -89,9 +88,7 @@ namespace Convert.Moduls
             }
         }
 
-#pragma warning disable CS1998 // В данном асинхронном методе отсутствуют операторы await, поэтому метод будет выполняться синхронно. Воспользуйтесь оператором await для ожидания неблокирующих вызовов API или оператором await Task.Run(...) для выполнения связанных с ЦП заданий в фоновом потоке.
         public virtual async Task<bool> Run()
-#pragma warning restore CS1998 // В данном асинхронном методе отсутствуют операторы await, поэтому метод будет выполняться синхронно. Воспользуйтесь оператором await для ожидания неблокирующих вызовов API или оператором await Task.Run(...) для выполнения связанных с ЦП заданий в фоновом потоке.
         {
             _config.IsRun.IsSource = true;
 

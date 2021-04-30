@@ -1,12 +1,12 @@
 ﻿#nullable enable
 using Convert.Logger;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using LXmld = System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, string>>;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class XmlProcessing
@@ -30,10 +30,6 @@ namespace Convert.Moduls.Config
                 XmlDocument doc = new XmlDocument();
                 doc.Load(filename);
 
-                //                var rezultat = (from XmlNode elem in doc.SelectNodes(selectnodes)
-                //                    select elem.Cast<XmlNode>()
-                //                        .ToDictionary(elem1 => elem1.Name.ToLower(), elem1 => elem1.InnerText.ToLower())).ToList();
-
                 var rezultat = new LXmld();
                 foreach (XmlNode elem in doc.SelectNodes(selectnodes)!)
                 {
@@ -46,13 +42,6 @@ namespace Convert.Moduls.Config
 
                 Dxml = new LXmld();
 
-                Func<string, string> f001 = (s) =>
-                {
-                    if (s.Contains("bt_"))
-                        return s.Split("_")[1].ToUpper();
-                    return s;
-                };
-
                 foreach (var item0 in rezultat)
                 {
                     Dictionary<string, string> d = new Dictionary<string, string>();
@@ -62,15 +51,11 @@ namespace Convert.Moduls.Config
                         var val = key1 switch
                         {
                             "path" => item0.ContainsKey(key1) ? item0[key1] : "path",
-                            //                            "bustype" => item0.ContainsKey(key1) ? (item0[key1].Contains("bt_") ? "CAN" : item0[key1]) : "bt_bustype",
-                            //                            "bustype" => item0.ContainsKey(key1) ? (item0[key1].Contains("bt_can") ? "CAN" : item0[key1]) : "bt_bustype",
-                            //                            "bustype" => item0.ContainsKey(key1) ? f001(item0[key1]) : "bt_bustype",
                             "bustype" => item0.ContainsKey(key1) ? item0[key1].Contains("bt_") ? item0[key1].Split("_")[1].ToUpper() : item0[key1] : "bt_bustype",
                             "channel" => item0.ContainsKey(key1) ? item0[key1] : "-1",
                             "type" => item0.ContainsKey(key1) ? item0[key1] : "type",
                             _ => ""
                         };
-
                         d.Add(key1, val);
                     }
 

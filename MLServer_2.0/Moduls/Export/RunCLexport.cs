@@ -2,6 +2,7 @@
 using Convert.Moduls.Error;
 using Convert.Moduls.FileManager;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Export
 {
     public class RunCLexport : ExeFileInfo

@@ -1,4 +1,5 @@
-﻿namespace Convert.Moduls.FileManager
+﻿// ReSharper disable once CheckNamespace
+namespace Convert.Moduls.FileManager
 {
     public interface ITypeDanFromFile1 : ITypeDanFromFile0
     {

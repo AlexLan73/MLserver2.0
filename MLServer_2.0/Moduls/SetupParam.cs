@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls
 {
     public class SetupParam
@@ -14,7 +15,7 @@ namespace Convert.Moduls
 
         private Dictionary<string, string> _nameFile;
 
-        private string[] _fileDanMlRt => new[] { "filename", "carname", "sernum" };
+        private static string[] FileDanMlRt => new[] { "filename", "carname", "sernum" };
         private readonly string[] _fildsMlRt2 = { "trigger", "compilationtimestamp" };
 
         private MlServerJson _mLServerJson;
@@ -65,7 +66,7 @@ namespace Convert.Moduls
 
             JsonBasa.LoadFileJsoDbConfig();
 
-            var mlrt = new MlRt(_nameFile["ml_rt"], _fileDanMlRt, ref _config);
+            var mlrt = new MlRt(_nameFile["ml_rt"], FileDanMlRt, ref _config);
             var resul = mlrt.Convert();
             if (resul)
                 return true;
@@ -80,6 +81,7 @@ namespace Convert.Moduls
             var analis = new Analysis(ref _config).Convert();
             if (analis == "")
                 _ = ErrorBasa.FError(-25);
+
             _config.MPath.Analis = analis;
 
             new ParsingXml(ref _config).Convert();

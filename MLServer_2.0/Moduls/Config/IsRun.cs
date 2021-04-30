@@ -1,5 +1,6 @@
 ﻿using Convert.Interface.Config;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class IsRun : IIsRun

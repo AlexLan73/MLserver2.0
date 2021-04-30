@@ -37,7 +37,6 @@ namespace Convert.Moduls
             {
                 try
                 {
-                    //                    Console.WriteLine($"  №-{_count}   {localAll[_count].MainModule.FileName}");
                     _fileName = localAll[_count].MainModule.FileName.ToLower().Contains("dll\\convert.exe")
                                     ? localAll[_count].MainModule.FileName
                                     : null;
@@ -49,17 +48,6 @@ namespace Convert.Moduls
 
             if (_fileName != null)
                 Console.WriteLine($"  ------->>>  {_fileName}");
-
-            /*            Process[] localByName = Process.GetProcessesByName("Convert")
-                                            .Where(x => x.MainModule.FileName.Contains("#COMMON\\DLL\\Convert.exe")).ToArray();
-
-                        if (localByName.Length > 0)
-                        {
-                            Console.WriteLine($"----->    {localByName[0]}");
-                            Console.WriteLine($"----->    {localByName[0].MainModule.FileName}");
-                            _fileName = localByName[0].MainModule.FileName;
-                        }
-            */
 
             var _z = _Args.Where(x => x.Length <= 3).ToList();
             foreach (var item in _z)

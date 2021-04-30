@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 using TypeDStringMemoryInfo1 = System.Collections.Concurrent.ConcurrentDictionary<string,
         System.Collections.Concurrent.ConcurrentDictionary<string, Convert.Moduls.ClfFileType.MemoryInfo>>;
 
-
-
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class JsonBasa

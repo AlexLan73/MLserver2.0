@@ -1,5 +1,6 @@
 ﻿using System;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Interface.Config
 {
     public interface IDanTriggerTime

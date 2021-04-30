@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class Analysis

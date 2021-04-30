@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class CarNameDan

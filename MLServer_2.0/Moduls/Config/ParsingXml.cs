@@ -3,13 +3,15 @@ using Convert.Logger;
 using Convert.Moduls.Error;
 using System.Collections.Generic;
 using System.IO;
+
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class ParsingXml
     {
         #region data
         private readonly Config0 _config;
-        private string[] masTega1 = { "path", "bustype", "channel", "type" };
+        private readonly string[] _masTega1 = { "path", "bustype", "channel", "type" };
         #endregion
 
         #region construct
@@ -32,7 +34,7 @@ namespace Convert.Moduls.Config
                 return;
             }
 
-            XmlProcessing processing = new(filename, masTega1);
+            XmlProcessing processing = new(filename, _masTega1);
             processing.XmLstream.Wait();
 
             if (processing.VSysVar != null

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls
 {
     public class RenameFileClfMoveBasa
@@ -25,7 +26,6 @@ namespace Convert.Moduls
 
         public bool Run()
         {
-            string[] nameFileClf;
             if (GetReturn())
                 return false;
 
@@ -38,7 +38,7 @@ namespace Convert.Moduls
 
             while (true)
             {
-                nameFileClf = Directory.GetFiles(Config.MPath.WorkDir, "*.clf");
+                var nameFileClf = Directory.GetFiles(Config.MPath.WorkDir, "*.clf");
                 if (GetReturn())
                     break;
 

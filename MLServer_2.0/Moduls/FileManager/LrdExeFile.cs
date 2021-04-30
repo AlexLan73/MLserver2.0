@@ -4,6 +4,7 @@ using Convert.Moduls.Error;
 using System;
 using System.Threading;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.FileManager
 {
     public class LrdExeFile : ExeFileInfo
@@ -11,7 +12,7 @@ namespace Convert.Moduls.FileManager
         public FileDelete FileDelete;
 
         public LrdExeFile(string exefile, string filenamr, string command, ref Config0 config)
-                     : base(exefile, filenamr, command)
+                                                             : base(exefile, filenamr, command)
         {
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class LrdExeFile"));
 
@@ -23,22 +24,17 @@ namespace Convert.Moduls.FileManager
             FileDelete.Run();
 
             var result = ExeInfo();
-
-            //            Console.WriteLine($"  Код завершения программы {result.CodeError}  ");
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { " LrdExeFile:\n ", $"  Код завершения программы { result.CodeError }  " }));
 
             if (result.CodeError != 0)
             {
-                //Console.WriteLine(" !!!  Бардак!! ");
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "  LrdExeFile ->  !!!  Бардак!!  "));
-
             }
 
             FileDelete.SetExitRepit();
 
             while (FileDelete.GetCountFilesName() > 0)
             {
-                //                Console.WriteLine($"Удаляем файлы, ожидаем завершение, осталось -> {FileDelete.GetCountFilesName()}");
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { " LrdExeFile:\n "
                                                             , $"Удаляем файлы, ожидаем завершение, осталось -> {FileDelete.GetCountFilesName()}" }));
 
@@ -55,8 +51,6 @@ namespace Convert.Moduls.FileManager
         public override void CallBackFun(string line)
         {
             if (line.Length <= 0) return;
-
-            //            Console.WriteLine(line);
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $"  LrdExeFile ->  {line}  "));
 
             if (!line.ToLower().Contains("file")) return;

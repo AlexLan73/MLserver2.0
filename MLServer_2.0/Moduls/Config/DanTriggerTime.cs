@@ -2,6 +2,7 @@
 using System;
 using System.Globalization;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class DanTriggerTime : IDanTriggerTime

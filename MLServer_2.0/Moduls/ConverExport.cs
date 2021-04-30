@@ -6,14 +6,13 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls
 {
-
     public class ConverExport
     {
         #region data
         private Config0 _config;
-        //        private readonly string patternFile = @"_M\d_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\)_\(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d\).clf";
         private ConcurrentDictionary<string, OneExport> _allRun;
 
         #endregion

@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.ClfFileType
 {
     public class ClfFileInfo : ExeFileInfo
@@ -53,7 +54,7 @@ namespace Convert.Moduls.ClfFileType
             var result = ExeInfo();
 
             //            Console.WriteLine($"  Код завершения программы {result.CodeError}  ");
-            string s = $"  Код завершения программы {result.CodeError}  ";
+            var s = $"  Код завершения программы {result.CodeError}  ";
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { "-ClfFileInfo => ", s }));
             if (result.CodeError != 0)
             {
@@ -84,8 +85,7 @@ namespace Convert.Moduls.ClfFileType
 
             Func<string, string> formatDanFrom = (s) =>
             {
-                var i = s.Length;
-                s = i switch
+                s = s.Length switch
                 {
                     26 => s,
                     19 => s + ".00000000",

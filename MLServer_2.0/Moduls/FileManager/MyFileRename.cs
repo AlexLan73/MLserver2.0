@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.FileManager
 {
     public class MyFileRename : AFileSystemBasa<TypeDanFromFile1>
@@ -31,9 +32,9 @@ namespace Convert.Moduls.FileManager
                 var sWrite = $" count {FilesNameQueue.Count}    --------------------------------------------------";
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " MyFileRename =>  " + sWrite));
 
-                foreach (var item in xx)
+                foreach (var (nameFile1, count, secWait) in xx)
                 {
-                    sWrite = $" path-> {item.NameFile1}  Count {item.Count} , SecWait {item.SecWait}";
+                    sWrite = $" path-> {nameFile1}  Count {count} , SecWait {secWait}";
                     _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " MyFileRename =>  " + sWrite));
                 }
                 Thread.Sleep(500);

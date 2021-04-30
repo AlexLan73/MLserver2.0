@@ -1,6 +1,7 @@
 ﻿using Convert.Logger;
 using Convert.Moduls.Error;
 
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class MlRt : IniProcessing

@@ -7,8 +7,7 @@ using System.Threading;
 using TypeDStringMemoryInfo = System.Collections.Concurrent.ConcurrentDictionary<string,
         System.Collections.Concurrent.ConcurrentDictionary<string, Convert.Moduls.ClfFileType.MemoryInfo>>;
 
-//using LXmld = System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, string>>;
-
+// ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
 {
     public class Config0

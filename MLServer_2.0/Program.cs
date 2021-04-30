@@ -1,17 +1,14 @@
-﻿// R-eSharper disable all StringLiteralTypo
+﻿// ReSharper disable once InvalidXmlDocComment
+// R-eSharper disable all StringLiteralTypo
 //  строка запуска c:\mlserver\#common\DLL\lrf_dec.exe -S 20 -L 512 -n -k -v -i C:\MLserver\PS18LIM\log\2020-11-04_18-36-34
 ////  https://docs.microsoft.com/ru-ru/dotnet/core/deploying/single-file  создание публикации
 
-//     ! "E:\MLserver\data\PS18SED\log\2020-08-19_12-59-54
-//      \\mlmsrv\MLServer\PS18SED\log\2020-09-01_12-54-14
 using Convert.Logger;
 using Convert.Moduls;
 using Convert.Moduls.Config;
 using Convert.Moduls.Error;
-///    !  E:\MLserver\data\PS14SED\2021-03-05_14-18-26\CLF
-///    ! "E:\MLserver\data\PS14SED\2021-03-05_14-18-26"
-///    E:\MLserver\data\PS33SED\log\2020-09-15_15-43-43 — копия
-///    
+
+// ReSharper disable once InvalidXmlDocComment
 ///   "out:E:\OutTest"   "rename:\\mlmsrv\MLServer\PTA10SUV"
 //  "rename:E:\MLserver\data\PS18SED\log\2020-09-03_06-00-36"
 
@@ -19,6 +16,7 @@ using System;
 using System.IO;
 using static System.Console;
 
+// ReSharper disable once CheckNamespace
 namespace Convert
 {
 
@@ -58,15 +56,12 @@ namespace Convert
             }
 
             LoggerManager logger = new(inputArguments.DArgs["WorkDir"] + "\\Log");
-            //            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" Рабочий каталог {inputArguments.DArgs["WorkDir"]}"));
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Входные данные проверенные"));
 
             var errorBasa = new ErrorBasa();
             Config0 config = new();
             var jsonBasa = new JsonBasa(ref config);
             config.MPath = new MasPaths(inputArguments.DArgs);
-
-            //            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Поиск каталога #COMMON "));
 
             var resul = config.MPath.FormPath();
             if (resul)
@@ -103,7 +98,6 @@ namespace Convert
                     convertOne.Run();
                 }
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Перебрали все каталоги "));
-                //                logger.Dispose();
             }
             else
             {
@@ -124,12 +118,10 @@ namespace Convert
                 //      3. Запускаем процес конвертации
                 //      ---  обратить внимание на каталог формирования данных
 
-
                 if (Directory.GetDirectories(inputArguments.DArgs["WorkDir"], "!D*").Length > 0)
                 {
                     _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Запуск-> Обработка сырых данных "));
 
-                    //  Class ConvertOne + Convert
                     ConvertOne convertOne = new ConvertOne(ref config);
                     convertOne.Run();
 
@@ -173,9 +165,7 @@ namespace Convert
                         converExport.Run();
 
                         _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение"));
-
                     }
-
                 }
             }
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Exit programm - " + DateTime.Now));
@@ -183,7 +173,7 @@ namespace Convert
             logger.Dispose();
 
             WriteLine("Все ))");
-            //            Thread.Sleep(60000);
+            //   Thread.Sleep(60000);
         }
 
     }
