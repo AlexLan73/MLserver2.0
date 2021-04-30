@@ -1,6 +1,7 @@
 ﻿// ReSharper disable all StringLiteralTypo
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Tracing;
 using System.IO;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace MLServer_2._0.Moduls
     public class InputArguments : IInputArgumentsDop
     {
         #region Data
-        private List<string> _args { get; set; }
+        private List<string> _Args { get; set; }
         public Dictionary<string, string> DArgs { get; set; }
         public string ExeFile { get; set; }
         public string WorkDir { get; set; }
@@ -22,26 +23,38 @@ namespace MLServer_2._0.Moduls
         #endregion
         public InputArguments(string[] args)
         {
-            _args = new List<string>(args);
+            _Args = new List<string>(args);
             DArgs = new Dictionary<string, string>();
         }
 
         public ResultTd1<bool, SResulT0> Parser()
         {
-            var _z = _args.Where(x => x.Length <= 3).ToList();
+            string _exe = null;
+            string _fileName = null;
+            Process[] localByName = Process.GetProcessesByName("Convert")
+                                .Where(x => x.MainModule.FileName.Contains("#COMMON\\DLL\\Convert.exe")).ToArray();
+
+            if (localByName.Length > 0)
+            {
+                Console.WriteLine($"----->    {localByName[0]}");
+                Console.WriteLine($"----->    {localByName[0].MainModule.FileName}");
+                _fileName = localByName[0].MainModule.FileName;
+            }
+
+            var _z = _Args.Where(x => x.Length <= 3).ToList();
             foreach (var item in _z)
-                _args.Remove(item);
+                _Args.Remove(item);
 
             Action<string, string> fdict = (s0, s1) =>
             {
                 string _t = "";
                 try
                 {
-                    _t = _args.First(x => x.ToLower().Contains(s0));
+                    _t = _Args.First(x => x.ToLower().Contains(s0));
                     if (_t != null)
                     {
                         DArgs.Add(s1, _t);
-                        _args.Remove(s0);
+                        _Args.Remove(s0);
                     }
                 }
                 catch (Exception)
@@ -52,31 +65,32 @@ namespace MLServer_2._0.Moduls
             fdict("~test", "test");
             fdict("~!d", "~d");
 
-            var _out = _args.FirstOrDefault(x => x.Contains("out:"));
+            var _out = _Args.FirstOrDefault(x => x.Contains("out:"));
             OutputDir = _out != null ? _out.Split("out:")[1] : WorkDir;
             if (Directory.Exists(OutputDir))
             {
                 DArgs.Add("OutputDir", OutputDir);
-                _args.Remove(_out);
+                _Args.Remove(_out);
             }
 
-            var _rename0 = _args.FirstOrDefault(x => x.Contains("rename:"));
+            var _rename0 = _Args.FirstOrDefault(x => x.Contains("rename:"));
             string _rename = _rename0 != null ? _rename0.Split("rename:")[1].Trim() : "";
             if (_rename != "" && Directory.Exists(_rename))
             {
                 DArgs.Add("RenameDir", _rename);
-                _args.Remove(_rename0);
+                _Args.Remove(_rename0);
             }
 
-            var _exe = _args.FirstOrDefault(x => x.Contains(".e1xe") && DArgs.ContainsKey("test"));
-            
+            _exe = _Args.FirstOrDefault(x => x.Contains(".exe") && DArgs.ContainsKey("test"));
 
-            DArgs.Add("ExeFile", _exe == null ? Environment.CurrentDirectory : _exe);
+            DArgs.Add("ExeFile", _exe == null ? _fileName : _exe);
             if (_exe != null)
-                _args.Remove(_exe);
-            Console.WriteLine($"!!!!!! === {DArgs["ExeFile"]}");
+                _Args.Remove(_exe);
 
-            var _dir = _args.Where(x => Directory.Exists(x)).ToArray();
+            if (DArgs["ExeFile"] == null)
+                return new ResultTd1<bool, SResulT0>(new SResulT0(-3, $"Error not #COMMON\\DLL\\Convert.exe ", "Modul InputArguments"));
+
+            var _dir = _Args.Where(x => Directory.Exists(x)).ToArray();
             if (_dir.Length == 1)
             {
                 DArgs.Add("WorkDir", _dir[0]);
@@ -87,5 +101,6 @@ namespace MLServer_2._0.Moduls
             }
             return new ResultTd1<bool, SResulT0>(new SResulT0(-2, $"Error comand string ", "Modul InputArguments"));
         }
+
     }
 }
