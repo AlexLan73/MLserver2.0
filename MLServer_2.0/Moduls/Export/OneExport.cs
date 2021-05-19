@@ -61,12 +61,28 @@ namespace Convert.Moduls.Export
         private int _countSourseFiles()
         {
             var directSour = Directory.GetDirectories(_config.MPath.WorkDir, "!D*");
-            if (!directSour.Any())
-                return 0;
+            //  Нет директорий с сырыми данными закончилась ВСЯ обработка сырых данных
+            if (!directSour.Any() && !(_config.IsRun.IsRename || _config.IsRun.IsClr || _config.IsRun.IsSource))
+            {
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Warning, "  Нет директорий с сырыми данными закончилась ВСЯ обработка сырых данных  Error - 0 "));
+                return 0; 
+            }
 
-            return directSour.Select(item => ((string, int))new(item, Directory.GetFiles(item, "D?F*.").Length))
+            int _count = 0;
+
+            try
+            {
+                _count = directSour.Select(item => ((string, int))new(item, Directory.GetFiles(item, "D?F*.").Length))
                         .ToList()
                         .Sum(x => x.Item2);
+            }
+            catch (Exception)
+            {
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Warning, "  Error in _countSourseFiles() to Repit  =>  _countSourseFiles()"));
+                _countSourseFiles();
+            }
+
+            return _count;
         }
 
         private int _runTestStartProcess()
@@ -98,8 +114,11 @@ namespace Convert.Moduls.Export
                     _startDateTime = DateTime.Now;      // Процесс работает и пока таймер не запускаем
                 else
                 {   //  1.4.
-                    if (_countSourseFiles() <= 0)
+                    if (_countSourseFiles() <= 0 && !(_config.IsRun.IsRename || _config.IsRun.IsClr || _config.IsRun.IsSource))
+                    {
+                        _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Warning, "  _runTestStartProcess() ->  Сход -1"));
                         return -1;     //  1.5.
+                    }
 
                     //  1.6.
                     if ((_config.IsRun.IsSource || _config.IsRun.IsRename) && isTestRunSourse)
@@ -108,8 +127,10 @@ namespace Convert.Moduls.Export
                         isTestRunSourse = false;
                     }
                 }
+                Task.Delay(500);
             }
             //  сход по времени
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Warning, " _runTestStartProcess()  --  Сход по времени \n"));
             return -1;
         }
         public void Run()

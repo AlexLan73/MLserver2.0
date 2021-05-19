@@ -36,7 +36,7 @@ namespace Convert.Logger
             _filename = filename + "\\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".log";
 
             _ctWriteAsync = _tokenWriteAsync.Token;
-            _ctReadLogger = _tokenWriteAsync.Token;
+            _ctReadLogger = _tokenReadLogger.Token;
             _isExitPrigram = false;
 
             _readDanTask = Task.Run(ReadLoggerInfo, _tokenReadLogger.Token);
@@ -63,8 +63,10 @@ namespace Convert.Logger
             AbortReadLogger();
             AbortWriteAsync();
 
-            _readDanTask.Wait(_ctWriteAsync);
-            _writeDanTask.Wait(_ctWriteAsync);
+//            _readDanTask.Wait(_ctWriteAsync);
+//            _writeDanTask.Wait(_ctWriteAsync);
+            _readDanTask.Wait(2500);
+            _writeDanTask.Wait(2500);
         }
         public static void DisposeStatic()
         {
@@ -155,7 +157,6 @@ namespace Convert.Logger
                     Task.Delay(550).Wait(_ctWriteAsync);
             }
         }
-
 
         private async Task WriteTextAsync(string filePath, string text)
         {
