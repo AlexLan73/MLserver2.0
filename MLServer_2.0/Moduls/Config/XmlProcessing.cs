@@ -53,13 +53,15 @@ namespace Convert.Moduls.Config
                             "path" => item0.ContainsKey(key1) ? item0[key1] : "path",
                             "bustype" => item0.ContainsKey(key1) ? item0[key1].Contains("bt_") ? item0[key1].Split("_")[1].ToUpper() : item0[key1] : "bt_bustype",
                             "channel" => item0.ContainsKey(key1) ? item0[key1] : "-1",
-                            "type" => item0.ContainsKey(key1) ? item0[key1] : "type",
+                            "networkname" => item0.ContainsKey(key1) ? item0[key1] : "",
                             _ => ""
                         };
                         d.Add(key1, val);
                     }
 
-                    if (d["type"] == "vsysvar")
+
+
+                    if ((item0.ContainsKey("type") ? item0["type"] : "") == "vsysvar")
                         VSysVar = new Dictionary<string, string>(d);
                     else
                         Dxml.Add(d);

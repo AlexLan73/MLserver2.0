@@ -11,7 +11,7 @@ namespace Convert.Moduls.Config
     {
         #region data
         private readonly Config0 _config;
-        private readonly string[] _masTega1 = { "path", "bustype", "channel", "type" };
+        private readonly string[] _masTega1 = { "path", "bustype", "channel", "networkname"};
         #endregion
 
         #region construct
@@ -56,7 +56,7 @@ namespace Convert.Moduls.Config
 
                     s += $"[DB{i}] \n";
                     s += "Path=" + filename + "\\" + item["path"] + "\n";
-                    s += "Network=" + item["type"] + "\n";
+                    s += "Network=" + item["networkname"] + "\n";
                     s += "Bus=" + item["bustype"] + "\n";
                     s += "Channels=" + item["channel"] + "\n";
                 }
