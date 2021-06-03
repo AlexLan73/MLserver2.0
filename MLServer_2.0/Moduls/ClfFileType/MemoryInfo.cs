@@ -2,7 +2,9 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 // ReSharper disable once CheckNamespace
 namespace Convert.Moduls.ClfFileType
@@ -13,6 +15,7 @@ namespace Convert.Moduls.ClfFileType
         public string FMemory { get; private set; }
         public DateTime Start { get; private set; }
         public DateTime End { get; private set; }
+        public string StartEndMem => StrStartStop();
         public List<DanTriggerTime> TriggerInfo { get; private set; }
         #endregion
 
@@ -24,12 +27,14 @@ namespace Convert.Moduls.ClfFileType
             Start = start;
             End = end;
             TriggerInfo = new List<DanTriggerTime>(triggerInfo);
+            StrStartStop();
         }
         public MemoryInfo(string name, DateTime start, DateTime end)
         {
             FMemory = name;
             Start = start;
             End = end;
+            StrStartStop();
             TriggerInfo = new List<DanTriggerTime>();
         }
         #endregion
@@ -51,6 +56,15 @@ namespace Convert.Moduls.ClfFileType
 
             return s0.Length > 0 ? "_Trigger" + s0 : "";
         }
+        private string StrStartStop()
+        {
+            //var file = Path.GetFileNameWithoutExtension(pathfile).Split("_", 3);
+            //var ext = Path.GetExtension(pathfile);
+            //FMemory = Regex.Match(file[2], @"F\d{3,5}", RegexOptions.IgnoreCase).Value;
+
+            return Start.ToString("(yyyy-MM-dd_HH-mm-ss)") + "_" + End.ToString("(yyyy-MM-dd_HH-mm-ss)")+ "_" + FMemory;
+        }
+
         #endregion
 
     }

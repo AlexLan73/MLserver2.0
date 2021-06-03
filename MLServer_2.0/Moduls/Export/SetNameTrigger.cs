@@ -42,6 +42,15 @@ namespace Convert.Moduls.Export
                 foreach (var item in x0)
                     foreach (var (key, value) in item)
                         _config.FMem.AddOrUpdate("M2_" + key, value, (_, _) => value);
+
+                x0 = _config.DbConfig
+                    .Where(x => x.Key.ToLower()
+                        .Contains("_m1_"))
+                    .Select(y => y.Value);
+                foreach (var item in x0)
+                    foreach (var (key, value) in item)
+                        _config.FMem.AddOrUpdate("M1_" + key, value, (_, _) => value);
+
             }
 
             _renameFile = new FileMove(_pathConvert, _pathConvert);
@@ -104,10 +113,23 @@ namespace Convert.Moduls.Export
         {
             await Task.Run(() =>
               {
+//                  var z = _config.FMem;
                   var ls = new List<string>(ls1);
                   foreach (var item in ls)
                   {
                       var file = Path.GetFileName(item);
+
+                      var file0 = Path.GetFileNameWithoutExtension(file).Split("_", 3);
+                      var ext = Path.GetExtension(file);
+                      string _fmemory = Regex.Match(file0[2], @"F\d{3,5}", RegexOptions.IgnoreCase).Value;
+                      string _m1F = "M1_" + _fmemory;
+                      string _newFile = "";
+
+                      if (_config.FMem.ContainsKey(_m1F))
+                          _newFile = file0[0] + "_M1_" + _config.FMem[_m1F].StartEndMem + ext;
+                      else
+                          continue;
+
                       try
                       {
                           var filePatch = _pathConvert + item;
@@ -119,8 +141,8 @@ namespace Convert.Moduls.Export
                           continue;
                       }
 
-                      file = file.ToUpper().Replace(")F", ")_F");
-                      _renameFile.Add(item, file);
+//                      file = file.ToUpper().Replace(")F", ")_F");
+                      _renameFile.Add(item, _newFile);
 
                   }
               });
@@ -129,10 +151,25 @@ namespace Convert.Moduls.Export
         {
             await Task.Run(() =>
             {
+                var z = _config.FMem;
+
                 List<string> ls = new(ls1);
                 foreach (var item in ls)
                 {
                     var file = Path.GetFileName(item).ToUpper();
+
+                    var file0 = Path.GetFileNameWithoutExtension(file).Split("_", 3);
+                    var ext = Path.GetExtension(file);
+                    string _fmemory = Regex.Match(file0[2], @"F\d{3,5}", RegexOptions.IgnoreCase).Value;
+                    string _m1F = "M2_" + _fmemory;
+                    string _newFile = "";
+
+                    if (_config.FMem.ContainsKey(_m1F))
+                        _newFile = file0[0] + "_M2_" + _config.FMem[_m1F].StartEndMem;
+                    else
+                        continue;
+
+
                     try
                     {
                         var filePatch = _pathConvert + item;
@@ -144,14 +181,14 @@ namespace Convert.Moduls.Export
                         continue;
                     }
 
-                    var i = file.IndexOf(")F", StringComparison.Ordinal);
-                    var file0 = file.Substring(0, i + 1) + "_";
-                    var file1 = file[(i + 1)..].Split(".");
+//                    var i = file.IndexOf(")F", StringComparison.Ordinal);
+//                    var file0 = file.Substring(0, i + 1) + "_";
+//                    var file1 = file[(i + 1)..].Split(".");
                     var fnum = "";
-                    var m2Fmem = "M2_" + file1[0];
+                    var m2Fmem = "M2_" + _fmemory;
                     if (_config.FMem.ContainsKey(m2Fmem))
                         fnum = _config.FMem[m2Fmem].GetNameTrigger();
-                    var s0 = file0 + file1[0] + fnum + "." + file1[1];
+                    var s0 = _newFile + fnum + ext;
                     _renameFile.Add(item, s0);
                 }
             });
