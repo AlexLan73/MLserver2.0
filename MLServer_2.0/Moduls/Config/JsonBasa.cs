@@ -76,6 +76,12 @@ namespace Convert.Moduls.Config
             else
                 _jsonBasa._config.DbConfig = new TypeDStringMemoryInfo1();
         }
+
+        public static  ConcurrentDictionary<string, ConcurrentDictionary<string, MemoryInfo>>  LoadFileJsoDbConfig(string path)
+        {
+            return LoadFileJso<ConcurrentDictionary<string, ConcurrentDictionary<string, MemoryInfo>>>(path);
+        }
+
         #endregion
 
     }

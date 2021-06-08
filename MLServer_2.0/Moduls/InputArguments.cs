@@ -81,13 +81,19 @@ namespace Convert.Moduls
                 _Args.Remove(_out);
             }
 
-            var _rename0 = _Args.FirstOrDefault(x => x.Contains("rename:"));
-            string _rename = _rename0 != null ? _rename0.Split("rename:")[1].Trim() : "";
-            if (_rename != "" && Directory.Exists(_rename))
+            void setPathDir(string namearg, string namedb)
             {
-                DArgs.Add("RenameDir", _rename);
-                _Args.Remove(_rename0);
+                var _rename0 = _Args.FirstOrDefault(x => x.Contains(namearg));
+                string _rename = _rename0 != null ? _rename0.Split(namearg)[1].Trim() : "";
+                if (_rename != "" && Directory.Exists(_rename))
+                {
+                    DArgs.Add(namedb, _rename);
+                    _Args.Remove(_rename0);
+                }
+
             }
+            setPathDir("rename:", "RenameDir");
+            setPathDir("mdfconvert:", "MDFRenameDir");
 
             _exe = _Args.FirstOrDefault(x => x.Contains(".exe") && DArgs.ContainsKey("test"));
 

@@ -7,13 +7,17 @@ using Convert.Logger;
 using Convert.Moduls;
 using Convert.Moduls.Config;
 using Convert.Moduls.Error;
+using MLServer_2._0.Moduls.MDFRename;
 
 // ReSharper disable once InvalidXmlDocComment
 ///   "out:E:\OutTest"   "rename:\\mlmsrv\MLServer\PTA10SUV"
 //  "rename:E:\MLserver\data\PS18SED\log\2020-09-03_06-00-36"
 
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using static System.Console;
 
 // ReSharper disable once CheckNamespace
@@ -74,7 +78,46 @@ namespace Convert
             _setupParam.IniciaPathJson();
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " - Инициализация параметров закончилась "));
 
-            if (inputArguments.DArgs.ContainsKey("RenameDir"))
+            
+            if (inputArguments.DArgs.ContainsKey("MDFRenameDir")) 
+            {
+                ConcurrentDictionary<string, int> _pathFileMDF = new ConcurrentDictionary<string, int>();
+                DateTime _dataStart = new DateTime(2020, 11, 2);
+                DateTime _dataEnd = new DateTime(2021, 06, 03, 16, 0, 0);
+
+                var _findMdf = new FindDirMDF(inputArguments.DArgs["MDFRenameDir"], ref _pathFileMDF, _dataStart, _dataEnd);
+                var _waitFindDir = _findMdf.Run();
+                _waitFindDir.Wait();
+
+                var _keyPaths = _pathFileMDF.Keys;
+
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "########## - Запуск переименования ########", EnumLogger.Monitor));
+
+                List<Task> _runReanme = new List<Task>();
+                foreach (var item in _keyPaths)
+                {
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $"##  -> {item}   ##", EnumLogger.Monitor));
+                    _runReanme.Add(new RenameMDF(item).Run());
+                }
+
+                while (_runReanme.Count>0)
+                {
+                    try
+                    {
+                        Console.WriteLine($"#__ осталось дождаться -{_runReanme.Count}   __#");
+
+                        var x = _runReanme[0];
+                        x.Wait();
+                        _runReanme.RemoveAt(0);
+                    }
+                    catch (Exception)
+                    {
+                        _runReanme.RemoveAt(0);
+                    }
+                }
+
+
+            } else if (inputArguments.DArgs.ContainsKey("RenameDir"))
             {
                 _ = LoggerManager.AddLoggerAsync(
                     new LoggerEvent(EnumError.Info, " - Включен режим переименования clf файлов и создание DbConfig.json  "));

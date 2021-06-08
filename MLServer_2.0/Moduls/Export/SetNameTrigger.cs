@@ -119,17 +119,6 @@ namespace Convert.Moduls.Export
                   {
                       var file = Path.GetFileName(item);
 
-                      var file0 = Path.GetFileNameWithoutExtension(file).Split("_", 3);
-                      var ext = Path.GetExtension(file);
-                      string _fmemory = Regex.Match(file0[2], @"F\d{3,5}", RegexOptions.IgnoreCase).Value;
-                      string _m1F = "M1_" + _fmemory;
-                      string _newFile = "";
-
-                      if (_config.FMem.ContainsKey(_m1F))
-                          _newFile = file0[0] + "_M1_" + _config.FMem[_m1F].StartEndMem + ext;
-                      else
-                          continue;
-
                       try
                       {
                           var filePatch = _pathConvert + item;
@@ -141,7 +130,15 @@ namespace Convert.Moduls.Export
                           continue;
                       }
 
-//                      file = file.ToUpper().Replace(")F", ")_F");
+                      var file0 = Path.GetFileNameWithoutExtension(file).Split("_", 3);
+                      string _m1F = "M1_" + Regex.Match(file0[2], @"F\d{3,5}", RegexOptions.IgnoreCase).Value;
+                      string _newFile = "";
+
+                      if (_config.FMem.ContainsKey(_m1F))
+                          _newFile = file0[0] + "_M1_" + _config.FMem[_m1F].StartEndMem + Path.GetExtension(file);
+                      else
+                          continue;
+
                       _renameFile.Add(item, _newFile);
 
                   }
@@ -158,18 +155,6 @@ namespace Convert.Moduls.Export
                 {
                     var file = Path.GetFileName(item).ToUpper();
 
-                    var file0 = Path.GetFileNameWithoutExtension(file).Split("_", 3);
-                    var ext = Path.GetExtension(file);
-                    string _fmemory = Regex.Match(file0[2], @"F\d{3,5}", RegexOptions.IgnoreCase).Value;
-                    string _m1F = "M2_" + _fmemory;
-                    string _newFile = "";
-
-                    if (_config.FMem.ContainsKey(_m1F))
-                        _newFile = file0[0] + "_M2_" + _config.FMem[_m1F].StartEndMem;
-                    else
-                        continue;
-
-
                     try
                     {
                         var filePatch = _pathConvert + item;
@@ -181,15 +166,21 @@ namespace Convert.Moduls.Export
                         continue;
                     }
 
-//                    var i = file.IndexOf(")F", StringComparison.Ordinal);
-//                    var file0 = file.Substring(0, i + 1) + "_";
-//                    var file1 = file[(i + 1)..].Split(".");
+                    var file0 = Path.GetFileNameWithoutExtension(file).Split("_", 3);
+                    string m2Fmem = "M2_" + Regex.Match(file0[2], @"F\d{3,5}", RegexOptions.IgnoreCase).Value;
+                    string _newFile = "";
+
+                    if (_config.FMem.ContainsKey(m2Fmem))
+                        _newFile = file0[0] + "_M2_" + _config.FMem[m2Fmem].StartEndMem;
+                    else
+                        continue;
+
                     var fnum = "";
-                    var m2Fmem = "M2_" + _fmemory;
                     if (_config.FMem.ContainsKey(m2Fmem))
                         fnum = _config.FMem[m2Fmem].GetNameTrigger();
-                    var s0 = _newFile + fnum + ext;
-                    _renameFile.Add(item, s0);
+
+                    _newFile = _newFile + fnum + Path.GetExtension(file); 
+                    _renameFile.Add(item, _newFile);
                 }
             });
         }
