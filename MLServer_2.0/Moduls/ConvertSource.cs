@@ -88,7 +88,7 @@ namespace Convert.Moduls
             }
         }
 
-        public virtual async Task<bool> Run()
+        public  virtual Task<bool> Run()
         {
             _config.IsRun.IsSource = true;
 
@@ -127,7 +127,7 @@ namespace Convert.Moduls
             // Console.WriteLine(" ***** ## ******  Переименование и перемецение CLF файлов завершена  ***** ");
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " ***** ## ******  Переименование и перемецение CLF файлов завершена  ***** "));
 
-            return resulRename.Result;
+            return resulRename; //.Result;
         }
 
     }
