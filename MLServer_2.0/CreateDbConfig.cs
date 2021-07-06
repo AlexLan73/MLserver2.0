@@ -15,46 +15,48 @@ namespace MLServer_2._0
     public class CreateDbConfig
     {
         private Dictionary<string, string> _dArgs;
-
+        private LoggerManager logger=null;
         public CreateDbConfig(Dictionary<string, string> dArgs)
         {
             _dArgs = dArgs;
         }
         public void Run()
         {
-            LoggerManager logger = new(_dArgs["WorkDir"] + "\\Log");
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Входные данные проверенные"));
-
-            var errorBasa = new ErrorBasa();
-            Config0 config = new();
-            var jsonBasa = new JsonBasa(ref config);
-            config.MPath = new MasPaths(_dArgs);
-
-            var resul = config.MPath.FormPath();
-            if (resul)
-            {
-                var error = ErrorBasa.FError(-4);
-                error.Wait();
-            }
-
-            SetupParam _setupParam = new(ref config);
-            _setupParam.IniciaPathJson();
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " - Инициализация параметров закончилась "));
-
-            _ = LoggerManager.AddLoggerAsync(
-                new LoggerEvent(EnumError.Info, " - Включен режим переименования clf файлов и создание DbConfig.json  "));
-
+            logger = new(_dArgs["RenameDir"] + "\\Log");
             var files = new FindDirClf(_dArgs["RenameDir"]).Run();
             foreach (var item in files)
             {
+                _dArgs["WorkDir"] = item;
+                _dArgs["OutputDir"] = item;
+
                 if (File.Exists(item + "\\clf.json"))
                     File.Delete(item + "\\clf.json");
 
                 if (File.Exists(item + "\\DbConfig.json"))
                     continue;
 
-                _dArgs["WorkDir"] = item;
-                _dArgs["OutputDir"] = item;
+//                LoggerManager.NewNameFile(item);
+
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Входные данные проверенные"));
+
+                var errorBasa = new ErrorBasa();
+                Config0 config = new();
+                var jsonBasa = new JsonBasa(ref config);
+                config.MPath = new MasPaths(_dArgs);
+
+                var resul = config.MPath.FormPath();
+                if (resul)
+                {
+                    var error = ErrorBasa.FError(-4);
+                    error.Wait();
+                }
+
+                SetupParam _setupParam = new(ref config);
+                _setupParam.IniciaPathJson();
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " - Инициализация параметров закончилась "));
+
+                _ = LoggerManager.AddLoggerAsync(
+                    new LoggerEvent(EnumError.Info, " - Включен режим переименования clf файлов и создание DbConfig.json  "));
 
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[]{ "  Включен режим переименования:\n "
                                                                     , $" Работаем с каталогом - {item}" }));
@@ -66,8 +68,6 @@ namespace MLServer_2._0
 
             logger.Dispose();
             Console.WriteLine("Все  - режим Rename))");
-
         }
-
     }
 }

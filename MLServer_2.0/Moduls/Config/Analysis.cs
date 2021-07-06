@@ -38,9 +38,13 @@ namespace Convert.Moduls.Config
 
             if (RezDirAnalis == "")
             {
-                var allfiles = Directory.GetFiles(pathBasa, "*.analysis.zip");
-                if (allfiles.Length > 0)
-                    RezDirAnalis = _findDirectAnalis(allfiles[0].Split(".zip")[0]);
+                if (Directory.Exists(pathBasa))
+                {
+                    var allfiles = Directory.GetFiles(pathBasa, "*.analysis.zip");
+                    if (allfiles.Length > 0)
+                        RezDirAnalis = _findDirectAnalis(allfiles[0].Split(".zip")[0]);
+
+                }
             }
 
             if (RezDirAnalis == "") return "";
