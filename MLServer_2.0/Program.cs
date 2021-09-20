@@ -8,6 +8,7 @@ using Convert.Moduls;
 using Convert.Moduls.Config;
 using Convert.Moduls.Error;
 using MLServer_2._0;
+using MLServer_2._0.Moduls;
 using MLServer_2._0.Moduls.MDFRename;
 
 // ReSharper disable once InvalidXmlDocComment
@@ -58,6 +59,11 @@ namespace Convert
                 if (resultError.Error.Id != null)
                     WriteLine($"   код ID {resultError.Error.Id.Value}");
                 Environment.Exit(-1);
+            }
+            if (inputArguments.DArgs.ContainsKey("~d"))
+            {
+                new RecoverOriginalFiles(inputArguments.DArgs["WorkDir"]).Run();
+                return;
             }
 
             if (inputArguments.DArgs.ContainsKey("RenameDir"))

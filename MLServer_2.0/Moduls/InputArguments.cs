@@ -30,7 +30,8 @@ namespace Convert.Moduls
             string _exe = null;
             string _fileName = null;
 
-            Process[] localAll = Process.GetProcesses();
+              Process[] localAll = Process.GetProcesses(); //.Fi.ToLower().Contains("dll\\convert.exe")
+
             int _count = localAll.Length - 1;
 
             while (_fileName == null && _count >= 0)
@@ -40,18 +41,20 @@ namespace Convert.Moduls
                     _fileName = localAll[_count].MainModule.FileName.ToLower().Contains("dll\\convert.exe")
                                     ? localAll[_count].MainModule.FileName
                                     : null;
+                    if(_fileName != null) 
+                        break;
                 }
                 catch (Exception)
                 { }
                 _count--;
             }
 
+
             if (_fileName != null)
                 Console.WriteLine($"  ------->>>  {_fileName}");
 
-            var _z = _Args.Where(x => x.Length <= 3).ToList();
-            foreach (var item in _z)
-                _Args.Remove(item);
+//            var _z = _Args.Where(x => x.Length <= 3).ToList();
+//            foreach (var item in _z) _Args.Remove(item);
 
             Action<string, string> fdict = (s0, s1) =>
             {
