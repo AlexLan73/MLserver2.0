@@ -13,7 +13,7 @@ namespace Convert.Logger
     {
         #region data
         private bool _isExitPrigram;
-        private readonly string _filename;
+        private string _filename;
         private readonly ConcurrentQueue<LoggerEvent> _cq = new();
         private readonly ConcurrentQueue<string> _strListWrite = new();
 
@@ -34,7 +34,7 @@ namespace Convert.Logger
                 Directory.CreateDirectory(filename);
 
             _filename = filename + "\\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".log";
-
+//            NewNameFile(filename);
             _ctWriteAsync = _tokenWriteAsync.Token;
             _ctReadLogger = _tokenReadLogger.Token;
             _isExitPrigram = false;
@@ -75,6 +75,9 @@ namespace Convert.Logger
         #endregion
 
         #region Add data
+//        public static void NewNameFile(string filename) => 
+//            _loggerManager._filename = filename + "\\LOG\\" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".log";
+
         public static Task AddLoggerAsync(LoggerEvent e)
         {
             _loggerManager._cq.Enqueue(e);

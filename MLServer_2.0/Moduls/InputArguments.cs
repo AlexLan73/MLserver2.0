@@ -104,15 +104,26 @@ namespace Convert.Moduls
             if (DArgs["ExeFile"] == null)
                 return new ResultTd1<bool, SResulT0>(new SResulT0(-3, $"Error not #COMMON\\DLL\\Convert.exe ", "Modul InputArguments"));
 
-            var _dir = _Args.Where(x => Directory.Exists(x)).ToArray();
-            if (_dir.Length == 1)
+            if (DArgs.ContainsKey("RenameDir"))
             {
-                DArgs.Add("WorkDir", _dir[0]);
-                if (!DArgs.ContainsKey("OutputDir"))
-                    DArgs.Add("OutputDir", _dir[0]);
-
+                DArgs.Add("WorkDir", DArgs["RenameDir"]);
+                DArgs.Add("OutputDir", DArgs["RenameDir"]);
                 return new ResultTd1<bool, SResulT0>(false);
             }
+            else
+            {
+                var _dir = _Args.Where(x => Directory.Exists(x)).ToArray();
+                if (_dir.Length == 1)
+                {
+                    DArgs.Add("WorkDir", _dir[0]);
+                    if (!DArgs.ContainsKey("OutputDir"))
+                        DArgs.Add("OutputDir", _dir[0]);
+
+                    return new ResultTd1<bool, SResulT0>(false);
+                }
+
+            }
+
             return new ResultTd1<bool, SResulT0>(new SResulT0(-2, $"Error comand string ", "Modul InputArguments"));
         }
 

@@ -3,6 +3,7 @@ using Convert.Logger;
 using Convert.Moduls.Error;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 // ReSharper disable once CheckNamespace
 namespace Convert.Moduls.Config
@@ -83,8 +84,21 @@ namespace Convert.Moduls.Config
         }
         #endregion
 
-        #region FormPath
-        public bool FormPath()
+        #region NewPathWork
+
+        public void SetNewPathWork(string work, string outpath)
+        {
+            WorkDir = work;
+            OutputDir = outpath;
+//            var _clf = Clf;
+//            var _log = Log;
+//            var _db = DbConfig;
+        }
+        #endregion
+
+
+    #region FormPath
+    public bool FormPath()
         {
             var findCommand = new FindCommand(ExeFile);
             var common = findCommand.FindCommon();
