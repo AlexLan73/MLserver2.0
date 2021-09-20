@@ -2,7 +2,7 @@
   "profiles": {
     "MLServer_2.0": {
       "commandName": "Project",
-      "commandLineArgs": "\"\\\\mlmsrv\\MLServer\\#COMMON\\Dll\\convert.exe\"  ~test rename:\\\\mlmsrv\\mlserver\\PS12SED"
+      "commandLineArgs": "\"\\\\mlmsrv\\MLServer\\#COMMON\\Dll\\convert.exe\"  \\\\mlmsrv\\mlserver\\PS09SED\\log\\2021-07-05_22-32-45  ~test "
     }
   }
 }
