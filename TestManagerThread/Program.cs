@@ -10,7 +10,7 @@ namespace TestManagerThread // Note: actual namespace depends on the project nam
     {
         public static void Main(string[] args)
         {
-            new TestTask(10).Run();
+            new TestTask(20).RunA();
 
             Console.WriteLine(" ManagerThread  Hello, World!");
 
