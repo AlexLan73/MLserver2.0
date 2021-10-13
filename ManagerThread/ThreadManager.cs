@@ -10,7 +10,7 @@ namespace ManagerThread
         public static ConcurrentDictionary<Guid, (Task, DanX, string)> CManagerTask = new ConcurrentDictionary<Guid, (Task, DanX, string)>();
         public static ConcurrentDictionary<Guid, (Task, Action, string)> CManagerTaskAction = new ConcurrentDictionary<Guid, (Task, Action, string)>();
 
-        //        public static void Add(Task t)=> CManagerTast.AddOrUpdate(t.Id, t, (x, y) => t);
+//        public static void Add(Task t) => CManagerTast.AddOrUpdate(t.Id, t, (x, y) => t);
 
         public static void DelXX(Guid i)
         {
@@ -30,13 +30,14 @@ namespace ManagerThread
                 CManagerTask.TryRemove(i, out z);
             }
         }
+
         public static void Add(Guid id, Task task, string s)
         {
             if (CManagerTask.ContainsKey(id))
             {
                 var z = CManagerTask[id];
 
-                _ = CManagerTask.AddOrUpdate(id, (task, z.Item2, z.Item3==""?s: z.Item3)
+                _ = CManagerTask.AddOrUpdate(id, (task, z.Item2, z.Item3 == "" ? s : z.Item3)
                                     , (x, y) => (task, z.Item2, z.Item3 == "" ? s : z.Item3));
             }
             else
@@ -61,8 +62,8 @@ namespace ManagerThread
         public static List<Guid> FindNotRunTask()
         {
             var _countTask = CManagerTask
-                    .Where(x=> x.Value.Item1!=null? x.Value.Item1.Status == TaskStatus.Running:false)
-                    .Select(y=>y.Key)
+                    .Where(x => x.Value.Item1 != null ? x.Value.Item1.Status == TaskStatus.Running : false)
+                    .Select(y => y.Key)
                     .ToList();
             return _countTask;
         }
