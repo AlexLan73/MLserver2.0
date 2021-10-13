@@ -30,7 +30,7 @@ namespace Convert.Moduls
             string _exe = null;
             string _fileName = null;
 
-              Process[] localAll = Process.GetProcesses(); //.Fi.ToLower().Contains("dll\\convert.exe")
+            Process[] localAll = Process.GetProcesses(); //.Fi.ToLower().Contains("dll\\convert.exe")
 
             int _count = localAll.Length - 1;
 
