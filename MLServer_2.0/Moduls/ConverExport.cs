@@ -18,7 +18,7 @@ namespace Convert.Moduls
         #endregion
         public ConverExport(ref Config0 config)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Создаем class ConverExport"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Создаем (Creact) class ConverExport"));
 
             _config = config;
 

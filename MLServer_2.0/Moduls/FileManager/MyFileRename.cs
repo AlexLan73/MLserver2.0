@@ -1,4 +1,5 @@
 ﻿using Convert.Logger;
+using MLServer_2._0;
 using System;
 using System.Linq;
 using System.Threading;
@@ -26,7 +27,12 @@ namespace Convert.Moduls.FileManager
         }
         public void TestQueue()
         {
-            while (true)
+            Guid _guid = Guid.NewGuid();
+            bool _isGuid = true;
+            void SetFalse() => _isGuid = false;
+            ThreadManager.Add(_guid, SetFalse, " MyFileRename.TestQueue() ");
+
+            while (_isGuid)
             {
                 var xx = FilesNameQueue.ToList().Where(x => x.Count > 3 | x.SecWait > 60).Select(x => (x.NameFile1, x.Count, x.SecWait));
                 var sWrite = $" count {FilesNameQueue.Count}    --------------------------------------------------";
@@ -38,17 +44,21 @@ namespace Convert.Moduls.FileManager
                     _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " MyFileRename =>  " + sWrite));
                 }
                 Thread.Sleep(500);
-                Console.WriteLine("  цикл TestQueue ожидаем ");
+                Console.WriteLine("  цикл TestQueue ожидаем ( TestQueue loop awaiting ) ");
                 try
                 {
                     if (CtTokenRepitExit.IsCancellationRequested)
-                        CtTokenRepitExit.ThrowIfCancellationRequested();
+                    {
+                        ThreadManager.DelRecInDict(_guid);
+                        CtTokenRepitExit.ThrowIfCancellationRequested(); 
+                    }
                 }
                 catch (Exception)
                 {
                     break;
                 }
             }
+            ThreadManager.DelRecInDict(_guid);
         }
         public override void CallBackQueue(TypeDanFromFile1 dan)
         {
@@ -57,27 +67,27 @@ namespace Convert.Moduls.FileManager
                 return;
             FilesNameQueue.Enqueue(dan);
         }
-        public void Run()
-        {
-            MyTask = Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    FilesNameQueue.TryDequeue(out var value);
-                    if (value != null)
-                    {
-                        //RunCommand(() => { File.Move(_value.NameFile0, _value.NameFile1); }, _value);
-                    }
-                    Thread.Sleep(300);
-                    Console.WriteLine(" ===!=!=!=!=!=!=!=========   Ожидаем  ");
-                    try
-                    {
-                        if (CtTokenRepitExit.IsCancellationRequested) CtTokenRepitExit.ThrowIfCancellationRequested();
-                    }
-                    catch (Exception) { break; }
+        //public void Run()
+        //{
+        //    MyTask = Task.Factory.StartNew(() =>
+        //    {
+        //        while (true)
+        //        {
+        //            FilesNameQueue.TryDequeue(out var value);
+        //            if (value != null)
+        //            {
+        //                //RunCommand(() => { File.Move(_value.NameFile0, _value.NameFile1); }, _value);
+        //            }
+        //            Thread.Sleep(300);
+        //            Console.WriteLine(" ===!=!=!=!=!=!=!=========   Ожидаем  ");
+        //            try
+        //            {
+        //                if (CtTokenRepitExit.IsCancellationRequested) CtTokenRepitExit.ThrowIfCancellationRequested();
+        //            }
+        //            catch (Exception) { break; }
 
-                }
-            });
-        }
+        //        }
+        //    });
+        //}
     }
 }

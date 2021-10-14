@@ -14,7 +14,7 @@ namespace Convert.Moduls.Config
         public List<DanTriggerTime> DateTimeTrigger;
         public TextLog(string filename, string field, ref Config0 config) : base(filename, field, ref config)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class TextLog"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем (Load) Class TextLog"));
 
             DateTimeTrigger = new List<DanTriggerTime>();
         }

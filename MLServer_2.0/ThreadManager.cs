@@ -16,6 +16,7 @@ namespace MLServer_2._0
 
     internal static class ThreadManager
     {
+//        public static ConcurrentDictionary<Guid, (Task, Action, string)> CManagerTaskAction = new();
         public static ConcurrentDictionary<Guid, (Task, Action, string)> CManagerTaskAction = new();
         public static void Add(Guid id, Task task, string s)
         {
@@ -77,7 +78,29 @@ namespace MLServer_2._0
                     .ToList();
             return _countTask;
         }
-
+        
+        public static void TestTask() 
+        {
+            List<Guid> _lcount = ThreadManager.FindNotRunTask();
+            while (_lcount.Count > 0)
+            {
+                Console.WriteLine($" № {_lcount.Count}  ___  Wait  ____");
+                foreach (Guid id in _lcount)
+                {
+                    try
+                    {
+                        var _x = ThreadManager.CManagerTaskAction[id];
+                        Console.WriteLine($" № {id} ->  { _x.Item3 } ");
+                        ThreadManager.DelProcesAndInDict(id);
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine($" № {id} -> Error ((  ");
+                    }
+                }
+                _lcount = ThreadManager.FindNotRunTask();
+            }
+        }
 
     }
 }

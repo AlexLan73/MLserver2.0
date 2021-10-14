@@ -10,10 +10,7 @@ using System.Threading.Tasks;
 
 namespace MLServer_2._0.Moduls.MDFRename
 {
-    public interface IFindDirMDF
-    {
-
-    }
+    public interface IFindDirMDF {}
     public class FindDirMDF: IFindDirMDF
     {
         #region data
@@ -30,7 +27,6 @@ namespace MLServer_2._0.Moduls.MDFRename
             this.path = path;
             _dtstart = dtstart;
             _dtend = dtend;
-        
         }
 
         public async Task Run()

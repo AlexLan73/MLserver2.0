@@ -50,32 +50,39 @@ namespace Convert.Moduls.Error
         private const string NameModulConfig = "Модуль SetupParam ";
 
         #region CodeError
-        private const string _err1 = "Проблема с входными параметрами";
-        private const string _err_1 = "Мало аргументов, < 2  Модуль InputArguments";
-        private const string _err_2 = "Не существует файл %file% Модуль InputArguments";
-        private const string _err_3 = "Нет рабочей директории %file%  Модуль InputArguments ";
-        private const string _err_4 = " ==>> #### Ошибка формирования: путей, json, ml_rt  ####";
-        private const string _err_5 = " С конвертацией в lrf_dec  Ошибка в обработке первоначальных данных";
-        private const string _err_7 = " Проблема с чтением информации из  %file%  ";
-        private const string _err_8 = " Error в запуске CLexport  %file%  ";
-        private const string _err_20 = "Нет файла %file% ";
-        private const string _err_201 = "Проблема с записью  %file% ";
-        private const string _err_202 = "Проблема с записью  %file% \n отсутствует { _xml.VSysVarPath } ";
-        private const string _err_23 = "В файле %file% нет данных о Trigger и времени" + NameModulConfig;
-        private const string _err_231 = "В файле %file% нет поля => filename";
-        private const string _err_24 = "Нет каталога #COMMON " + NameModulConfig;
-        private const string _err_211 = " Нет соответствия запрашиваемых данных и полученных ==> Модуль конфигурации инициал - ция" + NameModulConfig;
-        private const string _err_212 = " Нет данных в ml_rt2 " + NameModulConfig;
-        private const string _err_213 = " Нет данных в TextLog, время срабатывания триггера " + NameModulConfig;
-        private const string _err_25 = "Нет файла(директории) с Analis " + NameModulConfig;
-        private const string _err_26 = "Нет файла для анализа  %file% ";
-        private const string _err_261 = "Нет нужных данных в файле %file%  для анализа ";
-        private const string _err_27 = "Error c файлом конфигурации %file% ";
-        private const string _err_271 = "Error c файлом конфигурации Нет конфиг.MDF(...)  %file%  ";
-        private const string _err_272 = "Error c файлом конфигурации Нет конфиг. LRF_DEC(...)  %file%  ";
-        private const string _err_31 = "не правильно отработала программа FileType  ClfFileInfo";
-        private const string _err_32 = "нет строки '$Car: [' в FileType  ClfFileInfo";
-        private const string _err_34 = "нет информации о Memory: в файле %file%";
+        private const string _err1 = "Проблема с входными параметрами \n Problem with input parameters";
+        private const string _err_1 = "Мало аргументов, < 2  Модуль InputArguments \n Few arguments, <2 Module InputArguments";
+        private const string _err_2 = "Не существует файл %file% Модуль InputArguments \n File% file% does not exist InputArguments module";
+        private const string _err_3 = "Нет рабочей директории %file%  Модуль InputArguments \n No working directory% file% InputArguments module";
+        private const string _err_4 = " ==>> #### Ошибка формирования: путей, json, ml_rt  #### \n == >> #### Formation error: paths, json, ml_rt ####";
+        private const string _err_5 = " С конвертацией в lrf_dec  Ошибка в обработке первоначальных данных \n With conversion to lrf_dec Error in processing initial data";
+        private const string _err_7 = " Проблема с чтением информации из  %file%  \n Problem reading information from% file%";
+        private const string _err_8 = " Error в запуске ( start ) CLexport  %file%  ";
+        private const string _err_20 = "Нет файла ( No file ) %file% ";
+        private const string _err_201 = "Проблема с записью ( Recording problem ) %file% ";
+        private const string _err_202 = "Проблема с записью ( Recording problem ) %file% \n отсутствует ( absent ) { _xml.VSysVarPath } ";
+        private const string _err_23 = "В файле ( In file ) %file% нет данных о ( no data on ) Trigger и времени ( and time ) " + NameModulConfig;
+        private const string _err_231 = "В файле ( In file ) %file% нет поля ( and fields ) => filename";
+        private const string _err_24 = "Нет каталога ( No catalog ) #COMMON " + NameModulConfig;
+        private const string _err_211 = " Нет соответствия запрашиваемых данных и полученных ==> Модуль конфигурации инициализация \n " +
+                                        " There is no correspondence between the requested data and the received data ==> Configuration module initialization" + NameModulConfig;
+        private const string _err_212 = " Нет данных в ( No data in ) ml_rt2 " + NameModulConfig;
+        private const string _err_213 = " Нет данных в ( No data in ) TextLog, время срабатывания триггера ( trigger time ) " + NameModulConfig;
+        private const string _err_25 = "Нет файла(директории) ( No file (directory) ) с Analis " + NameModulConfig;
+        private const string _err_26 = "Нет файла для анализа ( No file to analyze )  %file% ";
+        private const string _err_261 = "Нет нужных данных в файле %file%  для анализа \n " +
+                                        "There is no required data in the file %file% for analysis";
+        private const string _err_27 = "Error c файлом конфигурации ( Error with configuration file ) %file% ";
+        private const string _err_271 = "Error c файлом конфигурации Нет конфиг.MDF(...)  %file%  \n" +
+                                        "Error with configuration file No config MDF (...) %file%";
+        private const string _err_272 = "Error c файлом конфигурации Нет конфиг. LRF_DEC(...)  %file%  \n" +
+                                        "Error with configuration file No config LRF_DEC (...) %file%";
+        private const string _err_31 = "не правильно отработала программа FileType  ClfFileInfo \n" +
+                                        "the program FileType ClfFileInfo did not work correctly";
+        private const string _err_32 = "нет строки '$Car: [' в FileType  ClfFileInfo \n " +
+                                        "no line '$ Car: [' in FileType ClfFileInfo";
+        private const string _err_34 = "нет информации о Memory: в файле %file% \n " +
+                                        "no information about Memory: in file %file%";
 
 
         #endregion

@@ -14,7 +14,7 @@ namespace Convert.Moduls.Config
         public MlRt2(string filename, string[] fields, ref Config0 config)
                                     : base(filename, fields, ref config)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Обработка файла MlRt2"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Обработка файла MlRt2 \n MlRt2 file processing"));
 
             NameTrigger = new ConcurrentDictionary<string, string>();
         }

@@ -22,7 +22,8 @@ namespace MLServer_2._0
         public void Run()
         {
             LoggerManager logger = new(_dArgs["WorkDir"] + "\\Log");
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Входные данные проверенные"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Входные данные проверенные \n " +
+                                                                             " Input data verified"));
 
             var errorBasa = new ErrorBasa();
             Config0 config = new();
@@ -38,7 +39,8 @@ namespace MLServer_2._0
 
             SetupParam _setupParam = new(ref config);
             _setupParam.IniciaPathJson();
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " - Инициализация параметров закончилась "));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " - Инициализация параметров закончилась \n " +
+                                                                             " - Parameter initialization finished"));
 
             //////////////////////////////////////////////////////////
             // ReSharper disable once InvalidXmlDocComment
@@ -59,12 +61,14 @@ namespace MLServer_2._0
 
             if (Directory.GetDirectories(_dArgs["WorkDir"], "!D*").Length > 0)
             {
-                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Запуск-> Обработка сырых данных "));
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Запуск-> Обработка сырых данных \n" +
+                                                                                 " Launch-> Raw Data Processing"));
 
                 ConvertOne convertOne = new ConvertOne(ref config);
                 convertOne.Run();
 
-                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Завершение обработки"));
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Завершение обработки \n " +
+                                                                                 " Completion of processing"));
 
             }
             //  Существует каталог CLF с файлами + наличие файла файла DbConfig.json 
@@ -74,14 +78,17 @@ namespace MLServer_2._0
                 if (File.Exists(_dArgs["WorkDir"] + "\\clf.json"))
                     File.Delete(_dArgs["WorkDir"] + "\\clf.json");
 
-                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Режим Конвертации -> CLF -> MDF (...) "));
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Режим Конвертации -> CLF -> MDF (...) \n" +
+                                                                                 " Conversion Mode -> CLF -> MDF (...)"));
 
                 if (!File.Exists(_dArgs["WorkDir"] + "\\DbConfig.json"))
                 {
-                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " нет файла DbConfig.json создаем его "));
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " нет файла DbConfig.json создаем его \n" +
+                                                                                     " no DbConfig.json file create it"));
                     ConvertOne convertOne = new(ref config);
                     convertOne.Run();
-                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение"));
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение \n" +
+                                                                                     " Processing completion"));
                 }
 
                 if (Directory.Exists(config.MPath.Clf)
@@ -89,11 +96,13 @@ namespace MLServer_2._0
                     && (Directory.GetFiles(config.MPath.WorkDir, "*.clf").Length == 0)
                     && File.Exists(config.MPath.WorkDir + "\\DbConfig.json"))
                 {
-                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Конвертируем -> CLF -> MDF (...)  "));
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Конвертируем -> CLF -> MDF (...)  \n" +
+                                                                                     "Conversion Mode->CLF->MDF(...)"));
 
                     var converExport = new ConverExport(ref config);
                     converExport.Run();
-                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение"));
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение \n" +
+                                                                                     " Processing completion"));
                 }
                 else if (!Directory.Exists(config.MPath.Clf)
                     && (Directory.GetFiles(config.MPath.WorkDir, "*.clf").Length > 0))
@@ -103,13 +112,14 @@ namespace MLServer_2._0
                     var converExport = new ConverExport(ref config);
                     converExport.Run();
 
-                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение"));
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Обработка завершение \n" +
+                                                                                     " Processing completion"));
                 }
             }
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Exit programm - " + DateTime.Now));
 
             logger.Dispose();
-            Console.WriteLine("Все - основной раздел ))");
+            Console.WriteLine("Все - основной раздел \n EXIT ))");
 
         }
     }

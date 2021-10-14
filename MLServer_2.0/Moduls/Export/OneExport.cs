@@ -32,7 +32,7 @@ namespace Convert.Moduls.Export
         #region Constructor
         public OneExport(ref Config0 config, (string, string, string) typeExport)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class OneExport"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем ( Load ) Class OneExport"));
 
             _config = config;
             _commandExport = typeExport.Item2;

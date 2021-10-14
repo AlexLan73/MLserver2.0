@@ -23,7 +23,7 @@ namespace Convert.Moduls
         #endregion
         public SetupParam(ref Config0 config)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Запуск class SetupParam "));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Запуск (Start) class SetupParam "));
             this._config = config;
             _inicial01();
 
@@ -62,7 +62,8 @@ namespace Convert.Moduls
             //     Настроить загрузку данных 
 
             _ = LoggerManager.AddLoggerAsync(
-                new LoggerEvent(EnumError.Info, new[] { "SetupParam \n", "Грузим файл конфигурации DbConfig " }));
+                new LoggerEvent(EnumError.Info, new[] { "SetupParam \n", "Грузим файл конфигурации DbConfig \n" +
+                                                                         "Loading the DbConfig configuration file" }));
 
             JsonBasa.LoadFileJsoDbConfig();
 

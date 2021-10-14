@@ -20,12 +20,12 @@ namespace Convert.Moduls.Export
         {
             var result = ExeInfo();
 
-            var sWrite = $"  Код завершения программы {result.CodeError}  ";
+            var sWrite = $"  Код завершения программы ( Program termination code )  {result.CodeError}  ";
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " RunCLexport =>  " + sWrite));
 
             if (result.CodeError != 0)
             {
-                sWrite = " !!!  Бардак!! ";
+                sWrite = " !!!  Бардак!! ( !!! Mess !!!  ) ";
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " RunCLexport =>  " + sWrite));
             }
 

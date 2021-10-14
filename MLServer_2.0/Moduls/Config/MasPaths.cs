@@ -72,7 +72,8 @@ namespace Convert.Moduls.Config
         #region construct
         public MasPaths(IReadOnlyDictionary<string, string> args)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем класс MasPaths - конфиг. с путями"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем класс MasPaths - конфиг. с путями \n" +
+                                                                             "Load the MasPaths class - config. with paths"));
 
             ExeFile = args["ExeFile"];
             WorkDir = args["WorkDir"];

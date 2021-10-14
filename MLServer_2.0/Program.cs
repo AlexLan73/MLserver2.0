@@ -34,12 +34,12 @@ namespace Convert
         {
             WriteLine("---------------------------------------------------------------------");
             WriteLine("---------------------------------------------------------------------");
-            WriteLine("----   Версия программы 2.0  ----------------------------------------");
-            WriteLine("----    параметры:           ----------------------------------------");
-            WriteLine("----     1. Путь где лежит запускаемый файл  ------------------------");
-            WriteLine("----     2. Рабочий каталог                  ------------------------");
-            WriteLine("----     3. rename:Каталог (каталоги) создаем DBConfig  -------------");
-            WriteLine("----     4. out:Каталог куда нужно вывести конвертацию  -------------");
+            WriteLine("----   Ver programs 2.1      ----------------------------------------");
+            WriteLine("----    params:              ----------------------------------------");
+            WriteLine("----     1. Path start convert.exe           ------------------------");
+            WriteLine("----     2. Work directory                   ------------------------");
+            WriteLine("----     3. rename:dir (directorys) create DBConfig          --------");
+            WriteLine("----     4. out: directory where to put conversion files     --------");
             WriteLine("---------------------------------------------------------------------");
             WriteLine("---------------------------------------------------------------------");
 
@@ -63,6 +63,7 @@ namespace Convert
             if (inputArguments.DArgs.ContainsKey("~d"))
             {
                 new RecoverOriginalFiles(inputArguments.DArgs["WorkDir"]).Run();
+                ThreadManager.TestTask();
                 return;
             }
 
@@ -70,6 +71,7 @@ namespace Convert
             {
                 CreateDbConfig createDbConfig = new CreateDbConfig(inputArguments.DArgs);
                 createDbConfig.Run();
+                ThreadManager.TestTask();
                 return;
             }
 
@@ -77,13 +79,14 @@ namespace Convert
             {
                 MDFClassRenameDir mDFClassRenameDir = new MDFClassRenameDir(inputArguments.DArgs);
                 mDFClassRenameDir.Run();
+                ThreadManager.TestTask();
                 return;
             }
 
             BasaClassConvert basaClassConvert = new BasaClassConvert(inputArguments.DArgs);
             basaClassConvert.Run();
-
-            WriteLine("Все ))");
+            ThreadManager.TestTask();
+            WriteLine("Все,  Halast))");
         }
 
     }

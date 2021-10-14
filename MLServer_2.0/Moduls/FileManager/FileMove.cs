@@ -1,4 +1,5 @@
 ﻿using Convert.Logger;
+using MLServer_2._0;
 using System;
 using System.IO;
 using System.Threading;
@@ -37,13 +38,17 @@ namespace Convert.Moduls.FileManager
         }
         public void Run()
         {
-            MyTask = Task.Factory.StartNew(() =>
+            Action<Guid> action = (_guid) => 
             {
-                while (true)
+                bool _isGuid = true;
+                void SetFalse() => _isGuid = false;
+                ThreadManager.Add(_guid, SetFalse, " FileMove ");
+
+                while (true && _isGuid)
                 {
                     Thread.Sleep(1000);
 
-                    while (GetCountFilesNameQueue() > 0)
+                    while ((GetCountFilesNameQueue() > 0) && _isGuid)
                     {
                         TypeDanFromFile1 _value;
                         FilesNameQueue.TryDequeue(out _value);
@@ -71,7 +76,47 @@ namespace Convert.Moduls.FileManager
                         }
                     }
                 }
-            });
+                ThreadManager.DelRecInDict(_guid);
+            };
+
+
+            MyTask = Task.Factory.StartNew(() => action(Guid.NewGuid()));
+
+            //MyTask = Task.Factory.StartNew(() =>
+            //{
+            //    while (true)
+            //    {
+            //        Thread.Sleep(1000);
+
+            //        while (GetCountFilesNameQueue() > 0)
+            //        {
+            //            TypeDanFromFile1 _value;
+            //            FilesNameQueue.TryDequeue(out _value);
+
+            //            if (_value != null)
+            //            {
+            //                if (!File.Exists(_value.NameFile0))
+            //                    continue;
+
+            //                //                            Console.WriteLine($" ==--> {_value.NameFile0} ");
+            //                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $" FileMove -> {_value.NameFile0} "));
+
+            //                try
+            //                {
+            //                    if (CtTokenRepitExit.IsCancellationRequested) CtTokenRepitExit.ThrowIfCancellationRequested();
+            //                }
+            //                catch (Exception)
+            //                {
+            //                    break;
+            //                }
+            //                RunCommand(() =>
+            //                {
+            //                    File.Move(_value.NameFile0, _value.NameFile1, true);
+            //                }, _value);
+            //            }
+            //        }
+            //    }
+            //});
         }
         public int GetCountFilesName() => FilesNameQueue != null ? FilesNameQueue.Count : 0;
         public void SetExitRepit()

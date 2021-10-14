@@ -22,7 +22,7 @@ namespace MLServer_2._0
         public void Run()
         {
             LoggerManager logger = new(_dArgs["WorkDir"] + "\\Log");
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Входные данные проверенные"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Входные данные проверенные \n Input data verified"));
 
             var errorBasa = new ErrorBasa();
             Config0 config = new();
@@ -38,7 +38,8 @@ namespace MLServer_2._0
 
             SetupParam _setupParam = new(ref config);
             _setupParam.IniciaPathJson();
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " - Инициализация параметров закончилась "));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " - Инициализация параметров закончилась \n " +
+                                                                             " - Parameter initialization is over"));
 
             ConcurrentDictionary<string, int> _pathFileMDF = new ConcurrentDictionary<string, int>();
             DateTime _dataStart = new DateTime(2020, 11, 2);
@@ -50,7 +51,8 @@ namespace MLServer_2._0
 
             var _keyPaths = _pathFileMDF.Keys;
 
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "########## - Запуск переименования ########", EnumLogger.Monitor));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "########## - Запуск переименования ######## \n " +
+                                                                             "########## - Start renaming ########", EnumLogger.Monitor));
 
             List<Task> _runReanme = new List<Task>();
             foreach (var item in _keyPaths)
@@ -59,11 +61,16 @@ namespace MLServer_2._0
                 _runReanme.Add(new RenameMDF(item).Run());
             }
 
-            while (_runReanme.Count > 0)
+            Guid _guid = Guid.NewGuid();
+            bool _isGuid = true;
+            void SetFalse() => _isGuid = false;
+            ThreadManager.Add(_guid, SetFalse, " MDFClassRenameDir ");
+
+            while ((_runReanme.Count > 0) && _isGuid)
             {
                 try
                 {
-                    Console.WriteLine($"#__ осталось дождаться -{_runReanme.Count}   __#");
+                    Console.WriteLine($"#__ осталось дождаться (it remains to wait) -{_runReanme.Count}   __#");
 
                     var x = _runReanme[0];
                     x.Wait();
@@ -74,9 +81,9 @@ namespace MLServer_2._0
                     _runReanme.RemoveAt(0);
                 }
             }
-
+            ThreadManager.DelRecInDict(_guid);
             logger.Dispose();
-            Console.WriteLine("Все   - режим MDFRenameDir ))");
+            Console.WriteLine("Все   - режим MDFRenameDir\n EXIT mode MDFRenameDir ))");
 
         }
     }

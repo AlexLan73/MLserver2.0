@@ -44,7 +44,7 @@ namespace MLServer_2._0.Moduls.MDFRename
         {
                 var x0 = DbConfig
                     .Where(x => x.Key.ToLower()
-                        .Contains("_m2_"))
+                    .Contains("_m2_"))
                     .Select(y => y.Value);
                 foreach (var item in x0)
                     foreach (var (key, value) in item)
@@ -52,7 +52,7 @@ namespace MLServer_2._0.Moduls.MDFRename
 
                 x0 = DbConfig
                     .Where(x => x.Key.ToLower()
-                        .Contains("_m1_"))
+                    .Contains("_m1_"))
                     .Select(y => y.Value);
                 foreach (var item in x0)
                     foreach (var (key, value) in item)

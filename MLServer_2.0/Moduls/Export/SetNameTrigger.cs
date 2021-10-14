@@ -1,6 +1,7 @@
 ﻿using Convert.Logger;
 using Convert.Moduls.Config;
 using Convert.Moduls.FileManager;
+using MLServer_2._0;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +27,7 @@ namespace Convert.Moduls.Export
         #region constructor
         public SetNameTrigger(ref Config0 config, string typeconvert)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class SetNameTrigger"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем ( Load ) Class SetNameTrigger"));
 
             _config = config;
             var typeconvert1 = typeconvert.ToUpper();
@@ -37,15 +38,16 @@ namespace Convert.Moduls.Export
             {
                 var x0 = _config.DbConfig
                     .Where(x => x.Key.ToLower()
-                        .Contains("_m2_"))
+                    .Contains("_m2_"))
                     .Select(y => y.Value);
+
                 foreach (var item in x0)
                     foreach (var (key, value) in item)
                         _config.FMem.AddOrUpdate("M2_" + key, value, (_, _) => value);
 
                 x0 = _config.DbConfig
                     .Where(x => x.Key.ToLower()
-                        .Contains("_m1_"))
+                    .Contains("_m1_"))
                     .Select(y => y.Value);
                 foreach (var item in x0)
                     foreach (var (key, value) in item)
@@ -62,8 +64,12 @@ namespace Convert.Moduls.Export
         public async Task Run()
         {
             _config.IsRun.IsExportRename = true;
+            Guid _guid = Guid.NewGuid();
+            bool _isGuid = true;
+            void SetFalse() => _isGuid = false;
+            ThreadManager.Add(_guid, SetFalse, " SetNameTrigger.Run() ");
 
-            while (_config.IsRun.IsExport || _findFileDirClf().Count > 0)
+            while ((_config.IsRun.IsExport || _findFileDirClf().Count > 0) && _isGuid)
             {
                 var ls = _findFileDirClf();
                 if (ls.Count <= 0)
@@ -84,9 +90,12 @@ namespace Convert.Moduls.Export
 
                 waitM1?.Wait();
                 waitM2?.Wait();
-                await Task.Delay(1000);
+                await Task.Delay(500);
             }
+            
+            ThreadManager.DelRecInDict(_guid);
             _config.IsRun.IsExportRename = false;
+
             while (_renameFile.GetCountFilesNameQueue() > 0)
                 Thread.Sleep(300);
 

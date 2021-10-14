@@ -52,7 +52,7 @@ namespace Convert.Moduls.Config
             await File.WriteAllTextAsync(_jsonBasa._config.MPath.DbConfig,
                 JsonConvert.SerializeObject(_jsonBasa._config.FileMemInfo, Formatting.Indented));
 
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Сохранить данные в DbConfig.json"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Сохранить данные в (Sawe dan in) DbConfig.json"));
         }
         #endregion
 
@@ -71,7 +71,7 @@ namespace Convert.Moduls.Config
                 var dbConfig = LoadFileJso<ConcurrentDictionary<string, ConcurrentDictionary<string, MemoryInfo>>>(_jsonBasa._config.MPath.DbConfig);
                 _jsonBasa._config.DbConfig = dbConfig ?? new TypeDStringMemoryInfo1();
 
-                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Чтение данных из DbConfig.json"));
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Чтение данных из (Read dan from ) DbConfig.json"));
             }
             else
                 _jsonBasa._config.DbConfig = new TypeDStringMemoryInfo1();

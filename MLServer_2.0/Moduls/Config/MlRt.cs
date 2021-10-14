@@ -10,7 +10,7 @@ namespace Convert.Moduls.Config
         public MlRt(string filename, string[] fields, ref Config0 config)
                                     : base(filename, fields, ref config)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Обработка файла MlRt"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Обработка файла MlRt \n MlRt file processing"));
         }
 
         public override bool Convert()

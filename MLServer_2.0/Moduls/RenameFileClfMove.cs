@@ -2,6 +2,7 @@
 using Convert.Moduls.ClfFileType;
 using Convert.Moduls.Config;
 using Convert.Moduls.FileManager;
+using MLServer_2._0;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +16,8 @@ namespace Convert.Moduls
         protected Config0 Config;
         public RenameFileClfMoveBasa(ref Config0 config)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class RenameFileClfMoveBasa"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class RenameFileClfMoveBasa \n" +
+                                                                             "Load Class RenameFileClfMoveBasa"));
             Config = config;
         }
 
@@ -35,8 +37,13 @@ namespace Convert.Moduls
 
             List<ClfFileInfo> taskClfInfo = new();
             Dictionary<(string, long, DateTime), bool> dFileClf = new();
+            Guid  _guid = Guid.NewGuid();
+            bool _isGuid = true;
+            void SetFalse() => _isGuid = false;
+            ThreadManager.Add(_guid, SetFalse, " RenameFileClfMoveBasa ");
 
-            while (true)
+
+            while (true && _isGuid)
             {
                 var nameFileClf = Directory.GetFiles(Config.MPath.WorkDir, "*.clf");
                 if (GetReturn())
@@ -48,7 +55,7 @@ namespace Convert.Moduls
                 foreach (var item in nameFileClf)
                 {
                     var i = 0;
-                    while (i < taskClfInfo.Count)
+                    while ((i < taskClfInfo.Count) &&  _isGuid)
                     {
                         if (taskClfInfo[i].IsError)
                         {
@@ -83,11 +90,12 @@ namespace Convert.Moduls
 
                 }
             }
+            ThreadManager.DelRecInDict(_guid);
 
             _ = JsonBasa.AddFileMemInfo(Config.FileMemInfo);
 
             while (renameFile.GetCountFilesNameQueue() > 0)
-                Thread.Sleep(300);
+                Thread.Sleep(10);
 
             renameFile.AbortRepit();
 
@@ -101,7 +109,8 @@ namespace Convert.Moduls
     {
         public RenameFileClfMove(ref Config0 config) : base(ref config)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class RenameFileClfMove"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class RenameFileClfMove \n " +
+                                                                             "Load Class RenameFileClfMove"));
 
         }
 

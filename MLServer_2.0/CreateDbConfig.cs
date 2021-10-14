@@ -37,7 +37,7 @@ namespace MLServer_2._0
 
 //                LoggerManager.NewNameFile(item);
 
-                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Входные данные проверенные"));
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Входные данные проверенные \n Input data verified"));
 
                 var errorBasa = new ErrorBasa();
                 Config0 config = new();
@@ -53,21 +53,25 @@ namespace MLServer_2._0
 
                 SetupParam _setupParam = new(ref config);
                 _setupParam.IniciaPathJson();
-                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " - Инициализация параметров закончилась "));
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " - Инициализация параметров закончилась \n " +
+                                                                                 " - Parameter initialization is over"));
 
                 _ = LoggerManager.AddLoggerAsync(
-                    new LoggerEvent(EnumError.Info, " - Включен режим переименования clf файлов и создание DbConfig.json  "));
+                    new LoggerEvent(EnumError.Info, " - Включен режим переименования clf файлов и создание DbConfig.json \n " +
+                                                    " - Enabled rename clf files mode and create DbConfig.json"));
 
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[]{ "  Включен режим переименования:\n "
-                                                                    , $" Работаем с каталогом - {item}" }));
+                                                                    , $" Работаем с каталогом - {item} \n " +
+                                                                    $" Rename mode enabled: \n " +
+                                                                    $" We work with the catalog - {item}" }));
 
                 ConvertOne convertOne = new(ref config);
                 convertOne.Run();
             }
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Перебрали все каталоги "));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " Перебрали все каталоги \n We went through all the directories"));
 
             logger.Dispose();
-            Console.WriteLine("Все  - режим Rename))");
+            Console.WriteLine("Все  - режим Rename)) \n EXIT - mode Rename");
         }
     }
 }

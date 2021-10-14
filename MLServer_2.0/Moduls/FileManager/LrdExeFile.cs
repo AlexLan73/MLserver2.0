@@ -1,6 +1,7 @@
 ﻿using Convert.Logger;
 using Convert.Moduls.Config;
 using Convert.Moduls.Error;
+using MLServer_2._0;
 using System;
 using System.Threading;
 
@@ -14,7 +15,7 @@ namespace Convert.Moduls.FileManager
         public LrdExeFile(string exefile, string filenamr, string command, ref Config0 config)
                                                              : base(exefile, filenamr, command)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class LrdExeFile"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем ( Load ) Class LrdExeFile"));
 
             FileDelete = new FileDelete(ref config);
         }
@@ -24,22 +25,30 @@ namespace Convert.Moduls.FileManager
             FileDelete.Run();
 
             var result = ExeInfo();
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { " LrdExeFile:\n ", $"  Код завершения программы { result.CodeError }  " }));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { " LrdExeFile:\n ", 
+                $"  Код завершения программы ( Program termination code ) { result.CodeError }  " }));
 
             if (result.CodeError != 0)
             {
-                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "  LrdExeFile ->  !!!  Бардак!!  "));
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "  LrdExeFile ->  !!!  Бардак!! ( !!!! Mess !!!  ) "));
             }
 
             FileDelete.SetExitRepit();
 
-            while (FileDelete.GetCountFilesName() > 0)
+            Guid _guid= Guid.NewGuid();
+            bool _isGuid = true;
+            void SetFalse() => _isGuid = false;
+            ThreadManager.Add(_guid, SetFalse, " LrdExeFile.Run() ");
+
+            while ((FileDelete.GetCountFilesName() > 0) && _isGuid)
             {
                 _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, new[] { " LrdExeFile:\n "
-                                                            , $"Удаляем файлы, ожидаем завершение, осталось -> {FileDelete.GetCountFilesName()}" }));
+                                                            , $"Удаляем файлы, ожидаем завершение, осталось -> \n" +
+                                                            $" Delete files, wait for completion, left ->  {FileDelete.GetCountFilesName()}" }));
 
                 Thread.Sleep(1000);
             }
+            ThreadManager.DelRecInDict(_guid);
             FileDelete.AbortRepit();
 
             if (result.CodeError == 0) return false;

@@ -1,4 +1,5 @@
 ﻿using Convert.Moduls.Config;
+using MLServer_2._0;
 using System;
 using System.IO;
 using System.Linq;
@@ -54,9 +55,13 @@ namespace Convert.Moduls.FileManager
 
         public void Run()
         {
-            MyTask = Task.Factory.StartNew(() =>
+            Action<Guid> action = (_guid) =>
             {
-                while (true)
+                bool _isGuid = true;
+                void SetFalse() => _isGuid = false;
+                ThreadManager.Add(_guid, SetFalse, " FileDelete.Run() ");
+
+                while (_isGuid)
                 {
                     Thread.Sleep(1000);
 
@@ -69,7 +74,10 @@ namespace Convert.Moduls.FileManager
                             try
                             {
                                 if (CtTokenRepitExit.IsCancellationRequested)
-                                    CtTokenRepitExit.ThrowIfCancellationRequested();
+                                {
+                                    ThreadManager.DelRecInDict(_guid);
+                                    CtTokenRepitExit.ThrowIfCancellationRequested(); 
+                                }
                             }
                             catch (Exception)
                             {
@@ -82,7 +90,42 @@ namespace Convert.Moduls.FileManager
                         DeleteDirsSourse();
                     }
                 }
-            });
+
+            };
+
+            MyTask = Task.Factory.StartNew(() => action(Guid.NewGuid()));
+
+
+            //MyTask = Task.Factory.StartNew(() =>
+            //{
+            //    while (true)
+            //    {
+            //        Thread.Sleep(1000);
+
+            //        while (GetCountFilesNameQueue() > 0)
+            //        {
+            //            TypeDanFromFile0 _value;
+            //            FilesNameQueue.TryDequeue(out _value);
+            //            if (_value != null)
+            //            {
+            //                try
+            //                {
+            //                    if (CtTokenRepitExit.IsCancellationRequested)
+            //                        CtTokenRepitExit.ThrowIfCancellationRequested();
+            //                }
+            //                catch (Exception)
+            //                {
+            //                    break;
+            //                }
+
+            //                RunCommand(() => { File.Delete(_value.NameFile0); }, _value);
+            //            }
+
+            //            DeleteDirsSourse();
+            //        }
+            //    }
+            //});
+
         }
         public int GetCountFilesName() => FilesNameQueue != null ? FilesNameQueue.Count : 0;
         public void SetExitRepit()

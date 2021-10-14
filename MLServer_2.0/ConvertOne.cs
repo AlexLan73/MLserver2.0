@@ -16,7 +16,7 @@ namespace Convert
 
         public ConvertOne(ref Config0 config)
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class ConvertOne"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class ConvertOne \n Load Class ConvertOne"));
             _config = config;
             if (!Directory.Exists(_config.MPath.Clf))
                 Directory.CreateDirectory(_config.MPath.Clf);
@@ -36,15 +36,16 @@ namespace Convert
             {
                 //  запускаем конвертацию сырых данных
                 var convertSource = new ConvertSource(ref _config);
-                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "запускаем конвертации сырых данных"));
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "запускаем конвертации сырых данных \n start converting raw data"));
                 resConvertSours = convertSource.Run();
-                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "завершение конвертации сырых данных"));
+                _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "запускаем конвертации сырых данных \n start converting raw data"));
             }
             else
             {
                 if (Directory.GetFiles(_config.MPath.WorkDir, "*.clf").Length > 0)
                 {
-                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "запустить переименование CLF файлов и перенос в каталог CLF."));
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "запустить переименование CLF файлов и перенос в каталог CLF. \n " +
+                                                                                     "start renaming CLF files and transferring to the CLF directory."));
                     //  запустить переименование.
                     resulRename = Task<bool>.Factory.StartNew(() => { return new RenameFileClfMoveBasa(ref _config).Run(); });
                 }
@@ -54,7 +55,7 @@ namespace Convert
             resulRename?.Wait();
             //            _resulClrExport?.Wait();
             //            StopProcessing();
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Завершение class ConvertOne.Run() "));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Завершение class ConvertOne.Run() \n Completing class ConvertOne.Run ()"));
             return false;
         }
 

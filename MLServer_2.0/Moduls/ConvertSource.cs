@@ -1,6 +1,7 @@
 ﻿using Convert.Logger;
 using Convert.Moduls.Config;
 using Convert.Moduls.FileManager;
+using MLServer_2._0;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -94,7 +95,6 @@ namespace Convert.Moduls
 
             _converExport = new ConverExport(ref _config);
 
-
             var resultat = false;
 
             TestFilesNullByte(Directory.GetDirectories(_config.MPath.WorkDir, "!D*"));
@@ -103,20 +103,48 @@ namespace Convert.Moduls
 
             _converExportTask = Task.Run(() => _converExport.Run());
 
-            var res = Task<bool>.Factory.StartNew(() =>
+            Func<Guid, bool> action = (_guid) =>
             {
-                while (FilesSourse().Length > 0)
+                bool _isGuid = true;
+                void SetFalse() => _isGuid = false;
+                ThreadManager.Add(_guid, SetFalse, " ConvertSource ");
+
+                while ((FilesSourse().Length > 0) && _isGuid)
                 {
                     //Console.WriteLine($"  кол-во файлов  ---  FilesSourse().Count()");
-                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $"  кол-во файлов  ---  {FilesSourse().Count()}"));
+                    _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $"  кол-во файлов (number of files) ---  {FilesSourse().Count()}"));
                     resultat = new LrdExeFile(_config.MPath.LrfDec,
                                                 _config.MPath.WorkDir,
                                                 _config.BasaParams["lrf_dec"], ref _config).Run();
                     DeleteDirsSourse();
-                }
 
+                }
+                ThreadManager.DelRecInDict(_guid);
                 return resultat;
-            });
+
+            };
+
+            var res = Task<bool>.Factory.StartNew(() => action(Guid.NewGuid()));
+
+            //var res = Task<bool>.Factory.StartNew(() =>
+            //{
+            //    bool _is = true;
+            //    void SetFalse() => _is = false;
+            //    ThreadManager.AddA(_idG, SetFalse, " _o11__ " + i.ToString());
+
+            //    while (FilesSourse().Length > 0 && _is)
+            //    {
+            //        //Console.WriteLine($"  кол-во файлов  ---  FilesSourse().Count()");
+            //        _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, $"  кол-во файлов (number of files) ---  {FilesSourse().Count()}"));
+            //        resultat = new LrdExeFile(_config.MPath.LrfDec,
+            //                                    _config.MPath.WorkDir,
+            //                                    _config.BasaParams["lrf_dec"], ref _config).Run();
+            //        DeleteDirsSourse();
+
+            //    }
+            //    return resultat;
+            //});
+
             res.Wait();
             // Console.WriteLine(" *****   ******  конвертация сырых данных завершена  ***** ");
             _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, " *****   ******  конвертация сырых данных завершена  ***** "));

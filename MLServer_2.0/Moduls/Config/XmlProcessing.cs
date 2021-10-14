@@ -24,7 +24,7 @@ namespace Convert.Moduls.Config
         /// 
         public XmlProcessing(string filename, string[] masTega, string selectnodes = "AnalysisPackage/DatabaseList/Database")
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class XmlProcessing"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем (Load) Class XmlProcessing"));
             XmLstream = new TaskFactory().StartNew(() =>
             {
                 XmlDocument doc = new XmlDocument();

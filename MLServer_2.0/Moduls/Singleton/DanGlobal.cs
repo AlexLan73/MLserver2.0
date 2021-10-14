@@ -18,8 +18,6 @@ namespace Convert.Moduls.Singleton
         }
 
         public static DanGlobal GetInstance() => Lazy.Value;
-        //        public ConcurrentDictionary<string, object> Analysis = new ConcurrentDictionary<string, object>();
-        //        public ConcurrentDictionary<string, string> PathDan = new ConcurrentDictionary<string, string>();
         public ConcurrentDictionary<string, object> Config = new ConcurrentDictionary<string, object>();
 
     }

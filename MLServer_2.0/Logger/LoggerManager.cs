@@ -63,10 +63,16 @@ namespace Convert.Logger
             AbortReadLogger();
             AbortWriteAsync();
 
-//            _readDanTask.Wait(_ctWriteAsync);
-//            _writeDanTask.Wait(_ctWriteAsync);
-            _readDanTask.Wait(2500);
-            _writeDanTask.Wait(2500);
+            try
+            {
+                _readDanTask?.Wait(2500);
+            }
+            catch (Exception){}
+            try
+            {
+                _writeDanTask?.Wait(2500);
+            }
+            catch (Exception){}
         }
         public static void DisposeStatic()
         {

@@ -36,7 +36,7 @@ namespace Convert.Moduls.Config
         #endregion
         public Config0()
         {
-            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем Class Config0"));
+            _ = LoggerManager.AddLoggerAsync(new LoggerEvent(EnumError.Info, "Загружаем (Load) Class Config0"));
 
             IsRun = new IsRun();
             BasaParams = new ConcurrentDictionary<string, string>();
